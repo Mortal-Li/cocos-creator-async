@@ -1,10 +1,11 @@
-/**
+﻿/**
  * UI资源配置
  * @author Mortal-Li
  * @created 2021年9月2日
  */
 
-export interface UIConfigInterface {
+
+export interface IUIConfig {
     /**
      * Bundle包名
      */
@@ -20,7 +21,9 @@ export interface UIConfigInterface {
 }
 
 
-/**
- * prefab资源路径前缀
- */
-export const PRE_PATH = "Prefabs/";
+// ***************** prefab 各类型路径配置 *****************
+const PRE_PATH = "Prefabs/";
+export const LAYER_PATH = PRE_PATH + "Layer/";
+export const POPUP_PATH = PRE_PATH + "Popup/";
+export const PANEL_PATH = PRE_PATH + "Panel/";
+export const WIDGET_PATH = PRE_PATH + "Widget/";

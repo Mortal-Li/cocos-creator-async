@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 管理所有manager
  * 
  * @author Mortal-Li
@@ -7,17 +7,15 @@
 
 import EventManager from "./manager/EventManager";
 import HttpManager from "./manager/HttpManager";
-import LayerManager from "./manager/LayerManager";
 import LocalManager from "./manager/LocalManager";
-import PopupManager from "./manager/PopupManager";
 import SoundManager from "./manager/SoundManager";
+import UIManager from "./manager/UIManager";
 
 
 const ceo = {
+    uiMgr: new UIManager(),
     eventMgr : new EventManager(),
     localMgr : new LocalManager(),
-    layerMgr : new LayerManager(),
-    popupMgr : new PopupManager(),
     soundMgr : new SoundManager(),
     httpMgr  : new HttpManager(),
     

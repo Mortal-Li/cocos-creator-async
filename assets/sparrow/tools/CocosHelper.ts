@@ -1,11 +1,10 @@
-/**
+﻿/**
  * 对cocos api的一些功能性封装
  * @author Mortal-Li
  * @created 2021年9月2日
  */
 
 import ceo from "../ceo";
-import { PRE_PATH } from "../ui/UIConfig";
 
 const {ccclass, property} = cc._decorator;
 
@@ -42,13 +41,13 @@ export default class CocosHelper {
         });
     }
     
-    static async createPrefabs(prefabName: string, bundleName?: string) {
-        let bundle = cc.assetManager.getBundle(bundleName ? bundleName : ceo.layerMgr.getCurBundle());
+    static async createPrefabs(prefabPath: string, bundleName?: string) {
+        let bundle = cc.assetManager.getBundle(bundleName ? bundleName : ceo.uiMgr.getCurBundleName());
         if (!bundle) {
             cc.warn("Bundle Miss!");
             return ;
         }
-        const prefab = await CocosHelper.asyncLoadPrefab(bundle, PRE_PATH + prefabName);
+        const prefab = await CocosHelper.asyncLoadPrefab(bundle, prefabPath);
         return cc.instantiate(prefab);
     }
 

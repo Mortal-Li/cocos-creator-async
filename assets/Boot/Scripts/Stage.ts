@@ -14,7 +14,7 @@ export default class Stage extends cc.Component {
 
     start () {
         ceo.init();
-        // ceo.layerMgr.gotoLayer(LayerConf.Load);
+        ceo.uiMgr.gotoLayer(LayerConf.Load);
     }
 
 }

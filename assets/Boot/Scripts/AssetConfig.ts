@@ -4,61 +4,70 @@
  * @created 2021年9月2日
  */
 
- import { UIConfigInterface } from "../../sparrow/ui/UIConfig";
+ import { IUIConfig } from "../../sparrow/ui/UIConfig";
 
  export const BundleConf = {
      Main : "MainBundle",
      Hall: "HallBundle",
      GameA: "GameABundle",
-     GameB: "GameBBundle",
  };
  
  export const LayerConf = {
-     Load: <UIConfigInterface> {
+     Load: <IUIConfig> {
          bundle: BundleConf.Main,
          name: "LoadLayer",
      },
  
-     Hall: <UIConfigInterface> {
+     Hall: <IUIConfig> {
          bundle: BundleConf.Hall,
          name: "HallLayer",
          stay: true,
      },
  
-     GameA: <UIConfigInterface> {
+     GameA: <IUIConfig> {
          bundle: BundleConf.GameA,
          name: "GameALayer",
-     },
-     
-     GameB: <UIConfigInterface> {
-         bundle: BundleConf.GameB,
-         name: "GameBLayer",
      },
  
  };
  
  export const PopupConf = {
      //********** Main **********/
-     Common: <UIConfigInterface> {
+     Common: <IUIConfig> {
          bundle: BundleConf.Main,
          name: "CommonPopup",
      },
  
      //********** Hall **********/
-     Settings: <UIConfigInterface> {
+     Settings: <IUIConfig> {
          bundle: BundleConf.Hall,
          name: "SettingsPopup",
      },
  
      //********** GameA **********/
-     GameAHelperPopup: <UIConfigInterface> {
+     GameAHelperPopup: <IUIConfig> {
          bundle: BundleConf.GameA,
          name: "GameAHelperPopup"
      },
 
-     //********** GameB **********/
-     GameBItemPopup: <UIConfigInterface> {
-         bundle: BundleConf.GameB,
-         name: "GameBItemPopup"
-     },
  };
+
+
+ export const PanelConf = {
+    Test: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "TestPanel"
+    },
+
+    Game: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "GamePanel"
+    },
+};
+
+export const WidgetConf = {
+    Toast: <IUIConfig> {
+        bundle: BundleConf.Main,
+        name: "Toast"
+    }
+}
