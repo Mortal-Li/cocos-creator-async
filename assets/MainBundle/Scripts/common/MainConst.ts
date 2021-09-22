@@ -1,5 +1,5 @@
 /**
- * 
+ * 游戏中用到的常量定义
  * @author Mortal-Li
  * @created 2021年9月18日
  */
@@ -9,7 +9,7 @@
  */
 export const GameCustomEvent = {
     Update_GEM: "Update_GEM"
-}
+};
 
 /**
  * 本地存储key名
@@ -27,11 +27,17 @@ export const SoundID = {
     Path: "Sounds/",
     
     Click: "click"
-}
+};
 
 /**
  * 游戏中使用的文本常量
  */
 export const TxtConst = {
-    
+    Sure: "Sure",
+    AddGems: "Add 10 Gems.",
+    Hello: "Hello! I'am Sparrow~",
+
+    NetTipTitle: "Whoops!",
+    NetTipMsg: "Network Connection Error!Do you want to try again?",
+    Retry: "Retry",
 };

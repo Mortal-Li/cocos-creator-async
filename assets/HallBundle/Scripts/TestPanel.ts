@@ -6,7 +6,7 @@
 
 import { PopupConf } from "../../Boot/Scripts/AssetConfig";
 import GameData from "../../MainBundle/Scripts/common/GameData";
-import { GameCustomEvent } from "../../MainBundle/Scripts/common/MainConst";
+import { GameCustomEvent, TxtConst } from "../../MainBundle/Scripts/common/MainConst";
 import Util from "../../MainBundle/Scripts/common/Util";
 import ceo from "../../sparrow/ceo";
 import UIBase from "../../sparrow/ui/UIBase";
@@ -31,13 +31,13 @@ export default class TestPanel extends UIBase {
                 break;
         
             case "toast":
-                Util.showToast("Toast test.");
+                Util.showToast(TxtConst.Hello);
                 break;
 
             case "common":
                 Util.showCommonPopup({
-                    msg: "Add 10 Gems.",
-                    btnTxtOK: "Sure",
+                    msg: TxtConst.AddGems,
+                    btnTxtOK: TxtConst.Sure,
                     btnCallOK: () => {
                         GameData.gems += 10;
                         ceo.eventMgr.emit(GameCustomEvent.Update_GEM);

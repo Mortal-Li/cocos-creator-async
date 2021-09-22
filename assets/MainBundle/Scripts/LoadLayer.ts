@@ -33,10 +33,10 @@ export default class LoadLayer extends LayerBase {
 
     async start () {
         // net req、res load ...  
-        await CocosHelper.asyncTween(this.pb, cc.tween().to(0.1, { progress: 0.4 }));
-        await CocosHelper.asyncTween(this.pb, cc.tween().to(0.1, { progress: 0.8 }));
+        await CocosHelper.asyncTween(this.pb, cc.tween().to(0.2, { progress: 0.4 }));
+        await CocosHelper.asyncTween(this.pb, cc.tween().to(0.3, { progress: 0.8 }));
         
-        CocosHelper.asyncTween(this.pb, cc.tween().to(0.1, { progress: 1 }));
+        await CocosHelper.asyncTween(this.pb, cc.tween().to(0.5, { progress: 1 }));
         ceo.uiMgr.gotoLayer(LayerConf.Hall);
     }
 
