@@ -81,7 +81,7 @@ assets
 // 然后在AssetConfig里面配置对应的信息，再调用对应的API函数；
 // 函数的第二个参数可选，为用户传递的数据，默认为空，如下：
 ceo.uiMgr.gotoLayer(LayerConf.Hall);
-ceo.uiMgr.showPopup(PopupConf.Settings);
+ceo.uiMgr.showPopup(PopupConf.Settings, data);
 ceo.uiMgr.createPanel(PanelConf.Game);
 ceo.uiMgr.createWidget(WidgetConf.Toast);
 
@@ -92,9 +92,13 @@ interface IUIConfig {
      */
     bundle: string;
     /**
-     * prefab资源名和挂载的脚本名，两者名字一样
+     * prefab资源名
      */
     name: string;
+    /**
+     * 挂载的脚本名, 可选；缺省表示和prefab资源名一致
+     */
+    script?: string;
     /**
      * 是否常驻内存，可选；true表示常驻
      */
@@ -105,4 +109,5 @@ interface IUIConfig {
 
 ### 版本更新说明
 
-2021年9月22日：1.0.0 框架雏形完成。
+2021年09月22日：1.0.0 框架雏形完成。  
+2021年11月24日：1.0.1 UI控制小优化、小功能添加等。

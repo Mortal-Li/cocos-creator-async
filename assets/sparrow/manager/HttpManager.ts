@@ -39,7 +39,7 @@ export default class HttpManager {
                 method: data ? 'POST' : 'GET',
                 data: data,
                 success: (recv) => {
-                    cc.log(url, data, recv);
+                    cc.log({url, data, recv});
                     if (option.hide) option.hide();
                     resolve(recv);
                 },

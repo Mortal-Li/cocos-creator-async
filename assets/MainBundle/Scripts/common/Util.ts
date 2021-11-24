@@ -19,7 +19,7 @@ export default class Util {
         ceo.godNode.addChild(tst);
     }
 
-    static showCommonPopup(options: {
+    static async showCommonPopup(options: {
         /**
          * 标题 可选
          */
@@ -40,9 +40,17 @@ export default class Util {
          * 取消按钮回调 可选
          */
         btnCallNO?: Function;
+        /**
+         * 是否隐藏取消按钮，默认false
+         */
+        hideNO?: boolean;
+        /**
+         * 弹窗高度，默认原始高度
+         */
+        height?: number;
         }) {
 
-        ceo.uiMgr.showPopup(PopupConf.Common, options);
+        return await ceo.uiMgr.showPopup(PopupConf.Common, options);
     }
 
     static banTouch() {

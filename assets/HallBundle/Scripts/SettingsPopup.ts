@@ -40,7 +40,7 @@ export default class SettingsPopup extends PopupBase {
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         switch (name) {
             case "close":
-                this.node.destroy();
+                this.close();
                 break;
         }
     }

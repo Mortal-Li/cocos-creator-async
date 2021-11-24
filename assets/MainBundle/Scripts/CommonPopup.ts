@@ -28,8 +28,16 @@ export default class CommonPopup extends PopupBase {
             T.titleLbl.string = d.title;
         }
         T.msgLbl.string = d.msg;
+
         if (d.btnTxtOK) {
             T.btnLbl.string = d.btnTxtOK;
+        }
+
+        if (d.hideNO) {
+            T.getUIObj("bg.close").active = false;
+        }
+        if (d.height) {
+            T.getUIObj("bg").height = d.height;
         }
     }
 
@@ -42,19 +50,24 @@ export default class CommonPopup extends PopupBase {
 
         switch (name) {
             case "close":
+                T.ret = false;
                 if (T.recvData.btnCallNO) {
                     T.recvData.btnCallNO();
                 }
                 break;
         
             case "ok":
+                T.ret = true;
                 if (T.recvData.btnCallOK) {
                     T.recvData.btnCallOK();
                 }
                 break;
         }
 
-        T.node.destroy();
+        T.close();
     }
 
+    closeAnim() {
+        this.node.destroy();
+    }
 }

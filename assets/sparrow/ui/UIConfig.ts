@@ -11,9 +11,13 @@ export interface IUIConfig {
      */
     bundle: string;
     /**
-     * prefab资源名和挂载的脚本名，两者名字一样
+     * prefab资源名
      */
     name: string;
+    /**
+     * 挂载的脚本名, 可选；缺省表示和prefab资源名一致
+     */
+    script?: string;
     /**
      * 是否常驻内存，可选；true表示常驻
      */

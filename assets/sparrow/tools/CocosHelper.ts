@@ -51,5 +51,31 @@ export default class CocosHelper {
         return cc.instantiate(prefab);
     }
 
+    static grayNode(node: cc.Node) {
+        if (node.getComponent(cc.Sprite)) {
+            node.getComponent(cc.Sprite).setMaterial(0, cc.Material.createWithBuiltin("2d-gray-sprite"));
+        } else if (node.getComponent(cc.Label)) {
+            node.getComponent(cc.Label).setMaterial(0, cc.Material.createWithBuiltin("2d-gray-sprite"));
+        }
+
+        for (let i = node.children.length - 1; i >= 0; --i ) {
+            CocosHelper.grayNode(node.children[i]);
+        }
+    }
+
+    static getGrayBg() {
+        let ttx = new cc.Texture2D();
+        ttx.initWithData(new Uint8Array([0, 0, 0]), cc.Texture2D.PixelFormat.RGB888, 1, 1);
+
+        let sprFrm = new cc.SpriteFrame();
+        sprFrm.setTexture(ttx);
+        sprFrm.setRect(cc.rect(0, 0, cc.winSize.width, cc.winSize.height));
+
+        let grayBg = new cc.Node();
+        grayBg.opacity = 200;
+        grayBg.addComponent(cc.Sprite).spriteFrame = sprFrm;
+
+        return grayBg;
+    }
 }
 

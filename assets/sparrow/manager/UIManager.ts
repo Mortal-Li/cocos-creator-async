@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 管理所有UI
  * 
  * @author Mortal-Li
@@ -30,11 +30,12 @@ export default class UIManager {
             let layer = ceo.godNode.getChildByName(conf.name);
             if (layer) {
                 layer.active = true;
-                let scpt: LayerBase = layer.getComponent(conf.name);
+                let scptName = conf.script ? conf.script : conf.name;
+                let scpt: LayerBase = layer.getComponent(scptName);
                 scpt.recvData = data;
                 scpt.refresh();
-                T.exchangeLayer(conf);
                 cc.log("show Layer", conf.name);
+                T.exchangeLayer(conf);
                 return ;
             }
         }
@@ -43,7 +44,8 @@ export default class UIManager {
         let prefab = await CocosHelper.asyncLoadPrefab(bundle, LAYER_PATH + conf.name);
         
         let layer = cc.instantiate(prefab);
-        let scpt: LayerBase = layer.getComponent(conf.name);
+        let scptName = conf.script ? conf.script : conf.name;
+        let scpt: LayerBase = layer.getComponent(scptName);
         scpt.recvData = data;
         
         layer.parent = ceo.godNode;
@@ -94,13 +96,23 @@ export default class UIManager {
     /**
      * 可返回弹窗界面中用户设置的数据
      */
-     async showPopup(conf: IUIConfig, data?: any) {
-        let popup = await CocosHelper.createPrefabs(POPUP_PATH + conf.name, conf.bundle);
-        popup.zIndex = 99;
-        let scpt: PopupBase = popup.getComponent(conf.name);
-        scpt.recvData = data;
+    async showPopup(conf: IUIConfig, data?: any) {
+        let zIdx = 99;
+        let p = ceo.godNode.getChildByName(this._curLayerConf.name);
 
-        popup.parent = ceo.godNode.getChildByName(this._curLayerConf.name);
+        let grayBg = CocosHelper.getGrayBg();
+        grayBg.name = "gray" + conf.name;
+        grayBg.zIndex = zIdx;
+        grayBg.addComponent(cc.BlockInputEvents);
+        grayBg.parent = p;
+
+        let popup = await CocosHelper.createPrefabs(POPUP_PATH + conf.name, conf.bundle);
+        popup.zIndex = zIdx;
+        let scptName = conf.script ? conf.script : conf.name;
+        let scpt: PopupBase = popup.getComponent(scptName);
+        scpt.recvData = data;
+        popup.parent = p;
+        scpt.showAnim();
         cc.log("show Popup", conf.name);
 
         return await new Promise<any>((resolve, reject) => {
@@ -108,11 +120,28 @@ export default class UIManager {
         });
     }
 
+    removePopup(name: string) {
+        let grayBg = ceo.godNode.getChildByName(this._curLayerConf.name).getChildByName("gray" + name);
+        grayBg.destroy();
+        cc.log("close Popup", name);
+    }
+
+    getPopup(popupConf: IUIConfig, layerConf: IUIConfig = null) {
+        if (!layerConf) layerConf = this._curLayerConf;
+        
+        let layer = ceo.godNode.getChildByName(layerConf.name);
+        if (layer) {
+            return layer.getChildByName(popupConf.name);
+        }
+
+        return null;
+    }
 
     // ********************* Panel *********************
     async createPanel(conf: IUIConfig, data?: any) {
         let panel = await CocosHelper.createPrefabs(PANEL_PATH + conf.name, conf.bundle);
-        let scpt: UIBase = panel.getComponent(conf.name);
+        let scptName = conf.script ? conf.script : conf.name;
+        let scpt: UIBase = panel.getComponent(scptName);
         scpt.recvData = data;
         return panel;
     }
