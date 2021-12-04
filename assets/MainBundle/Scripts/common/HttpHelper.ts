@@ -34,7 +34,7 @@ interface ReqOptionInterface {
 
 class HttpHelper {
 
-    req(router: string, data: any = {}, option?: ReqOptionInterface) {
+    async req(router: string, data: any = {}, option?: ReqOptionInterface) {
 
         data["_timestamp"] = Date.now().toString();
         if (GameData.id) {
@@ -57,7 +57,7 @@ class HttpHelper {
             option = defaultOption;
         }
         
-        return this._req(GAME_URL + router, data, option);
+        return await this._req(GAME_URL + router, data, option);
     }
 
     private _req(url: string, data: any, option: ReqOptionInterface) {
@@ -80,7 +80,7 @@ class HttpHelper {
                         title: TxtConst.NetTipTitle,
                         msg: TxtConst.NetTipMsg,
                         btnCallOK: () => {
-                            this._req(url, data, option);
+                            this._req(url, data, option).then(resolve).catch(reject);
                         },
                         btnTxtOK: TxtConst.Retry,
                         btnCallNO: () => {
