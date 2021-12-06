@@ -44,6 +44,10 @@ export default class TestPanel extends UIBase {
                     }
                 });
                 break;
+
+            case "table":
+                ceo.uiMgr.showPopup(PopupConf.TableView);
+                break;
         }
     }
 }

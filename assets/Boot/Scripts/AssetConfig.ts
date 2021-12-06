@@ -43,6 +43,11 @@
          bundle: BundleConf.Hall,
          name: "SettingsPopup",
      },
+
+     TableView: <IUIConfig> {
+         bundle: BundleConf.Hall,
+         name: "TableViewPopup",
+     },
  
      //********** GameA **********/
      GameAHelperPopup: <IUIConfig> {

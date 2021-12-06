@@ -67,7 +67,4 @@ export default class CommonPopup extends PopupBase {
         T.close();
     }
 
-    closeAnim() {
-        this.node.destroy();
-    }
 }
