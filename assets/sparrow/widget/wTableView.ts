@@ -29,7 +29,7 @@ export default class wTableView extends cc.Component {
     private cellNum = 0;
     private isVertical = true;
 
-	onLoad() {
+    onLoad() {
         let T = this;
 
         if (!T.scv.vertical && !T.scv.horizontal ||
@@ -43,7 +43,7 @@ export default class wTableView extends cc.Component {
 
         T.node.on("scroll-began", T.onScrollBegan, T);
         T.node.on("scrolling", T.onScrolling, T);
-	}
+    }
 
     /**
      * 当数据准备好后，调用此方法刷新数据以更新UI
@@ -158,8 +158,11 @@ export default class wTableView extends cc.Component {
     _onScroll(isPositive: boolean, dis: number, pn: string) {
         let T = this;
 
+        let tvLen = T.node[pn];
+        let cellLen = T.cellNode[pn];
+        
         if (isPositive) {
-            let headHideNum = Math.floor(dis / T.cellNode[pn]);
+            let headHideNum = Math.floor(dis / cellLen);
             if (headHideNum > T.headHideNum) {
                 for (let i = T.headHideNum; i < headHideNum; ++i) {
                     let delCell = T.scv.content.getChildByName(String(i));
@@ -168,13 +171,13 @@ export default class wTableView extends cc.Component {
                 T.headHideNum = headHideNum;
             }
 
-            let nums = Math.ceil((dis + T.node[pn]) / T.cellNode[pn]);
+            let nums = Math.ceil((dis + tvLen) / cellLen);
             for (let i = T.cellNum - T.tailHideNum; i < nums; ++i) {
                 T._checkCellWithIdx(i);
             }
             T.tailHideNum = T.cellNum - nums;
         } else {
-            let tailHideNum = T.cellNum - Math.ceil((dis + T.node[pn]) / T.cellNode[pn]);
+            let tailHideNum = T.cellNum - Math.ceil((dis + tvLen) / cellLen);
             if (tailHideNum > T.tailHideNum) {
                 for (let i = T.tailHideNum; i < tailHideNum; ++i) {
                     let delCell = T.scv.content.getChildByName(String(T.cellNum - i - 1));
@@ -183,7 +186,7 @@ export default class wTableView extends cc.Component {
                 T.tailHideNum = tailHideNum;
             }
 
-            let nums = Math.floor(dis / T.cellNode[pn]);
+            let nums = Math.floor(dis / cellLen);
             for (let i = T.headHideNum - 1; i >= nums; --i) {
                 T._checkCellWithIdx(i);
             }
