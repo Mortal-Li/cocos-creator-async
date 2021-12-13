@@ -35,7 +35,7 @@ assets
 │   │   ├───AssetConfig.ts -------> 记录不同预制体的配置脚本
 │   └───Stage.fire ---------------> 主场景
 ├───Games ------------------------> 不同的子游戏或子玩法
-│   ├───GameABundle --------------> GameA Bundle 优先级-1
+│   ├───GameABundle --------------> GameA Bundle 优先级 1
 │   │   ├───Prefabs
 │   │   │   ├───Layer ------------> Layer预制体
 │   │   │   ├───Panel ------------> Panel预制体
@@ -43,7 +43,7 @@ assets
 │   │   │   └───Widget -----------> Widget预制体
 │   │   ├───Scripts --------------> GameA 相关脚本
 │   │   └───Textures -------------> GameA 相关资源
-│   └───GameBBundle --------------> GameB Bundle 优先级-1
+│   └───GameBBundle --------------> GameB Bundle 优先级 1
 │       ├───Prefabs
 │       │   ├───Layer
 │       │   ├───Panel
@@ -51,7 +51,7 @@ assets
 │       │   └───Widget
 │       ├───Scripts
 │       └───Textures
-├───HallBundle -------------------> 大厅 bundle 优先级-3
+├───HallBundle -------------------> 大厅 bundle 优先级 3
 │   ├───Prefabs
 │   │   ├───Layer
 │   │   ├───Panel
@@ -59,7 +59,7 @@ assets
 │   │   └───Widget
 │   ├───Scripts
 │   └───Textures
-├───MainBundle -------------------> 主要 bundle 优先级-5，主要是一些通用的模块和资源
+├───MainBundle -------------------> 主要 bundle 优先级 5，主要是一些通用的模块和资源
 │   ├───Prefabs
 │   │   ├───Layer
 │   │   ├───Panel
