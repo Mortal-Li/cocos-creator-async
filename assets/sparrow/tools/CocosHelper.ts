@@ -40,6 +40,14 @@ export default class CocosHelper {
             });
         });
     }
+
+    static asyncLoadSpriteFrame(pathStr: string, bundle: cc.AssetManager.Bundle) {
+        return new Promise<cc.SpriteFrame>((resolve, reject) => {
+            bundle.load(pathStr, cc.SpriteFrame, (err: Error, frame: cc.SpriteFrame) => {
+                err ? reject(err) : resolve(frame);
+            });
+        });
+    }
     
     static async createPrefabs(prefabPath: string, bundleName?: string) {
         let bundle = cc.assetManager.getBundle(bundleName ? bundleName : ceo.uiMgr.getCurBundleName());

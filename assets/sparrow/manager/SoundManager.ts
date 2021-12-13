@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 
  * @author Mortal-Li
  * @created 2021年9月2日
@@ -60,19 +60,25 @@ export default class SoundManager {
     }
 
     playEffect(effectName: string, loop: boolean = false) {
-        let T = this;
-
-        const bundle = cc.assetManager.getBundle(T._bundle);
-        if (!bundle) return;
-
-        bundle.load(T._path + effectName, (err, audio: cc.AudioClip) => {
-            if (err) {
-                cc.log(err);
+        return new Promise<any>((resolve, reject) => {
+            const bundle = cc.assetManager.getBundle(this._bundle);
+            if (!bundle) {
+                reject();
                 return;
             }
 
-            cc.audioEngine.playEffect(audio, loop);
+            bundle.load(this._path + effectName, (err, audio: cc.AudioClip) => {
+                if (err) {
+                    cc.log(err);
+                    reject();
+                    return;
+                }
+
+                let id = cc.audioEngine.playEffect(audio, loop);
+                resolve(id);
+            });
         });
+        
     }
 
     stopAll() {
