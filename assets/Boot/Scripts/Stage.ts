@@ -18,3 +18,5 @@ export default class Stage extends cc.Component {
     }
 
 }
+
+cc.log("Welcome~");

@@ -4,10 +4,12 @@
  * @created 2021年9月18日
  */
 
+import UIBase from "../../sparrow/ui/UIBase";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class Toast extends cc.Component {
+export default class Toast extends UIBase {
     
     @property(cc.Label)
     private cntLabel: cc.Label = null;

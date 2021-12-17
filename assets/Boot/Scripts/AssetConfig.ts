@@ -36,6 +36,7 @@
      Common: <IUIConfig> {
          bundle: BundleConf.Main,
          name: "CommonPopup",
+         stay: true
      },
  
      //********** Hall **********/
@@ -73,6 +74,7 @@
 export const WidgetConf = {
     Toast: <IUIConfig> {
         bundle: BundleConf.Main,
-        name: "Toast"
+        name: "Toast",
+        stay: true
     }
 }

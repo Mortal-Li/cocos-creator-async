@@ -48,15 +48,18 @@ export default class CocosHelper {
             });
         });
     }
-    
-    static async createPrefabs(prefabPath: string, bundleName?: string) {
-        let bundle = cc.assetManager.getBundle(bundleName ? bundleName : ceo.uiMgr.getCurBundleName());
+
+    static async getPrefab(bundleName: string, pathStr: string) {
+        let bundle = cc.assetManager.getBundle(bundleName);
         if (!bundle) {
-            cc.warn("Bundle Miss!");
-            return ;
+            cc.log("load bundle", bundleName);
+            bundle = await CocosHelper.asyncLoadBundle(bundleName);
         }
-        const prefab = await CocosHelper.asyncLoadPrefab(bundle, prefabPath);
-        return cc.instantiate(prefab);
+
+        let prefab = await CocosHelper.asyncLoadPrefab(bundle, pathStr);
+        prefab.addRef();
+
+        return prefab;
     }
 
     static grayNode(node: cc.Node) {

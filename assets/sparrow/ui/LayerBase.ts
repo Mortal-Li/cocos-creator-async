@@ -12,8 +12,8 @@ const {ccclass, property} = cc._decorator;
 export default class LayerBase extends UIBase {
     
     /**
-     * 刷新当前界面 (常驻内存layer使用)
+     * 刷新当前界面 (stay为true时调用)
      */
-     refresh() {}
+    refresh() {}
 
 }

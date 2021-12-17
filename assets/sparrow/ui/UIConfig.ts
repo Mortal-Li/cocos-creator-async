@@ -19,7 +19,9 @@ export interface IUIConfig {
      */
     script?: string;
     /**
-     * 是否常驻内存，可选；true表示常驻
+     * 是否常驻内存或保留缓存，可选；默认false
+     * 对于layer类型，如果为true，切换layer时，不会remove当前layer结点和引用的资源；
+     * 对于其他类型，如果为true，如Popup，表示会remove当前结点，但是不会decRef引用的资源；
      */
     stay?: boolean;
 }

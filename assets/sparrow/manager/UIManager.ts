@@ -23,52 +23,52 @@ export default class UIManager {
         return this._curLayerConf.bundle;
     }
 
-    async gotoLayer(conf: IUIConfig, data?: any) {
+    async gotoLayer(newConf: IUIConfig, data?: any) {
         let T = this;
 
-        if (conf.stay) {
-            let layer = ceo.godNode.getChildByName(conf.name);
+        if (newConf.stay) {
+            let layer = ceo.godNode.getChildByName(newConf.name);
             if (layer) {
                 layer.active = true;
-                let scptName = conf.script ? conf.script : conf.name;
+                let scptName = newConf.script ? newConf.script : newConf.name;
                 let scpt: LayerBase = layer.getComponent(scptName);
                 scpt.recvData = data;
                 scpt.refresh();
-                cc.log("show Layer", conf.name);
-                T.exchangeLayer(conf);
+                cc.log("show Layer", newConf.name);
+                T.exchangeLayer(newConf);
                 return ;
             }
         }
 
-        let bundle = await T.getBundle(conf.bundle);
-        let prefab = await CocosHelper.asyncLoadPrefab(bundle, LAYER_PATH + conf.name);
-        
+        let prefab = await CocosHelper.getPrefab(newConf.bundle, LAYER_PATH + newConf.name);
         let layer = cc.instantiate(prefab);
-        let scptName = conf.script ? conf.script : conf.name;
+        let scptName = newConf.script ? newConf.script : newConf.name;
         let scpt: LayerBase = layer.getComponent(scptName);
+        scpt.pfb = newConf.stay ? null : prefab;
         scpt.recvData = data;
         
         layer.parent = ceo.godNode;
-        cc.log("create Layer", conf.name);
+        cc.log("create Layer", newConf.name);
 
-        T.exchangeLayer(conf);
+        T.exchangeLayer(newConf);
     }
 
-    private exchangeLayer(conf: IUIConfig) {
+    private exchangeLayer(newConf: IUIConfig) {
         let T = this;
 
-        if (T._curLayerConf) {
-            let curLayer = ceo.godNode.getChildByName(T._curLayerConf.name);
-            if (T._curLayerConf.stay) {
+        let curConf = T._curLayerConf;
+        if (curConf) {
+            let curLayer = ceo.godNode.getChildByName(curConf.name);
+            if (curConf.stay) {
                 curLayer.active = false;
-                cc.log("hide Layer", T._curLayerConf.name);
+                cc.log("hide Layer", curConf.name);
             } else {
                 curLayer.destroy();
-                cc.log("destroy Layer", T._curLayerConf.name);
+                cc.log("destroy Layer", curConf.name);
             }
         }
 
-        T._curLayerConf = conf;
+        T._curLayerConf = newConf;
     }
 
     async preLoadLayer(conf: IUIConfig, onCompleted?: (error?: Error) => void) {
@@ -97,8 +97,10 @@ export default class UIManager {
      * 可返回弹窗界面中用户设置的数据
      */
     async showPopup(conf: IUIConfig, data?: any) {
+        let T = this;
+
         let zIdx = 99;
-        let p = ceo.godNode.getChildByName(this._curLayerConf.name);
+        let p = ceo.godNode.getChildByName(T._curLayerConf.name);
 
         let grayBg = CocosHelper.getGrayBg();
         grayBg.name = "gray" + conf.name;
@@ -106,10 +108,12 @@ export default class UIManager {
         grayBg.addComponent(cc.BlockInputEvents);
         grayBg.parent = p;
 
-        let popup = await CocosHelper.createPrefabs(POPUP_PATH + conf.name, conf.bundle);
+        let prefab = await CocosHelper.getPrefab(conf.bundle, POPUP_PATH + conf.name);
+        let popup = cc.instantiate(prefab);
         popup.zIndex = zIdx;
         let scptName = conf.script ? conf.script : conf.name;
         let scpt: PopupBase = popup.getComponent(scptName);
+        scpt.pfb = conf.stay ? null : prefab;
         scpt.recvData = data;
         popup.parent = p;
         scpt.showAnim();
@@ -139,9 +143,11 @@ export default class UIManager {
 
     // ********************* Panel *********************
     async createPanel(conf: IUIConfig, data?: any) {
-        let panel = await CocosHelper.createPrefabs(PANEL_PATH + conf.name, conf.bundle);
+        let prefab = await CocosHelper.getPrefab(conf.bundle, PANEL_PATH + conf.name);
+        let panel = cc.instantiate(prefab);
         let scptName = conf.script ? conf.script : conf.name;
         let scpt: UIBase = panel.getComponent(scptName);
+        scpt.pfb = conf.stay ? null : prefab;
         scpt.recvData = data;
         return panel;
     }
@@ -149,6 +155,11 @@ export default class UIManager {
 
     // ********************* Widget *********************
     async createWidget(conf: IUIConfig) {
-        return await CocosHelper.createPrefabs(WIDGET_PATH + conf.name, conf.bundle);
+        let prefab = await CocosHelper.getPrefab(conf.bundle, WIDGET_PATH + conf.name);
+        let wgt = cc.instantiate(prefab);
+        let scptName = conf.script ? conf.script : conf.name;
+        let scpt: UIBase = wgt.getComponent(scptName);
+        scpt.pfb = conf.stay ? null : prefab;
+        return wgt;
     }
 }
