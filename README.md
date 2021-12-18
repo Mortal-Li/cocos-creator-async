@@ -80,9 +80,12 @@ assets
 ```typescript
 // 创建四种类型的界面：先在编辑器创建对应的预制体，挂载对应的脚本，该脚本继承对应的基类；
 // 然后在AssetConfig里面配置对应的信息，再调用对应的API函数；
-// 函数的第二个参数可选，为用户传递的数据，默认为空，如下：
-ceo.uiMgr.gotoLayer(LayerConf.Hall);
-ceo.uiMgr.showPopup(PopupConf.Settings, data);
+// 函数的第二个参数可选，为用户传递的数据，默认为空，showPopup可返回用户设置的任意数据，如下：
+ceo.uiMgr.gotoLayer(LayerConf.Hall, data);
+
+ceo.uiMgr.showPopup(PopupConf.Settings);
+let data = await ceo.uiMgr.showPopup(PopupConf.Settings, data);
+
 ceo.uiMgr.createPanel(PanelConf.Game);
 ceo.uiMgr.createWidget(WidgetConf.Toast);
 
@@ -113,4 +116,5 @@ interface IUIConfig {
 ### 版本更新说明
 
 2021年09月22日：1.0.0 框架雏形完成。  
-2021年11月24日：1.0.1 UI控制小优化、小功能添加等。
+2021年11月24日：1.0.1 UI控制小优化、小功能添加等。  
+2021年12月18日：1.1.0 添加TableView、优化动态加载资源内存占用等。
