@@ -15,12 +15,12 @@ import { IUIConfig, LAYER_PATH, PANEL_PATH, POPUP_PATH, WIDGET_PATH } from "../u
 
 
 export default class UIManager {
-    
+
     // ********************* Layer *********************
     private _curLayerConf : IUIConfig;
 
-    getCurBundleName() {
-        return this._curLayerConf.bundle;
+    getCurLayerConf() {
+        return this._curLayerConf;
     }
 
     async gotoLayer(newConf: IUIConfig, data?: any) {
@@ -40,13 +40,7 @@ export default class UIManager {
             }
         }
 
-        let prefab = await CocosHelper.getPrefab(newConf.bundle, LAYER_PATH + newConf.name);
-        let layer = cc.instantiate(prefab);
-        let scptName = newConf.script ? newConf.script : newConf.name;
-        let scpt: LayerBase = layer.getComponent(scptName);
-        scpt.pfb = newConf.stay ? null : prefab;
-        scpt.recvData = data;
-        
+        let layer = await T._initUIBase(newConf, LAYER_PATH, data);
         layer.parent = ceo.godNode;
         cc.log("create Layer", newConf.name);
 
@@ -71,26 +65,18 @@ export default class UIManager {
         T._curLayerConf = newConf;
     }
 
-    async preLoadLayer(conf: IUIConfig, onCompleted?: (error?: Error) => void) {
-        let T = this;
-        
-        let bundle = await T.getBundle(conf.bundle);
-        bundle.preload(LAYER_PATH + conf.name, cc.Prefab, (err: Error)=>{
+    async preLoadLayer(conf: IUIConfig, onCompleted?: (error?: Error) => void, onProgress?: (finish: number, total: number) => void) {
+        let bundle = await CocosHelper.getBundle(conf.bundle);
+        bundle.preload(LAYER_PATH + conf.name, cc.Prefab, (cur: number, all: number, _ignore) => {
+            if (onProgress) {
+                onProgress(cur, all);
+            }
+        }, (err: Error, _ignores) => {
             if (onCompleted) {
                 onCompleted(err);
             }
         });
     }
-
-    private async getBundle(bundleName: string) {
-        let bundle = cc.assetManager.getBundle(bundleName);
-        if (!bundle) {
-            cc.log("load bundle", bundleName);
-            return await CocosHelper.asyncLoadBundle(bundleName);
-        }
-        return bundle;
-    }
-
 
     // ********************* Popup *********************
     /**
@@ -108,13 +94,10 @@ export default class UIManager {
         grayBg.addComponent(cc.BlockInputEvents);
         grayBg.parent = p;
 
-        let prefab = await CocosHelper.getPrefab(conf.bundle, POPUP_PATH + conf.name);
-        let popup = cc.instantiate(prefab);
+        let popup = await T._initUIBase(conf, POPUP_PATH, data);
         popup.zIndex = zIdx;
         let scptName = conf.script ? conf.script : conf.name;
         let scpt: PopupBase = popup.getComponent(scptName);
-        scpt.pfb = conf.stay ? null : prefab;
-        scpt.recvData = data;
         popup.parent = p;
         scpt.showAnim();
         cc.log("show Popup", conf.name);
@@ -143,23 +126,28 @@ export default class UIManager {
 
     // ********************* Panel *********************
     async createPanel(conf: IUIConfig, data?: any) {
-        let prefab = await CocosHelper.getPrefab(conf.bundle, PANEL_PATH + conf.name);
-        let panel = cc.instantiate(prefab);
-        let scptName = conf.script ? conf.script : conf.name;
-        let scpt: UIBase = panel.getComponent(scptName);
-        scpt.pfb = conf.stay ? null : prefab;
-        scpt.recvData = data;
-        return panel;
+        return await this._initUIBase(conf, PANEL_PATH, data);
     }
 
-
     // ********************* Widget *********************
-    async createWidget(conf: IUIConfig) {
-        let prefab = await CocosHelper.getPrefab(conf.bundle, WIDGET_PATH + conf.name);
-        let wgt = cc.instantiate(prefab);
+    async createWidget(conf: IUIConfig, data?: any) {
+        return await this._initUIBase(conf, WIDGET_PATH, data);
+    }
+
+    // ********************* Common ********************* 
+    private async _initUIBase(conf: IUIConfig, prefixPath: string, data?: any) {
+        let bundle = await CocosHelper.getBundle(conf.bundle);
+        let prefab = await CocosHelper.asyncLoadPrefab(bundle, prefixPath + conf.name);
+        let node = cc.instantiate(prefab);
         let scptName = conf.script ? conf.script : conf.name;
-        let scpt: UIBase = wgt.getComponent(scptName);
-        scpt.pfb = conf.stay ? null : prefab;
-        return wgt;
+        let scpt: UIBase = node.getComponent(scptName);
+        scpt.recvData = data;
+        if (conf.stay) {
+            if (prefab.refCount == 0) prefab.addRef();
+        } else {
+            prefab.addRef();
+            scpt.refAssets.push(prefab);
+        }
+        return node;
     }
 }

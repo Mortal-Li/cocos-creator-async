@@ -12,9 +12,9 @@ const {ccclass, property} = cc._decorator;
 export default class UIBase extends CompBase {
 
     /**
-     * 所在的prefab
+     * 动态加载的资源
      */
-    pfb: cc.Prefab = null;
+    refAssets: cc.Asset[] = [];
 
     /**
      * 传递的数据
@@ -26,6 +26,9 @@ export default class UIBase extends CompBase {
     }
 
     onDestroy() {
-        if (this.pfb) this.pfb.decRef();
+        this.refAssets.forEach((ast, i)=>{
+            ast.decRef();
+        });
+        this.refAssets = null;
     }
 }

@@ -41,7 +41,7 @@ export default class PopupBase extends UIBase {
     }
 
     /**
-     * 关闭弹窗的动画，如果不需要或另外实现则子类中覆盖
+     * 关闭弹窗的动画，如果不需要或另外实现则子类中覆盖并调用destroy
      */
     closeAnim() {
         cc.tween(this.node).to(0.2, { scale: 0 }, cc.easeBackIn()).call(()=>{ this.node.destroy(); }).start();

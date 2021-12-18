@@ -4,11 +4,7 @@
  * @created 2021年9月2日
  */
 
-import ceo from "../ceo";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 export default class CocosHelper {
     
     static asynSleep = function(t: number) {
@@ -49,17 +45,13 @@ export default class CocosHelper {
         });
     }
 
-    static async getPrefab(bundleName: string, pathStr: string) {
+    static async getBundle(bundleName: string, needLoad: boolean = true) {
         let bundle = cc.assetManager.getBundle(bundleName);
-        if (!bundle) {
+        if (!bundle && needLoad) {
             cc.log("load bundle", bundleName);
-            bundle = await CocosHelper.asyncLoadBundle(bundleName);
+            return await CocosHelper.asyncLoadBundle(bundleName);
         }
-
-        let prefab = await CocosHelper.asyncLoadPrefab(bundle, pathStr);
-        prefab.addRef();
-
-        return prefab;
+        return bundle;
     }
 
     static grayNode(node: cc.Node) {

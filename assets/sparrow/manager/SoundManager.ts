@@ -60,7 +60,7 @@ export default class SoundManager {
     }
 
     playEffect(effectName: string, loop: boolean = false) {
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<number>((resolve, reject) => {
             const bundle = cc.assetManager.getBundle(this._bundle);
             if (!bundle) {
                 reject();
