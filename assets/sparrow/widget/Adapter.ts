@@ -1,5 +1,5 @@
-/**
- * 场景适配器
+﻿/**
+ * 场景适配器，挂载在场景下即可
  * @author Mortal-Li
  * @created 2021年9月2日
  */
@@ -28,12 +28,12 @@ export default class Adapter extends cc.Component {
         let fs = cc.view.getFrameSize();
 
         if (fs.height / fs.width < dr.height / dr.width) {
-            cvs.fitWidth = false
-            cvs.fitHeight = true
+            cvs.fitWidth = false;
+            cvs.fitHeight = true;
         }
         else {
-            cvs.fitWidth = true
-            cvs.fitHeight = false
+            cvs.fitWidth = true;
+            cvs.fitHeight = false;
         }
     }
 }

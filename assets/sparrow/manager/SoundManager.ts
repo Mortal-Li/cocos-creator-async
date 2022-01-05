@@ -17,7 +17,7 @@ export default class SoundManager {
         T._path = pathStr;
     }
     
-    playMusic(musicName: string, loop: boolean = true) {
+    playMusic(musicName: string, loop: boolean = true, endCall: Function = null) {
         let T = this;
 
         const bundle = cc.assetManager.getBundle(T._bundle);
@@ -33,6 +33,9 @@ export default class SoundManager {
             let id = cc.audioEngine.playMusic(audio, loop);
             if (id != null && id != undefined) {
                 T._curBgMusicName = musicName;
+                if (endCall) {
+                    cc.audioEngine.setFinishCallback(id, endCall);
+                }
             }
         });
     }

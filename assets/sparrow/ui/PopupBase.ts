@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 弹窗基类
  * @author Mortal-Li
  * @created 2021年9月2日
@@ -37,7 +37,9 @@ export default class PopupBase extends UIBase {
      */
     showAnim() {
         this.node.scale = 0;
-        cc.tween(this.node).to(0.2, { scale: 1 }, cc.easeBackOut()).start();
+        cc.tween(this.node)
+            .set({ width: cc.winSize.width, height: cc.winSize.height })    // bug fix, scale may cause cc.Widget wrong
+            .to(0.2, { scale: 1 }, cc.easeBackOut()).start();
     }
 
     /**

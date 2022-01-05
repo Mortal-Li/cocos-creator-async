@@ -109,7 +109,7 @@ export default class UIManager {
 
     removePopup(name: string) {
         let grayBg = ceo.godNode.getChildByName(this._curLayerConf.name).getChildByName("gray" + name);
-        grayBg.destroy();
+        grayBg?.destroy();
         cc.log("close Popup", name);
     }
 
@@ -141,6 +141,7 @@ export default class UIManager {
         let node = cc.instantiate(prefab);
         let scptName = conf.script ? conf.script : conf.name;
         let scpt: UIBase = node.getComponent(scptName);
+        if (!scpt) scpt = node.addComponent(UIBase);
         scpt.recvData = data;
         if (conf.stay) {
             if (prefab.refCount == 0) prefab.addRef();
