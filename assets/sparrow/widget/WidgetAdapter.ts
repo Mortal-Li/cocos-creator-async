@@ -4,28 +4,19 @@
  * @created 2021年12月29日
  */
 
-const {ccclass, property} = cc._decorator;
+ const {ccclass, property} = cc._decorator;
 
-const WidgetDir = cc.Enum({
-    None: 0,
-    Top: 1,
-    Bottom: 2,
-    Left: 3,
-    Right: 4
-});
-
-@ccclass
-export default class WidgetAdapter extends cc.Component {
-    
-    @property({
-        type: WidgetDir,
-        tooltip: "需要适配的方向"
-    })
-    dir = WidgetDir.None;
-
-    private preValue = 0;
+ @ccclass
+ export default class WidgetAdapter extends cc.Component {
+ 
+    private originValue = {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+    };
     private wgt: cc.Widget = null;
-
+ 
     onLoad() {
         let T = this;
 
@@ -36,21 +27,24 @@ export default class WidgetAdapter extends cc.Component {
         }
         T.wgt = wgt;
 
-        let dir = T.dir;
-        if (dir == WidgetDir.Top) T.preValue = wgt.top;
-        else if (dir == WidgetDir.Bottom) T.preValue = wgt.bottom;
-        else if (dir == WidgetDir.Left) T.preValue = wgt.left;
-        else if (dir == WidgetDir.Right) T.preValue = wgt.right;
+        T.originValue.top = wgt.top;
+        T.originValue.bottom = wgt.bottom;
+        T.originValue.left = wgt.left;
+        T.originValue.right = wgt.right;
 
-        T.onResize();
-        T.node.on(cc.Node.EventType.SIZE_CHANGED, T.onResize, T);
+        T.refresh = T.refresh.bind(T);
+        T.refresh();
     }
 
-    onDestroy() {
-        this.node.off(cc.Node.EventType.SIZE_CHANGED, this.onResize, this);
+    onEnable() {
+        window.addEventListener("orientationchange", this.refresh);
     }
 
-    onResize() {
+    onDisable() {
+        window.removeEventListener("orientationchange", this.refresh);
+    }
+
+    refresh() {
         let T = this;
 
         let safeArea = cc.sys.getSafeAreaRect();
@@ -58,12 +52,12 @@ export default class WidgetAdapter extends cc.Component {
         let bottom = safeArea.y;
         let left = safeArea.x;
         let right = cc.winSize.width - safeArea.width - safeArea.x;
+        let wgt = T.wgt;
+        if (wgt.isAlignTop) T.wgt.top = T.originValue.top + top;
+        if (wgt.isAlignBottom) T.wgt.bottom = T.originValue.bottom + bottom;
+        if (wgt.isAlignLeft) T.wgt.left = T.originValue.left + left;
+        if (wgt.isAlignRight) T.wgt.right = T.originValue.right + right;
 
-        let dir = T.dir;
-        if (dir == WidgetDir.Top) T.wgt.top = top < 1 ? T.preValue : (T.preValue + top);
-        else if (dir == WidgetDir.Bottom) T.wgt.bottom = bottom < 1 ? T.preValue : (T.preValue + bottom);
-        else if (dir == WidgetDir.Left) T.preValue = left < 1 ? T.preValue : (T.preValue + left);
-        else if (dir == WidgetDir.Right) T.preValue = right < 1 ? T.preValue : (T.preValue + right);
     }
-
+ 
 }

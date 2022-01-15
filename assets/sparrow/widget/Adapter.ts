@@ -10,30 +10,26 @@ const {ccclass, property} = cc._decorator;
 export default class Adapter extends cc.Component {
 
     onLoad () {
-        let T = this;
-
-        T.node.on(cc.Node.EventType.SIZE_CHANGED, T.onResize, T);
-        T.onResize();
-    }
-
-    onDestroy() {
-        let T = this;
-
-        T.node.off(cc.Node.EventType.SIZE_CHANGED, T.onResize, T);
-    }
-
-    onResize() {
         let cvs = cc.find("Canvas").getComponent(cc.Canvas);
-        let dr = cvs.designResolution;
+        cvs.fitWidth = true;
+        cvs.fitHeight = true;
+        this.refreshSize();
+    }
+
+    onEnable() {
+        this.node.on(cc.Node.EventType.SIZE_CHANGED, this.refreshSize, this);
+    }
+
+    onDisable() {
+        this.node.on(cc.Node.EventType.SIZE_CHANGED, this.refreshSize, this);
+    }
+
+    refreshSize() {
+        let dr = cc.view.getDesignResolutionSize();
         let fs = cc.view.getFrameSize();
 
-        if (fs.height / fs.width < dr.height / dr.width) {
-            cvs.fitWidth = false;
-            cvs.fitHeight = true;
-        }
-        else {
-            cvs.fitWidth = true;
-            cvs.fitHeight = false;
-        }
+        let scale = Math.max(dr.width / fs.width, dr.height / fs.height);
+        this.node.width = fs.width * scale;
+        this.node.height = fs.height * scale;
     }
 }
