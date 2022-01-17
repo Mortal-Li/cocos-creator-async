@@ -38,7 +38,7 @@ export default class PopupBase extends UIBase {
     showAnim() {
         this.node.scale = 0;
         cc.tween(this.node)
-            .set({ width: cc.winSize.width, height: cc.winSize.height })    // bug fix, scale may cause cc.Widget wrong
+            .set({ width: ceo.godNode.width, height: ceo.godNode.height })    // bug fix, scale may cause cc.Widget wrong
             .to(0.2, { scale: 1 }, cc.easeBackOut()).start();
     }
 

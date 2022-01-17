@@ -4,10 +4,10 @@
  * @created 2021年12月29日
  */
 
- const {ccclass, property} = cc._decorator;
+const {ccclass, property} = cc._decorator;
 
- @ccclass
- export default class WidgetAdapter extends cc.Component {
+@ccclass
+export default class WidgetAdapter extends cc.Component {
  
     private originValue = {
         top: 0,
@@ -47,17 +47,20 @@
     refresh() {
         let T = this;
 
+        let wgt = T.wgt;
+        if (!wgt) return;
+
         let safeArea = cc.sys.getSafeAreaRect();
-        let top = cc.winSize.height - safeArea.height - safeArea.y;
+        let visible = cc.view.getVisibleSize();
+        let top = visible.height - safeArea.height - safeArea.y;
         let bottom = safeArea.y;
         let left = safeArea.x;
-        let right = cc.winSize.width - safeArea.width - safeArea.x;
-        let wgt = T.wgt;
+        let right = visible.width - safeArea.width - safeArea.x;
+        
         if (wgt.isAlignTop) T.wgt.top = T.originValue.top + top;
         if (wgt.isAlignBottom) T.wgt.bottom = T.originValue.bottom + bottom;
         if (wgt.isAlignLeft) T.wgt.left = T.originValue.left + left;
         if (wgt.isAlignRight) T.wgt.right = T.originValue.right + right;
-
     }
  
 }

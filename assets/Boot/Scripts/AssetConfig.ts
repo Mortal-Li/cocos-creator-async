@@ -49,6 +49,11 @@
          bundle: BundleConf.Hall,
          name: "TableViewPopup",
      },
+
+     SafeAdapter: <IUIConfig> {
+         bundle: BundleConf.Hall,
+         name: "SafeAdapterPopup",
+     },
  
      //********** GameA **********/
      GameAHelperPopup: <IUIConfig> {

@@ -48,6 +48,10 @@ export default class TestPanel extends UIBase {
             case "table":
                 ceo.uiMgr.showPopup(PopupConf.TableView);
                 break;
+
+            case "adapter":
+                ceo.uiMgr.showPopup(PopupConf.SafeAdapter);
+                break;
         }
     }
 }
