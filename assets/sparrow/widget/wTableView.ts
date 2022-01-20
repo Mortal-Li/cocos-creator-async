@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 将wTableView.prefab拖拽到编辑器使用
  * @author Mortal-Li
  * @created 2021年12月5日
@@ -17,9 +17,14 @@ export default class wTableView extends cc.Component {
 
     @property({
         type: cc.Component.EventHandler,
-        tooltip: "数据更新回调"
+        tooltip: "数据更新回调-(cell:cc.Node, idx:number, custom:string)"
     })
     updateCell: cc.Component.EventHandler = new cc.Component.EventHandler();
+
+    @property({
+        tooltip: "间距"
+    })
+    private div: number = 0;
 
     private preOffset: cc.Vec2;
     private cellPool: cc.Node[] = [];
@@ -28,6 +33,8 @@ export default class wTableView extends cc.Component {
     private tailHideNum = 0;
     private cellNum = 0;
     private isVertical = true;
+
+    private cellLen = 0;
 
     onLoad() {
         let T = this;
@@ -58,11 +65,16 @@ export default class wTableView extends cc.Component {
         }
         T.cellNum = numOfCells;
 
-        if (T.isVertical) T.scv.content.height = T.cellNode.height * numOfCells;
-        else T.scv.content.width = T.cellNode.width * numOfCells;
+        if (T.isVertical) {
+            T.cellLen = T.cellNode.height + T.div;
+            T.scv.content.height = T.cellLen * numOfCells;
+        } else {
+            T.cellLen = T.cellNode.width + T.div;
+            T.scv.content.width = T.cellLen * numOfCells;
+        }
 
         T.headHideNum = 0;
-        let numOfVisibleCells = T.isVertical ? (T.scv.node.height / T.cellNode.height) : (T.scv.node.width / T.cellNode.width);
+        let numOfVisibleCells = T.isVertical ? (T.scv.content.parent.height / T.cellLen) : (T.scv.content.parent.width / T.cellLen);
         let len = Math.min(Math.ceil(numOfVisibleCells), numOfCells);
         T.tailHideNum = numOfCells - len;
 
@@ -81,7 +93,7 @@ export default class wTableView extends cc.Component {
         let T = this;
         
         if (T.updateCell.target && T.updateCell.handler) {
-            T.updateCell.emit([cell, idx]);
+            T.updateCell.emit([cell.getChildByName(T.cellNode.name), idx]);
         }
     }
 
@@ -92,8 +104,13 @@ export default class wTableView extends cc.Component {
         if (T.cellPool.length > 0) {
             cell = T.cellPool.pop();
         } else {
-            cell = cc.instantiate(T.cellNode);
-            cell.active = true;
+            cell = new cc.Node();
+            cell.setContentSize(T.cellNode.getContentSize());
+            let nd = cc.instantiate(T.cellNode);
+            nd.active = true;
+            nd.parent = cell;
+            if (T.isVertical) nd.y = T.div / 2;
+            else nd.x = -T.div / 2;
         }
         cell.parent = T.scv.content;
         return cell;
@@ -109,8 +126,8 @@ export default class wTableView extends cc.Component {
     _setCellPosWithIdx(cell: cc.Node, idx: number) {
         let T = this;
 
-        if (T.isVertical) cell.y = 0 - T.cellNode.height / 2 * (idx * 2 + 1);
-        else cell.x = T.cellNode.width / 2 * (idx * 2 + 1);
+        if (T.isVertical) cell.y = 0 - T.cellLen / 2 * (idx * 2 + 1);
+        else cell.x = T.cellLen / 2 * (idx * 2 + 1);
     }
 
     _checkCellWithIdx(idx: number) {
@@ -159,7 +176,7 @@ export default class wTableView extends cc.Component {
         let T = this;
 
         let tvLen = T.scv.node[pn];
-        let cellLen = T.cellNode[pn];
+        let cellLen = T.cellLen;
         
         if (isPositive) {
             let headHideNum = Math.floor(dis / cellLen);
