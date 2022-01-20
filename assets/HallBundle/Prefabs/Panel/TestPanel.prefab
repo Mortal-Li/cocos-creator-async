@@ -510,7 +510,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -30,
+        0,
         60,
         0,
         0,
@@ -814,7 +814,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        190,
+        250,
         60,
         0,
         0,
@@ -1422,7 +1422,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -30,
+        0,
         -60,
         0,
         0,
@@ -1705,7 +1705,7 @@
     "_N$paddingRight": 0,
     "_N$paddingTop": 0,
     "_N$paddingBottom": 0,
-    "_N$spacingX": 20,
+    "_N$spacingX": 50,
     "_N$spacingY": 20,
     "_N$verticalDirection": 1,
     "_N$horizontalDirection": 0,

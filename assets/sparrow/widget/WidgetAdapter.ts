@@ -6,14 +6,46 @@
 
 const {ccclass, property} = cc._decorator;
 
+const AdapterMode = cc.Enum({
+    Align: 0,
+    Fill: 1
+});
 @ccclass
 export default class WidgetAdapter extends cc.Component {
  
+    @property({
+        tooltip: "是否适配顶部安全区域"
+    })
+    top: boolean = false;
+
+    @property({
+        tooltip: "是否适配底部安全区域"
+    })
+    bottom: boolean = false;
+
+    @property({
+        tooltip: "是否适配左边安全区域"
+    })
+    left: boolean = false;
+
+    @property({
+        tooltip: "是否适配右边安全区域"
+    })
+    right: boolean = false;
+
+    @property({
+        type: AdapterMode,
+        tooltip: "适配模式: Align表示对齐边缘模式，支持同时多方向；Fill表示拉伸模式，只支持单方向"
+    })
+    mode = AdapterMode.Align;
+
     private originValue = {
         top: 0,
         bottom: 0,
         left: 0,
         right: 0,
+        width: 0,
+        height: 0,
     };
     private wgt: cc.Widget = null;
  
@@ -56,11 +88,37 @@ export default class WidgetAdapter extends cc.Component {
         let bottom = safeArea.y;
         let left = safeArea.x;
         let right = visible.width - safeArea.width - safeArea.x;
+
+        if (T.mode == AdapterMode.Align) {
+            if (wgt.isAlignTop && T.top) T.wgt.top = T.originValue.top + top;
+            if (wgt.isAlignBottom && T.bottom) T.wgt.bottom = T.originValue.bottom + bottom;
+            if (wgt.isAlignLeft && T.left) T.wgt.left = T.originValue.left + left;
+            if (wgt.isAlignRight && T.right) T.wgt.right = T.originValue.right + right;
+        } else {
+            if (!T.originValue.width) {
+                T.originValue.width = T.node.width;
+                T.originValue.height = T.node.height;
+            }
+            
+            if (wgt.isAlignTop && T.top) {
+                T.node.height = T.originValue.height + top;
+                T.wgt.updateAlignment();
+                T.wgt.top = T.originValue.top;
+            } else if (wgt.isAlignBottom && T.bottom) {
+                T.node.height = T.originValue.height + bottom;
+                T.wgt.updateAlignment();
+                T.wgt.bottom = T.originValue.bottom;
+            } else if (wgt.isAlignLeft && T.left) {
+                T.node.width = T.originValue.width + left;
+                T.wgt.updateAlignment();
+                T.wgt.left = T.originValue.left;
+            } else if (wgt.isAlignRight && T.right) {
+                T.node.width = T.originValue.width + right;
+                T.wgt.updateAlignment();
+                T.wgt.right = T.originValue.right;
+            }
+        }
         
-        if (wgt.isAlignTop) T.wgt.top = T.originValue.top + top;
-        if (wgt.isAlignBottom) T.wgt.bottom = T.originValue.bottom + bottom;
-        if (wgt.isAlignLeft) T.wgt.left = T.originValue.left + left;
-        if (wgt.isAlignRight) T.wgt.right = T.originValue.right + right;
     }
- 
+
 }
