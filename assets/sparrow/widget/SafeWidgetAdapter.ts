@@ -11,7 +11,7 @@ const AdapterMode = cc.Enum({
     Fill: 1
 });
 @ccclass
-export default class WidgetAdapter extends cc.Component {
+export default class SafeWidgetAdapter extends cc.Component {
  
     @property({
         tooltip: "是否适配顶部安全区域"

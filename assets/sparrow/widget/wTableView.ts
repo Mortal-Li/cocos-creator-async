@@ -62,7 +62,7 @@ export default class wTableView extends cc.Component {
         else T.scv.content.width = T.cellNode.width * numOfCells;
 
         T.headHideNum = 0;
-        let numOfVisibleCells = T.isVertical ? (T.node.height / T.cellNode.height) : (T.node.width / T.cellNode.width);
+        let numOfVisibleCells = T.isVertical ? (T.scv.node.height / T.cellNode.height) : (T.scv.node.width / T.cellNode.width);
         let len = Math.min(Math.ceil(numOfVisibleCells), numOfCells);
         T.tailHideNum = numOfCells - len;
 
@@ -158,7 +158,7 @@ export default class wTableView extends cc.Component {
     _onScroll(isPositive: boolean, dis: number, pn: string) {
         let T = this;
 
-        let tvLen = T.node[pn];
+        let tvLen = T.scv.node[pn];
         let cellLen = T.cellNode[pn];
         
         if (isPositive) {
