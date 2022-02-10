@@ -63,6 +63,12 @@ export default class wTableView extends cc.Component {
             cc.error("wrong number, must >= 0!");
             return;
         }
+
+        let preNum = T.cellNum;
+        for (let i = 0; i < preNum; ++i) {
+            T._removeCell(i);
+        }
+
         T.cellNum = numOfCells;
 
         if (T.isVertical) {
@@ -73,20 +79,80 @@ export default class wTableView extends cc.Component {
             T.scv.content.width = T.cellLen * numOfCells;
         }
 
-        T.headHideNum = 0;
-        let numOfVisibleCells = T.isVertical ? (T.scv.content.parent.height / T.cellLen) : (T.scv.content.parent.width / T.cellLen);
-        let len = Math.min(Math.ceil(numOfVisibleCells), numOfCells);
-        T.tailHideNum = numOfCells - len;
+        if (preNum == 0) {
+            let numOfVisibleCells = T.isVertical ? (T.scv.content.parent.height / T.cellLen) : (T.scv.content.parent.width / T.cellLen);
+            let len = Math.min(Math.ceil(numOfVisibleCells), numOfCells);
+            
+            T.headHideNum = 0;
+            T.tailHideNum = numOfCells - len;
+            for (let i = 0; i < len; ++i) {
+                T._setNewCell(i);
+            }
 
-        for (let i = 0; i < len; ++i) {
-            let cell = T._getCell();
-            cell.name = String(i);
-            T._updateCell(cell, i);
-            T._setCellPosWithIdx(cell, i);
+            if (T.isVertical) T.scv.scrollToTop();
+            else T.scv.scrollToLeft();
+            T.preOffset = T.scv.getScrollOffset();
+        } else {
+            T.scv.stopAutoScroll();
+            T._wrapOffset(T.preOffset);
+
+            let dis = T.isVertical ? T.preOffset.y : -T.preOffset.x;
+            let viewLen = T.isVertical ? T.scv.content.parent.height : T.scv.content.parent.width;
+            let num = Math.ceil((dis + viewLen) / T.cellLen);
+            num = Math.min(num, numOfCells);
+            T.tailHideNum = numOfCells - num;
+            T.headHideNum = Math.floor(dis / T.cellLen);
+            for (let i = T.headHideNum; i < num; ++i) {
+                T._setNewCell(i);
+            }
         }
+    }
 
-        if (T.isVertical) T.scv.scrollToTop();
-        else T.scv.scrollToLeft();
+    scrollToTop(timeInSecond?: number, attenuated?: boolean) {
+        this._forwardScroll("scrollToTop", timeInSecond, attenuated);
+    }
+
+    scrollToBottom(timeInSecond?: number, attenuated?: boolean) {
+        this._forwardScroll("scrollToBottom", timeInSecond, attenuated);
+    }
+
+    scrollToLeft(timeInSecond?: number, attenuated?: boolean) {
+        this._forwardScroll("scrollToLeft", timeInSecond, attenuated);
+    }
+
+    scrollToRight(timeInSecond?: number, attenuated?: boolean) {
+        this._forwardScroll("scrollToRight", timeInSecond, attenuated);
+    }
+
+    _forwardScroll(funcName: string, ...params: any[]) {
+        let T = this;
+        T.scv.stopAutoScroll();
+        T.scv[funcName](...params);
+        if (!params[0]) {
+            T.preOffset = T.scv.getScrollOffset();
+            T.refreshData(T.cellNum);
+        }
+    }
+
+    /**
+     * 注意，这里的offset，不管是垂直方向还是水平方向，符号都是正(+)
+     */
+    scrollToOffset(offset: cc.Vec2, timeInSecond?: number, attenuated?: boolean) {
+        let T = this;
+        T.scv.stopAutoScroll();
+        T.scv.scrollToOffset(offset, timeInSecond, attenuated);
+        if (!timeInSecond) {
+            T.preOffset = T.scv.getScrollOffset();
+            T.refreshData(T.cellNum);
+        }
+    }
+
+    isScrolling() {
+        return this.scv.isScrolling();
+    }
+
+    isAutoScrolling() {
+        return this.scv.isAutoScrolling();
     }
 
     _updateCell(cell: cc.Node, idx: number) {
@@ -116,11 +182,14 @@ export default class wTableView extends cc.Component {
         return cell;
     }
 
-    _removeCell(cell: cc.Node) {
+    _removeCell(idx: number) {
         let T = this;
 
-        cell.removeFromParent(true);
-        T.cellPool.push(cell);
+        let cell = T.scv.content.getChildByName(String(idx));
+        if (cell) {
+            cell.removeFromParent(true);
+            T.cellPool.push(cell);
+        }
     }
 
     _setCellPosWithIdx(cell: cc.Node, idx: number) {
@@ -135,10 +204,33 @@ export default class wTableView extends cc.Component {
 
         let cell = T.scv.content.getChildByName(String(idx));
         if (!cell) {
-            let newCell = T._getCell();
-            newCell.name = String(idx);
-            T._setCellPosWithIdx(newCell, idx);
-            T._updateCell(newCell, idx);
+            T._setNewCell(idx);
+        }
+    }
+
+    _setNewCell(idx: number) {
+        let T = this;
+        let cell = T._getCell();
+        cell.name = String(idx);
+        T._updateCell(cell, idx);
+        T._setCellPosWithIdx(cell, idx);
+    }
+
+    _wrapOffset(curOffset: cc.Vec2) {
+        let T = this;
+
+        if (T.isVertical) {
+            if (curOffset.y < 0) {
+                curOffset.y = 0;
+            } else if (curOffset.y > T.scv.getMaxScrollOffset().y) {
+                curOffset.y = T.scv.getMaxScrollOffset().y;
+            }
+        } else {
+            if (curOffset.x > 0) {
+                curOffset.x = 0;
+            } else if (curOffset.x < -T.scv.getMaxScrollOffset().x) {
+                curOffset.x = -T.scv.getMaxScrollOffset().x;
+            }
         }
     }
 
@@ -150,55 +242,41 @@ export default class wTableView extends cc.Component {
         let T = this;
 
         let curOffset = scv.getScrollOffset();
+        T._wrapOffset(curOffset);
 
         if (T.isVertical) {
-            if (curOffset.y < 0) {
-                curOffset.y = 0;
-            } else if (curOffset.y > scv.getMaxScrollOffset().y) {
-                curOffset.y = scv.getMaxScrollOffset().y;
-            }
-
-            T._onScroll(curOffset.y - T.preOffset.y > 0, curOffset.y, "height");
+            T._onScroll(curOffset.y - T.preOffset.y > 0, curOffset.y, T.scv.content.parent.height);
         } else {
-            if (curOffset.x > 0) {
-                curOffset.x = 0;
-            } else if (curOffset.x < -scv.getMaxScrollOffset().x) {
-                curOffset.x = -scv.getMaxScrollOffset().x;
-            }
-
-            T._onScroll(curOffset.x - T.preOffset.x < 0, -curOffset.x, "width");
+            T._onScroll(curOffset.x - T.preOffset.x < 0, -curOffset.x, T.scv.content.parent.width);
         }
 
         T.preOffset = curOffset;
     }
 
-    _onScroll(isPositive: boolean, dis: number, pn: string) {
+    _onScroll(isPositive: boolean, dis: number, viewLen: number) {
         let T = this;
 
-        let tvLen = T.scv.node[pn];
         let cellLen = T.cellLen;
         
         if (isPositive) {
             let headHideNum = Math.floor(dis / cellLen);
             if (headHideNum > T.headHideNum) {
                 for (let i = T.headHideNum; i < headHideNum; ++i) {
-                    let delCell = T.scv.content.getChildByName(String(i));
-                    if (delCell) T._removeCell(delCell);
+                    T._removeCell(i);
                 }
                 T.headHideNum = headHideNum;
             }
 
-            let nums = Math.ceil((dis + tvLen) / cellLen);
+            let nums = Math.ceil((dis + viewLen) / cellLen);
             for (let i = T.cellNum - T.tailHideNum; i < nums; ++i) {
                 T._checkCellWithIdx(i);
             }
             T.tailHideNum = T.cellNum - nums;
         } else {
-            let tailHideNum = T.cellNum - Math.ceil((dis + tvLen) / cellLen);
+            let tailHideNum = T.cellNum - Math.ceil((dis + viewLen) / cellLen);
             if (tailHideNum > T.tailHideNum) {
                 for (let i = T.tailHideNum; i < tailHideNum; ++i) {
-                    let delCell = T.scv.content.getChildByName(String(T.cellNum - i - 1));
-                    if (delCell) T._removeCell(delCell);
+                    T._removeCell(T.cellNum - i - 1);
                 }
                 T.tailHideNum = tailHideNum;
             }

@@ -18,6 +18,9 @@ export default class TableViewPopup extends PopupBase {
     @property(wTableView)
     hrzTV: wTableView = null;
 
+    numOfVtc: number = 20;
+    numOfHrz: number = 12;
+
 	onLoad() {
 	
 	}
@@ -25,8 +28,8 @@ export default class TableViewPopup extends PopupBase {
     start () {
         let T = this;
 
-        T.vtcTV.refreshData(20);
-        T.hrzTV.refreshData(12);
+        T.vtcTV.refreshData(T.numOfVtc);
+        T.hrzTV.refreshData(T.numOfHrz);
     }
 
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
@@ -35,6 +38,28 @@ export default class TableViewPopup extends PopupBase {
         switch (name) {
             case "close":
                 T.close();
+                break;
+
+            case "add5":
+                T.numOfVtc += 5;
+                T.vtcTV.refreshData(T.numOfVtc);
+                break;
+
+            case "del5":
+                T.numOfVtc -= 5;
+                T.numOfVtc = Math.max(0, T.numOfVtc);
+                T.vtcTV.refreshData(T.numOfVtc);
+                break;
+
+            case "add5h":
+                T.numOfHrz += 5;
+                T.hrzTV.refreshData(T.numOfHrz);
+                break;
+
+            case "del5h":
+                T.numOfHrz -= 5;
+                T.numOfHrz = Math.max(0, T.numOfHrz);
+                T.hrzTV.refreshData(T.numOfHrz);
                 break;
         }
     }
