@@ -4,9 +4,10 @@
  * @created 2021年9月2日
  */
 
-const {ccclass, property} = cc._decorator;
+const {ccclass, menu} = cc._decorator;
 
 @ccclass
+@menu("Adapter/Adapter")
 export default class Adapter extends cc.Component {
 
     onLoad () {

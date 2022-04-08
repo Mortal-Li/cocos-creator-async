@@ -4,13 +4,14 @@
  * @created 2021年12月29日
  */
 
-const {ccclass, property} = cc._decorator;
+const {ccclass, property, menu} = cc._decorator;
 
 const AdapterMode = cc.Enum({
     Align: 0,
     Fill: 1
 });
 @ccclass
+@menu("Adapter/SafeWidgetAdapter")
 export default class SafeWidgetAdapter extends cc.Component {
  
     @property({

@@ -1,4 +1,5 @@
 ﻿/**
+ * wTableView是对ScrollView的性能优化版
  * 将wTableView.prefab拖拽到编辑器使用
  * @author Mortal-Li
  * @created 2021年12月5日

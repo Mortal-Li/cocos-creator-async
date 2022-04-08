@@ -54,6 +54,11 @@
          bundle: BundleConf.Hall,
          name: "SafeAdapterPopup",
      },
+
+     QuadTree: <IUIConfig> {
+         bundle: BundleConf.Hall,
+         name: "QuadTreePopup",
+     },
  
      //********** GameA **********/
      GameAHelperPopup: <IUIConfig> {
