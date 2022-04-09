@@ -5,7 +5,7 @@
  */
 
 import ceo from "../../ceo";
-import { QTBounds } from "../../tools/Quadtree";
+import { QTBounds, Quadtree } from "../../tools/Quadtree";
 
 const {ccclass, property, menu} = cc._decorator;
 
@@ -16,6 +16,7 @@ export default class QCircleCollider extends cc.CircleCollider {
     cid: number = 0;
     bounds: QTBounds = null;
     objs: any[] = null;
+    qts: Quadtree[] = [];
 
     onEnable() {
         ceo.qCollisionMgr.addCollider(this);

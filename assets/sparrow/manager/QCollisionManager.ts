@@ -104,6 +104,7 @@ export default class QCollisionManager {
             //     }
             // }
 
+            collider["qts"] = [];
             let cid = collider["cid"]
             for (let i = cid - 1; i > 1; --i) {
                 let contact = this._mapI2C[cid][i];
@@ -189,7 +190,7 @@ export default class QCollisionManager {
         let cid1, cid2;
         for (i = 0, l = colliders.length; i < l; ++i) {
             let c = colliders[i];
-            let objs = this._qt.retrieve(c["bounds"]);
+            let objs = this._qt.retrieve(c);
             cid1 = c["cid"];
             for (let j = 0, l2 = objs.length; j < l2; ++j) {
                 cid2 = objs[j]["cid"];

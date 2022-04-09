@@ -5,6 +5,7 @@
  */
 
 import ceo from "../../ceo";
+import { QTBounds, Quadtree } from "../../tools/Quadtree";
 
 const {ccclass, property, menu} = cc._decorator;
 
@@ -12,6 +13,11 @@ const {ccclass, property, menu} = cc._decorator;
 @menu("QCollider/QPolygonCollider")
 export default class QPolygonCollider extends cc.PolygonCollider {
     
+    cid: number = 0;
+    bounds: QTBounds = null;
+    objs: any[] = null;
+    qts: Quadtree[] = [];
+
     onEnable() {
         ceo.qCollisionMgr.addCollider(this);
     }

@@ -127,6 +127,7 @@ export class Quadtree {
         }
 
         //otherwise, store object here
+        qtObj.qts.push(this);
         this.objects.push(qtObj);
 
         //max_objects reached
@@ -140,8 +141,7 @@ export class Quadtree {
             //add all objects to their corresponding subnode
             for (i = 0; i < this.objects.length; i++) {
                 let one = this.objects[i];
-                // let idx = one.obj.qts.indexOf(this);
-                // one.obj.qts.slice(idx, 1);
+                one.qts.slice(one.qts.indexOf(this), 1);
 
                 indexes = this.getIndex(one.bounds);
                 for (let k = 0; k < indexes.length; k++) {
@@ -157,16 +157,11 @@ export class Quadtree {
     /**
      * Return all objects that could collide with the given object
      */
-    retrieve(bounds: QTBounds) :any[] {
-        let indexes: number[] = this.getIndex(bounds),
-            returnObjects: any[] = this.objects;
-
-        //if we have subnodes, retrieve their objects
-        if (this.nodes.length) {
-            for (let i = 0; i < indexes.length; i++) {
-                returnObjects = returnObjects.concat(this.nodes[indexes[i]].retrieve(bounds));
-            }
-        }
+    retrieve(qtObj: any) :any[] {
+        let returnObjects = [];
+        qtObj.qts.forEach((qt: Quadtree, idx) => {
+            returnObjects = returnObjects.concat(qt.objects);
+        });
 
         //remove duplicates
         returnObjects = returnObjects.filter(function (item, index) {
@@ -181,6 +176,9 @@ export class Quadtree {
      * Clear the quadtree
      */
     clear() {
+        this.objects.forEach((qtObj, idx) => {
+            qtObj.qts = [];
+        })
         this.objects = [];
 
         for (let i = 0; i < this.nodes.length; i++) {
