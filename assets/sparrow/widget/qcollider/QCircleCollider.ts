@@ -5,17 +5,17 @@
  */
 
 import ceo from "../../ceo";
-import { QTBounds, Quadtree } from "../../tools/Quadtree";
+import { QTBounds, QTObject, Quadtree } from "../../tools/Quadtree";
 
 const {ccclass, property, menu} = cc._decorator;
 
 @ccclass
 @menu("QCollider/QCircleCollider")
-export default class QCircleCollider extends cc.CircleCollider {
-    
+export default class QCircleCollider extends cc.CircleCollider implements QTObject {
+
     cid: number = 0;
     bounds: QTBounds = null;
-    objs: any[] = null;
+    objs: QTObject[] = [];
     qts: Quadtree[] = [];
 
     onEnable() {

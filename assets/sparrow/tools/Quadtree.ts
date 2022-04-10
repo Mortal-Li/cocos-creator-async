@@ -11,6 +11,28 @@ export interface QTBounds {
     height: number;
 }
 
+export interface QTObject {
+    /**
+     * 唯一标志
+     */
+    cid: number;
+
+    /**
+     * 碰撞结点当前包围盒
+     */
+    bounds: QTBounds;
+    
+    /**
+     * 当前碰撞结点所在四叉树结点集合
+     */
+    qts: Quadtree[];
+
+    /**
+     * 当前可能会和自己产生碰撞的结点集合
+     */
+    objs?: QTObject[];
+}
+
 export class Quadtree {
 
     max_objects: number = 10;
@@ -18,7 +40,7 @@ export class Quadtree {
     level: number = 0;
     bounds: QTBounds = null;
 
-    objects: any[] = [];
+    objects: QTObject[] = [];
     nodes: Quadtree[] = [];
     
     constructor(bounds: QTBounds, max_objects?: number, max_levels?: number, level?: number) {
@@ -29,7 +51,7 @@ export class Quadtree {
     }
 
     /**
-     * Split the node into 4 subnodes
+     * 生成子树
      */
     split() {
         let nextLevel = this.level + 1,
@@ -38,7 +60,7 @@ export class Quadtree {
             x = this.bounds.x,
             y = this.bounds.y;
 
-        //top right node
+        //top right
         this.nodes[0] = new Quadtree({
             x: x + subWidth,
             y: y + subHeight,
@@ -46,7 +68,7 @@ export class Quadtree {
             height: subHeight
         }, this.max_objects, this.max_levels, nextLevel);
 
-        //top left node
+        //top left
         this.nodes[1] = new Quadtree({
             x: x,
             y: y + subHeight,
@@ -54,7 +76,7 @@ export class Quadtree {
             height: subHeight
         }, this.max_objects, this.max_levels, nextLevel);
 
-        //bottom left node
+        //bottom left
         this.nodes[2] = new Quadtree({
             x: x,
             y: y,
@@ -62,7 +84,7 @@ export class Quadtree {
             height: subHeight
         }, this.max_objects, this.max_levels, nextLevel);
 
-        //bottom right node
+        //bottom right
         this.nodes[3] = new Quadtree({
             x: x + subWidth,
             y: y,
@@ -72,7 +94,7 @@ export class Quadtree {
     }
 
     /**
-     * Determine which node the object belongs to
+     * 查找归属哪些象限
      */
     getIndex(bounds: QTBounds) :number[] {
         let indexes: number[] = [],
@@ -108,15 +130,12 @@ export class Quadtree {
     }
 
     /**
-     * Insert the object into the node. If the node
-     * exceeds the capacity, it will split and add all
-     * objects to their corresponding subnodes.
+     * 插入碰撞结点到四叉树中
      */
-    insert(qtObj: any) {
+    insert(qtObj: QTObject) {
         let i = 0,
             indexes: number[];
 
-        //if we have subnodes, call insert on matching subnodes
         if (this.nodes.length) {
             indexes = this.getIndex(qtObj.bounds);
 
@@ -126,19 +145,16 @@ export class Quadtree {
             return;
         }
 
-        //otherwise, store object here
         qtObj.qts.push(this);
         this.objects.push(qtObj);
 
-        //max_objects reached
+        // 如果当前结点需要分裂
         if (this.objects.length > this.max_objects && this.level < this.max_levels) {
 
-            //split if we don't already have subnodes
             if (!this.nodes.length) {
                 this.split();
             }
 
-            //add all objects to their corresponding subnode
             for (i = 0; i < this.objects.length; i++) {
                 let one = this.objects[i];
                 one.qts.slice(one.qts.indexOf(this), 1);
@@ -148,22 +164,21 @@ export class Quadtree {
                     this.nodes[indexes[k]].insert(one);
                 }
             }
-
-            //clean up this node
+            
             this.objects = [];
         }
     }
 
     /**
-     * Return all objects that could collide with the given object
+     * 获取所有可能产生碰撞的对象
      */
-    retrieve(qtObj: any) :any[] {
-        let returnObjects = [];
+    retrieve(qtObj: QTObject) :QTObject[] {
+        let returnObjects: QTObject[] = [];
         qtObj.qts.forEach((qt: Quadtree, idx) => {
             returnObjects = returnObjects.concat(qt.objects);
         });
 
-        //remove duplicates
+        // 去重
         returnObjects = returnObjects.filter(function (item, index) {
             return returnObjects.indexOf(item) >= index;
         });
@@ -171,9 +186,8 @@ export class Quadtree {
         return returnObjects;
     }
 
-
     /**
-     * Clear the quadtree
+     * 清空四叉树
      */
     clear() {
         this.objects.forEach((qtObj, idx) => {

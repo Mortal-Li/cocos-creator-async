@@ -9,7 +9,8 @@ export const CollisionType = {
     None: 0,
     CollisionEnter: 1,
     CollisionStay: 2,
-    CollisionExit: 3
+    CollisionExit: 3,
+    CollisionHappened: 4
 }
 
 export class QContact {
@@ -18,10 +19,12 @@ export class QContact {
     collider2: any = null;
     touching: boolean = false;
     testFunc: Function = null;
+    simple: boolean = false;
     
-    constructor(collider1: any, collider2: any) {
+    constructor(collider1: any, collider2: any, simple: boolean = false) {
         this.collider1 = collider1;
         this.collider2 = collider2;
+        this.simple = simple;
 
         let isCollider1Polygon = (collider1 instanceof cc.BoxCollider) || (collider1 instanceof cc.PolygonCollider);
         let isCollider2Polygon = (collider2 instanceof cc.BoxCollider) || (collider2 instanceof cc.PolygonCollider);
@@ -70,6 +73,11 @@ export class QContact {
 
     updateState() {
         let result = this.test();
+
+        if (this.simple) {
+            if (result) return CollisionType.CollisionHappened;
+            return CollisionType.None;
+        }
 
         let type = CollisionType.None;
         if (result && !this.touching) {

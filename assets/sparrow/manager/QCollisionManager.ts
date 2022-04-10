@@ -1,53 +1,51 @@
 /**
- * 基于四叉树的碰撞检测管理器
+ * 基于四叉树的碰撞检测管理器，对于动态结点的碰撞检测效果也有很大提升
  * 使用方式和引擎自带的碰撞管理器一样
  * 1、先打开项目设置面板，(项目 -> 项目设置...)，在分组管理中添加分组并设置哪些组可以产生碰撞;
  * 2、给碰撞节点添加对应的碰撞组件，如 QCircleCollider、QBox;
- * 3、开启碰撞：ceo.qCollisionMgr.enabled = true;
+ * 3、开启碰撞并初始化：ceo.qCollisionMgr.enabled = true; ceo.qCollisionMgr.resetQt(...);
  * 4、碰撞回调函数和引擎自带的也一样, onCollisionEnter、onCollisionStay、onCollisionExit
+ * 
+ * simple 模式：调用resetQt函数，第二个参数传入true，表示碰撞回调使用简单模式，只会产生onCollisionHappened一个回调，提高一点性能
  * @author Mortal-Li
  * @created 2022年3月30日
  */
 
 import { CollisionType, QContact } from "../tools/QContact";
-import { Quadtree } from "../tools/Quadtree";
+import { QTBounds, QTObject, Quadtree } from "../tools/Quadtree";
 
 let _gIdx = 0;
 
 export default class QCollisionManager {
     
     enabled: boolean = false;
-    enabledDebugDraw: boolean = false;
+    private simple: boolean = false;
 
     private _qt: Quadtree = null;
-    private _colliders: cc.Collider[] = [];
-    // private _contacts: QContact[] = [];
-    private _mapI2C: any[] = [];
+    private _colliders: QTObject[] = [];
+    private _mapI2C: QContact[][] = [];
 
+    shouldCollide: Function = null;
     updateCollider: Function = null;
     initCollider: Function = null;
 
     constructor() {
-        this._qt = new Quadtree({
-            x: 0,
-            y: 0,
-            width: cc.winSize.width,
-            height: cc.winSize.height
-        });
-        
-        this.initCollider = cc.director.getCollisionManager()["initCollider"];
-        this.updateCollider = cc.director.getCollisionManager()["updateCollider"];
+        let mgr = cc.director.getCollisionManager();
+        this.shouldCollide = mgr["shouldCollide"];
+        this.initCollider = mgr["initCollider"];
+        this.updateCollider = mgr["updateCollider"];
 
         // register id, set update
         cc.director.getScheduler().enableForTarget(this);
         cc.director.getScheduler().scheduleUpdate(this, cc.Scheduler.PRIORITY_SYSTEM, false);
     }
 
-    resetQt(bounds) {
+    resetQt(bounds: QTBounds, simple: boolean = false) {
         if (this._qt) {
             this._qt.clear();
             this._qt = null;
         }
+        this.simple = simple;
         this._qt = new Quadtree(bounds);
     }
 
@@ -64,18 +62,16 @@ export default class QCollisionManager {
         }
     }
 
-    addCollider(collider: cc.Collider) {
+    addCollider(collider: QTObject) {
         let colliders = this._colliders;
         let index = colliders.indexOf(collider);
         if (index === -1) {
-            collider["cid"] = ++_gIdx;
+            collider.cid = ++_gIdx;
             this._mapI2C[_gIdx] = [];
             for (let i = 0, l = colliders.length; i < l; i++) {
                 let other = colliders[i];
                 if (this.shouldCollide(collider, other)) {
-                    let contact = new QContact(collider, other);
-                    // this._contacts.push(contact);
-                    this._mapI2C[_gIdx][other["cid"]] = contact;
+                    this._mapI2C[_gIdx][other.cid] = new QContact(collider, other, this.simple);
                 }
             }
 
@@ -83,50 +79,106 @@ export default class QCollisionManager {
             this.initCollider(collider);
         }
 
-        collider.node.on(cc.Node.EventType.GROUP_CHANGED, this.onNodeGroupChanged, this);
+        collider["node"].on(cc.Node.EventType.GROUP_CHANGED, this.onNodeGroupChanged, this);
     }
 
-    removeCollider(collider: cc.Collider) {
+    removeCollider(collider: QTObject) {
         let colliders = this._colliders;
         let index = colliders.indexOf(collider);
         if (index >= 0) {
             colliders.splice(index, 1);
+            collider.qts = [];
 
-            // let contacts = this._contacts;
-            // for (let i = contacts.length - 1; i >= 0; i--) {
-            //     let contact = contacts[i];
-            //     if (contact.collider1 === collider || contact.collider2 === collider) {
-            //         if (contact.touching) {
-            //             this._doCollide(CollisionType.CollisionExit, contact);
-            //         }
-
-            //         contacts.splice(i, 1);
-            //     }
-            // }
-
-            collider["qts"] = [];
-            let cid = collider["cid"]
+            let cid = collider.cid;
             for (let i = cid - 1; i > 1; --i) {
                 let contact = this._mapI2C[cid][i];
                 if (contact) {
-                    if (contact.touching) {
+                    if (!this.simple && contact.touching) {
                         this._doCollide(CollisionType.CollisionExit, contact);
                     }
                     this._mapI2C[cid][i] = null;
                 }
             }
 
-
-            collider.node.off(cc.Node.EventType.GROUP_CHANGED, this.onNodeGroupChanged, this);
+            if (colliders.length == 0) _gIdx = 0;
+            collider["node"].off(cc.Node.EventType.GROUP_CHANGED, this.onNodeGroupChanged, this);
         }
         else {
-            cc.warn("Not Found");
+            cc.warn("Not Found ", collider.cid);
         }
     }
 
-    _doCollide(collisionType: number, contact: QContact) {
+    update(dt) {
+        if (!this.enabled) {
+            return;
+        }
+        
+        let i, l;
+
+        // update collider
+        let colliders = this._colliders;
+        for (i = 0, l = colliders.length; i < l; ++i) {
+            this.updateCollider(colliders[i]);
+            colliders[i].bounds = colliders[i]["node"].getBoundingBoxToWorld();
+        }
+
+        // update quadtree
+        this._qt.clear();
+        for (i = 0, l = colliders.length; i < l; ++i) {
+            this._qt.insert(colliders[i]);
+        }
+
+        // get contacts
+        let contacts: QContact[] = [];
+        let mapI2C = this._mapI2C;
+        let cid1, cid2;
+        for (i = 0, l = colliders.length; i < l; ++i) {
+            let c = colliders[i];
+            let retObjs = this._qt.retrieve(c);
+            cid1 = c.cid;
+            for (let j = 0, l2 = retObjs.length; j < l2; ++j) {
+                cid2 = retObjs[j].cid;
+                if (cid1 === cid2 || !mapI2C[cid1][cid2]) continue;
+                contacts.push(mapI2C[cid1][cid2]);
+            }
+            
+            if (!this.simple) {
+                c.objs.forEach((v, idx) => {
+                    let ret = retObjs.indexOf(v);
+                    if (ret == -1) {
+                        if (mapI2C[cid1][v.cid]) contacts.push(mapI2C[cid1][v.cid]);
+                    }
+                });
+                c.objs = retObjs;
+            }
+
+        }
+        
+        // do collide
+        let results = [];
+        for (i = 0, l = contacts.length; i < l; ++i) {
+            let collisionType = contacts[i].updateState();
+            if (collisionType === CollisionType.None) {
+                continue;
+            }
+
+            results.push([collisionType, contacts[i]]);
+        }
+        
+        // handle collide results, emit message
+        for (i = 0, l = results.length; i < l; ++i) {
+            let result = results[i];
+            this._doCollide(result[0], result[1]);
+        }
+        
+    }
+
+    _doCollide(collisionType, contact) {
         let contactFunc;
         switch (collisionType) {
+            case CollisionType.CollisionHappened:
+                contactFunc = 'onCollisionHappened';
+                break;
             case CollisionType.CollisionEnter:
                 contactFunc = 'onCollisionEnter';
                 break;
@@ -158,75 +210,5 @@ export default class QCollisionManager {
                 comp[contactFunc](collider1, collider2);
             }
         }
-    }
-
-    shouldCollide(c1: cc.Collider, c2: cc.Collider) {
-        let node1 = c1.node, node2 = c2.node;
-        let collisionMatrix = cc.game["collisionMatrix"];
-        return node1 !== node2 && collisionMatrix[node1.groupIndex][node2.groupIndex];
-    }
-
-    update(dt) {
-        if (!this.enabled) {
-            return;
-        }
-        
-        let i, l;
-
-        // update collider
-        let colliders = this._colliders;
-        for (i = 0, l = colliders.length; i < l; ++i) {
-            this.updateCollider(colliders[i]);
-            colliders[i]["bounds"] = colliders[i].node.getBoundingBoxToWorld();
-        }
-
-        this._qt.clear();
-        for (i = 0, l = colliders.length; i < l; ++i) {
-            this._qt.insert(colliders[i]);
-        }
-
-        let contacts: QContact[] = [];
-        let mapI2C = this._mapI2C;
-        let cid1, cid2;
-        for (i = 0, l = colliders.length; i < l; ++i) {
-            let c = colliders[i];
-            let objs = this._qt.retrieve(c);
-            cid1 = c["cid"];
-            for (let j = 0, l2 = objs.length; j < l2; ++j) {
-                cid2 = objs[j]["cid"];
-                if (cid1 === cid2 || !mapI2C[cid1][cid2]) continue;
-                contacts.push(mapI2C[cid1][cid2]);
-            }
-            
-            if (c["objs"]) {
-                c["objs"].forEach((v, idx) => {
-                    let ret = objs.indexOf(v);
-                    if (ret == -1) {
-                        if (mapI2C[cid1][v["cid"]]) contacts.push(mapI2C[cid1][v["cid"]]);
-                    }
-                });
-            }
-            c["objs"] = objs;
-        }
-        
-        // do collide
-        let results = [];
-        for (i = 0, l = contacts.length; i < l; i++) {
-            let collisionType = contacts[i].updateState();
-            if (collisionType === CollisionType.None) {
-                continue;
-            }
-
-            results.push([collisionType, contacts[i]]);
-        }
-        
-        // handle collide results, emit message
-        for (i = 0, l = results.length; i < l; i++) {
-            let result = results[i];
-            this._doCollide(result[0], result[1]);
-        }
-
-        // draw colliders
-        if (this.enabledDebugDraw) cc.director.getCollisionManager()["drawColliders"]();
     }
 }
