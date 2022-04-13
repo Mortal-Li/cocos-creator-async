@@ -2,11 +2,12 @@
  * 基于四叉树的碰撞检测管理器，对于动态结点的碰撞检测效果也有很大提升
  * 使用方式和引擎自带的碰撞管理器一样
  * 1、先打开项目设置面板，(项目 -> 项目设置...)，在分组管理中添加分组并设置哪些组可以产生碰撞;
- * 2、给碰撞节点添加对应的碰撞组件，如 QCircleCollider、QBox;
+ * 2、给碰撞节点添加对应的碰撞组件，如 QCircleCollider、QBoxCollider;
  * 3、开启碰撞并初始化：ceo.qCollisionMgr.enabled = true; ceo.qCollisionMgr.resetQt(...);
  * 4、碰撞回调函数和引擎自带的也一样, onCollisionEnter、onCollisionStay、onCollisionExit
  * 
  * simple 模式：调用resetQt函数，第二个参数传入true，表示碰撞回调使用简单模式，只会产生onCollisionHappened一个回调，提高一点性能
+ * 
  * @author Mortal-Li
  * @created 2022年3月30日
  */
