@@ -170,23 +170,6 @@ export class Quadtree {
     }
 
     /**
-     * 获取所有可能产生碰撞的对象
-     */
-    retrieve(qtObj: QTObject) :QTObject[] {
-        let returnObjects: QTObject[] = [];
-        qtObj.qts.forEach((qt: Quadtree, idx) => {
-            returnObjects = returnObjects.concat(qt.objects);
-        });
-
-        // 去重
-        returnObjects = returnObjects.filter(function (item, index) {
-            return returnObjects.indexOf(item) >= index;
-        });
-
-        return returnObjects;
-    }
-
-    /**
      * 清空四叉树
      */
     clear() {

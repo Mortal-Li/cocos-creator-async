@@ -134,11 +134,21 @@ export default class QCollisionManager {
         let cid1, cid2;
         for (i = 0, l = colliders.length; i < l; ++i) {
             let c = colliders[i];
-            let retObjs = this._qt.retrieve(c);
+            
+            let retObjs: QTObject[] = [];
+            c.qts.forEach((qt: Quadtree, idx) => {
+                retObjs = retObjs.concat(qt.objects);
+            });
+
+            // 去重
+            retObjs = retObjs.filter(function (item, index) {
+                return retObjs.indexOf(item) >= index;
+            });
+
             cid1 = c.cid;
             for (let j = 0, l2 = retObjs.length; j < l2; ++j) {
                 cid2 = retObjs[j].cid;
-                if (cid1 === cid2 || !mapI2C[cid1][cid2]) continue;
+                if (!mapI2C[cid1][cid2]) continue;
                 contacts.push(mapI2C[cid1][cid2]);
             }
             
