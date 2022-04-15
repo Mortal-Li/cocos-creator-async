@@ -4,7 +4,7 @@
  * @created 2021年9月2日
  */
 
- import { IUIConfig } from "../../sparrow/ui/UIConfig";
+ import { IUIConfig, UICacheMode } from "../../sparrow/ui/UIConfig";
 
  export const BundleConf = {
      Main : "MainBundle",
@@ -21,7 +21,7 @@
      Hall: <IUIConfig> {
          bundle: BundleConf.Hall,
          name: "HallLayer",
-         stay: true,
+         cacheMode: UICacheMode.Stay,
      },
  
      GameA: <IUIConfig> {
@@ -36,7 +36,7 @@
      Common: <IUIConfig> {
          bundle: BundleConf.Main,
          name: "CommonPopup",
-         stay: true
+         cacheMode: UICacheMode.Cache
      },
  
      //********** Hall **********/
@@ -85,6 +85,6 @@ export const WidgetConf = {
     Toast: <IUIConfig> {
         bundle: BundleConf.Main,
         name: "Toast",
-        stay: true
+        cacheMode: UICacheMode.Cache
     }
 }

@@ -12,7 +12,8 @@ const {ccclass, property} = cc._decorator;
 export default class LayerBase extends UIBase {
     
     /**
-     * 刷新当前界面 (stay为true时自动调用)
+     * 当cacheMode为UICacheMode.Stay，并从其他Layer切回来时，
+     * 会自动调用，以便做刷新操作
      */
     refresh() {}
 

@@ -10,7 +10,7 @@ import CocosHelper from "../tools/CocosHelper";
 import LayerBase from "../ui/LayerBase";
 import PopupBase from "../ui/PopupBase";
 import UIBase from "../ui/UIBase";
-import { IUIConfig, LAYER_PATH, PANEL_PATH, POPUP_PATH, WIDGET_PATH } from "../ui/UIConfig";
+import { IUIConfig, LAYER_PATH, PANEL_PATH, POPUP_PATH, UICacheMode, WIDGET_PATH } from "../ui/UIConfig";
 
 
 
@@ -23,10 +23,18 @@ export default class UIManager {
         return this._curLayerConf;
     }
 
+    /**
+     * 跳转到下一个Layer
+     */
     async gotoLayer(newConf: IUIConfig, data?: any) {
         let T = this;
 
-        if (newConf.stay) {
+        if (T._curLayerConf && T._curLayerConf.name === newConf.name) {
+            T.resetCurLayer(data);
+            return ;
+        }
+
+        if (newConf.cacheMode == UICacheMode.Stay) {
             let layer = ceo.godNode.getChildByName(newConf.name);
             if (layer) {
                 layer.active = true;
@@ -53,7 +61,7 @@ export default class UIManager {
         let curConf = T._curLayerConf;
         if (curConf) {
             let curLayer = ceo.godNode.getChildByName(curConf.name);
-            if (curConf.stay) {
+            if (curConf.cacheMode == UICacheMode.Stay) {
                 curLayer.active = false;
                 cc.log("hide Layer", curConf.name);
             } else {
@@ -63,6 +71,26 @@ export default class UIManager {
         }
 
         T._curLayerConf = newConf;
+    }
+
+    /**
+     * 刷新、重置当前Layer
+     */
+    async resetCurLayer(data?: any) {
+        let T = this;
+
+        let conf = T._curLayerConf;
+        if (conf) {
+            let layer = await T._initUIBase(conf, LAYER_PATH, data);
+            layer.parent = ceo.godNode;
+            layer.name = "tempName";
+    
+            ceo.godNode.getChildByName(conf.name).destroy();
+            layer.name = conf.name;
+            
+            cc.log("reset Layer", conf.name);
+        }
+
     }
 
     async preLoadLayer(conf: IUIConfig, onCompleted?: (error?: Error) => void, onProgress?: (finish: number, total: number) => void) {
@@ -147,7 +175,7 @@ export default class UIManager {
         let scpt: UIBase = node.getComponent(scptName);
         if (!scpt) scpt = node.addComponent(UIBase);
         scpt.recvData = data;
-        if (conf.stay) {
+        if (conf.cacheMode == UICacheMode.Cache) {
             if (prefab.refCount == 0) prefab.addRef();
         } else {
             prefab.addRef();

@@ -5,6 +5,24 @@
  */
 
 
+/**
+ * 缓存模式
+ */
+export const UICacheMode = {
+    /**
+     * 不缓存加载的资源
+     */
+    NoCache: 0,
+    /**
+     * 缓存加载的资源
+     */
+    Cache: 1,
+    /**
+     * 常驻节点 (用于Layer)
+     */
+    Stay: 2
+};
+
 export interface IUIConfig {
     /**
      * Bundle包名
@@ -19,11 +37,9 @@ export interface IUIConfig {
      */
     script?: string;
     /**
-     * 是否常驻内存或保留缓存，可选；默认false
-     * 对于layer类型，如果为true，切换layer时，不会remove当前layer结点和decRef对应的prefab；
-     * 对于其他类型，如果为true，如Popup，表示会remove当前结点，但是不会decRef对应的prefab；
+     * 所加载资源的缓存模式，默认为 UICacheMode.NoCache，不缓存
      */
-    stay?: boolean;
+    cacheMode?: number;
 }
 
 

@@ -17,7 +17,7 @@ export default class UIBase extends CompBase {
     refAssets: cc.Asset[] = [];
 
     /**
-     * 传递的数据
+     * 传递进来的数据
      */
     recvData?: any;
 
