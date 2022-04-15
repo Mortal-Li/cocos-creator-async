@@ -88,17 +88,22 @@ export default class UIManager {
         let zIdx = 99;
         let p = ceo.godNode.getChildByName(T._curLayerConf.name);
 
-        let grayBg = CocosHelper.getGrayBg();
-        grayBg.name = "gray" + conf.name;
-        grayBg.zIndex = zIdx;
-        grayBg.addComponent(cc.BlockInputEvents);
-        grayBg.parent = p;
+        let popNd = new cc.Node();
+        popNd.name = conf.name;
+        popNd.zIndex = zIdx;
+        popNd.parent = p;
+        let wgt = popNd.addComponent(cc.Widget);
+        wgt.isAlignTop = wgt.isAlignBottom = wgt.isAlignLeft = wgt.isAlignRight = true;
+        wgt.top = wgt.bottom = wgt.left = wgt.right = 0;
+        wgt.updateAlignment();
+        popNd.addComponent(cc.BlockInputEvents);
+
+        CocosHelper.getGrayBg().parent = popNd;
 
         let popup = await T._initUIBase(conf, POPUP_PATH, data);
-        popup.zIndex = zIdx;
         let scptName = conf.script ? conf.script : conf.name;
         let scpt: PopupBase = popup.getComponent(scptName);
-        popup.parent = p;
+        popup.parent = popNd;
         scpt.showAnim();
         cc.log("show Popup", conf.name);
 
@@ -107,10 +112,9 @@ export default class UIManager {
         });
     }
 
-    removePopup(name: string) {
-        let grayBg = ceo.godNode.getChildByName(this._curLayerConf.name).getChildByName("gray" + name);
-        grayBg?.destroy();
-        cc.log("close Popup", name);
+    removePopup(p: cc.Node) {
+        p?.destroy();
+        cc.log("close Popup", p.name);
     }
 
     getPopup(popupConf: IUIConfig, layerConf: IUIConfig = null) {
