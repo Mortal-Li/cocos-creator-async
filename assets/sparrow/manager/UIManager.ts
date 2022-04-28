@@ -140,7 +140,7 @@ export default class UIManager {
         });
     }
 
-    removePopup(p: cc.Node) {
+    autoRemovePopup(p: cc.Node) {
         p?.destroy();
         cc.log("close Popup", p.name);
     }

@@ -1,7 +1,7 @@
 ## <center>Cocos-Creator-Sparrow</center>
 <center>
 
-![Def](https://img.shields.io/badge/cocos--creator-2.4.6-blue)
+![Def](https://img.shields.io/badge/cocos--creator-2.4.6+-blue)
 ![GitHub](https://img.shields.io/github/license/Mortal-Li/cocos-creator-sparrow)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Mortal-Li/cocos-creator-sparrow)
 
@@ -10,7 +10,7 @@
 Sparrow是一个基于Cocos-creator的轻量级代码开发框架，它主要有以下特征：
 - 单场景 + 多层级
 - 使用引擎的Bundle思想来管理游戏代码和资源
-- 提供常用的功能模块和通用的解决方案
+- 提供常用的功能模块和通用的解决方案（不需要的功能模块可自行删除）
 
 希望能用更简洁的代码提供更效率的开发体验。
 
@@ -76,20 +76,12 @@ assets
     ├───widget -------------------> 一些通用控件或组件，如TableView、适配组件等
     └───ceo.ts -------------------> 控制UI树根节点，管理所有manager
 ```
-#### 3、使用示范
+#### 3、UI创建示范
 ```typescript
 // 创建四种类型的界面：先在编辑器创建对应的预制体，挂载对应的脚本，该脚本继承对应的基类；
-// 然后在AssetConfig里面配置对应的信息，再调用对应的API函数；
-// 函数的第二个参数可选，为用户传递的数据，默认为空，showPopup可返回用户设置的任意数据，如下：
-ceo.uiMgr.gotoLayer(LayerConf.Hall, data);
+// 然后在AssetConfig里面配置对应的信息，再调用对应的API函数即可。
 
-ceo.uiMgr.showPopup(PopupConf.Settings);
-let data = await ceo.uiMgr.showPopup(PopupConf.Settings, data);
-
-ceo.uiMgr.createPanel(PanelConf.Game);
-ceo.uiMgr.createWidget(WidgetConf.Toast);
-
-// 这些xxxConf的定义规则在UIConfig里，如下：
+// UI的配置格式如下，定义在UIConfig.ts中
 interface IUIConfig {
     /**
      * Bundle包名
@@ -104,18 +96,35 @@ interface IUIConfig {
      */
     script?: string;
     /**
-     * 所加载资源的缓存模式，默认为 UICacheMode.NoCache，不缓存
+     * 所加载资源的缓存模式，默认为 UICacheMode.NoCache，不缓存；
+     * 设置为UICacheMode.Cache，表示缓存加载的资源；
+     * 设置为UICacheMode.Stay，用于Layer类型，表示Layer常在，只不过跳转到其他Layer时，
+     * 会把当前Layer的active设置为false，再跳回来时设置为true
      */
     cacheMode?: number;
 }
+
+// ---------------- Layer类型 ----------------
+// 异步方法，跳转到指定的Layer;
+// 第一个参数类型是IUIConfig，下面一样；
+// 第二个参数表示传入这个Layer的任意类型数据，可选；传入的数据会被脚本自动保存。
+ceo.uiMgr.gotoLayer(LayerConf.Hall, data);
+// 异步方法，重置刷新当前Layer，data为传入的数据，可选。
+ceo.uiMgr.resetCurLayer(data)
+
+// ---------------- Popup类型 ----------------
+// 异步方法，显示指定的弹窗；
+// 第一个参数类型是IUIConfig；第二个是要传入的数据，可选
+ceo.uiMgr.showPopup(PopupConf.Settings);
+// 弹窗关闭后，会返回用户在弹窗脚本中设置的任意类型数据。
+let ret = await ceo.uiMgr.showPopup(PopupConf.Settings, data);
+
+// ---------------- Panel、Widget类型 ----------------
+// 都是异步方法，跟前面不同的是，这两种类型创建后，需要自行设置父节点才会显示。
+ceo.uiMgr.createPanel(PanelConf.Game);
+ceo.uiMgr.createWidget(WidgetConf.Toast);
+
 ```
-详细使用以及其他使用示例请查看Demo代码。
-
-### 版本更新说明
-
-2021年09月22日：1.0.0 框架雏形完成。  
-2021年11月24日：1.0.1 UI控制小优化、小功能添加等。  
-2021年12月18日：1.1.0 添加TableView、优化动态加载资源内存占用等。  
-2022年01月05日：1.1.1 小优化、问题修复、完善适配等。  
-2022年01月20日：1.1.2 小优化以及增加新的安全适配模式。  
-2022年04月13日：1.1.3 小优化以及增加高效碰撞检测模块QCollisionManager，用于替代引擎自带的碰撞管理模块。  
+详细使用以及其他使用示例请运行demo工程查看。  
+[更新日志](https://github.com/Mortal-Li/cocos-creator-sparrow/blob/main/CHANGELOG.md)
+ 

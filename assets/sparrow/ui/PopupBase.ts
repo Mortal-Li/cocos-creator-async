@@ -20,7 +20,7 @@ export default class PopupBase extends UIBase {
     onDestroyCall: (value?: any) => void = () => {};
 
     onDestroy() {
-        ceo.uiMgr.removePopup(this.node.parent);
+        ceo.uiMgr.autoRemovePopup(this.node.parent);
         this.onDestroyCall(this.ret);
         super.onDestroy();
     }
