@@ -4,72 +4,72 @@
  * @created 2021年9月2日
  */
 
- import { IUIConfig, UICacheMode } from "../../sparrow/ui/UIConfig";
+import { IUIConfig, UICacheMode } from "../../sparrow/ui/UIConfig";
 
- export const BundleConf = {
-     Main : "MainBundle",
-     Hall: "HallBundle",
-     GameA: "GameABundle",
- };
- 
- export const LayerConf = {
-     Load: <IUIConfig> {
-         bundle: BundleConf.Main,
-         name: "LoadLayer",
-     },
- 
-     Hall: <IUIConfig> {
-         bundle: BundleConf.Hall,
-         name: "HallLayer",
-         cacheMode: UICacheMode.Stay,
-     },
- 
-     GameA: <IUIConfig> {
-         bundle: BundleConf.GameA,
-         name: "GameALayer",
-     },
- 
- };
- 
- export const PopupConf = {
-     //********** Main **********/
-     Common: <IUIConfig> {
-         bundle: BundleConf.Main,
-         name: "CommonPopup",
-         cacheMode: UICacheMode.Cache
-     },
- 
-     //********** Hall **********/
-     Settings: <IUIConfig> {
-         bundle: BundleConf.Hall,
-         name: "SettingsPopup",
-     },
+export const BundleConf = {
+    Main : "MainBundle",
+    Hall: "HallBundle",
+    GameA: "GameABundle",
+};
 
-     TableView: <IUIConfig> {
-         bundle: BundleConf.Hall,
-         name: "TableViewPopup",
-     },
+export const LayerConf = {
+    Load: <IUIConfig> {
+        bundle: BundleConf.Main,
+        name: "LoadLayer",
+    },
 
-     SafeAdapter: <IUIConfig> {
-         bundle: BundleConf.Hall,
-         name: "SafeAdapterPopup",
-     },
+    Hall: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "HallLayer",
+        cacheMode: UICacheMode.Stay,
+    },
 
-     QuadTree: <IUIConfig> {
-         bundle: BundleConf.Hall,
-         name: "QuadTreePopup",
-     },
- 
-     //********** GameA **********/
-     GameAHelperPopup: <IUIConfig> {
-         bundle: BundleConf.GameA,
-         name: "GameAHelperPopup"
-     },
+    GameA: <IUIConfig> {
+        bundle: BundleConf.GameA,
+        name: "GameALayer",
+    },
 
- };
+};
+
+export const PopupConf = {
+    //********** Main **********/
+    Common: <IUIConfig> {
+        bundle: BundleConf.Main,
+        name: "CommonPopup",
+        cacheMode: UICacheMode.Cache
+    },
+
+    //********** Hall **********/
+    Settings: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "SettingsPopup",
+    },
+
+    TableView: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "TableViewPopup",
+    },
+
+    SafeAdapter: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "SafeAdapterPopup",
+    },
+
+    QuadTree: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "QuadTreePopup",
+    },
+
+    //********** GameA **********/
+    GameAHelperPopup: <IUIConfig> {
+        bundle: BundleConf.GameA,
+        name: "GameAHelperPopup"
+    },
+
+};
 
 
- export const PanelConf = {
+export const PanelConf = {
     Test: <IUIConfig> {
         bundle: BundleConf.Hall,
         name: "TestPanel"

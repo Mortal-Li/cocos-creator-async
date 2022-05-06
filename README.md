@@ -105,6 +105,14 @@ interface IUIConfig {
 }
 
 // ---------------- Layer类型 ----------------
+// const LayerConf = {
+//     Hall: <IUIConfig> {
+//         bundle: BundleConf.Hall,
+//         name: "HallLayer",
+//         cacheMode: UICacheMode.Stay,
+//     }
+// };
+
 // 异步方法，跳转到指定的Layer;
 // 第一个参数类型是IUIConfig，下面一样；
 // 第二个参数表示传入这个Layer的任意类型数据，可选；传入的数据会被脚本自动保存。
@@ -113,6 +121,13 @@ ceo.uiMgr.gotoLayer(LayerConf.Hall, data);
 ceo.uiMgr.resetCurLayer(data)
 
 // ---------------- Popup类型 ----------------
+// const PopupConf = {
+//     Settings: <IUIConfig> {
+//         bundle: BundleConf.Hall,
+//         name: "SettingsPopup",
+//     }
+// };
+
 // 异步方法，显示指定的弹窗；
 // 第一个参数类型是IUIConfig；第二个是要传入的数据，可选
 ceo.uiMgr.showPopup(PopupConf.Settings);
@@ -120,6 +135,21 @@ ceo.uiMgr.showPopup(PopupConf.Settings);
 let ret = await ceo.uiMgr.showPopup(PopupConf.Settings, data);
 
 // ---------------- Panel、Widget类型 ----------------
+// const PanelConf = {
+//     Game: <IUIConfig> {
+//         bundle: BundleConf.Hall,
+//         name: "GamePanel"
+//     },
+// };
+//
+// const WidgetConf = {
+//     Toast: <IUIConfig> {
+//         bundle: BundleConf.Main,
+//         name: "Toast",
+//         cacheMode: UICacheMode.Cache
+//     }
+// }
+
 // 都是异步方法，跟前面不同的是，这两种类型创建后，需要自行设置父节点才会显示。
 ceo.uiMgr.createPanel(PanelConf.Game);
 ceo.uiMgr.createWidget(WidgetConf.Toast);
