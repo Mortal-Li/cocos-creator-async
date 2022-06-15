@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 
  * @author Mortal-Li
  * @created 2021年9月18日
@@ -35,7 +35,7 @@ export default class CompBase extends cc.Component {
          for (let i = 0; i < strs.length; ++i) {
              p = p.getChildByName(strs[i]);
              if (!p) {
-                 cc.warn("Child is NULL!");
+                 cc.warn("Child is NULL!", strs[i]);
                  return null;
              }
          }

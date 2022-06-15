@@ -84,6 +84,14 @@ export default class SoundManager {
         
     }
 
+    stopEffect(id: number) {
+        cc.audioEngine.stopEffect(id);
+    }
+
+    stopAllEffects() {
+        cc.audioEngine.stopAllEffects();
+    }
+
     stopAll() {
         cc.audioEngine.stopAll();
         this._curBgMusicName = null;

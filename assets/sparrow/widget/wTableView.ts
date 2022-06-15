@@ -242,6 +242,8 @@ export default class wTableView extends cc.Component {
     onScrolling(scv: cc.ScrollView) {
         let T = this;
 
+        if (T.cellNum == 0) return;
+
         let curOffset = scv.getScrollOffset();
         T._wrapOffset(curOffset);
 

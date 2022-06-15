@@ -13,7 +13,9 @@ const {ccclass, property} = cc._decorator;
 export default class Stage extends cc.Component {
 
     start () {
-        ceo.init();
+        ceo.init({
+            qt: true
+        });
         ceo.uiMgr.gotoLayer(LayerConf.Load);
     }
 

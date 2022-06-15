@@ -54,15 +54,15 @@ export default class CocosHelper {
         return bundle;
     }
 
-    static grayNode(node: cc.Node) {
+    static grayNode(node: cc.Node, isGray: boolean = true) {
         if (node.getComponent(cc.Sprite)) {
-            node.getComponent(cc.Sprite).setMaterial(0, cc.Material.createWithBuiltin("2d-gray-sprite"));
+            node.getComponent(cc.Sprite).setMaterial(0, cc.Material.getBuiltinMaterial(isGray ? "2d-gray-sprite" : "2d-sprite"));
         } else if (node.getComponent(cc.Label)) {
-            node.getComponent(cc.Label).setMaterial(0, cc.Material.createWithBuiltin("2d-gray-sprite"));
+            node.getComponent(cc.Label).setMaterial(0, cc.Material.getBuiltinMaterial(isGray ? "2d-gray-sprite" : "2d-sprite"));
         }
 
         for (let i = node.children.length - 1; i >= 0; --i ) {
-            CocosHelper.grayNode(node.children[i]);
+            CocosHelper.grayNode(node.children[i], isGray);
         }
     }
 
