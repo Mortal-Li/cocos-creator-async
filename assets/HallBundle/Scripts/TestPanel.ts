@@ -56,6 +56,10 @@ export default class TestPanel extends UIBase {
             case "quad":
                 ceo.uiMgr.showPopup(PopupConf.QuadTree);
                 break;
+
+            case "socket":
+                ceo.uiMgr.showPopup(PopupConf.Socket);
+                break;
         }
     }
 }

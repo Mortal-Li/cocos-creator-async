@@ -213,9 +213,9 @@ export class BaseSocket {
                 this._req2respCallbacks[cmd] = [];
             }
 
-            this._req2respCallbacks[cmd].push((data?: any) => {
+            this._req2respCallbacks[cmd].push((d?: any) => {
                 if (showWaiting) this._connectOptions.tips?.showRequesting(false);
-                resolve(data);
+                resolve(d);
             });
         });
     }
@@ -247,6 +247,7 @@ export class BaseSocket {
             this._ws.onclose = (ev) => {};
             
             this._ws.close();
+            cc.log("ws closed manually");
         }
     }
 
@@ -258,18 +259,21 @@ export class BaseSocket {
             return;
         }
 
-        let reqCallbacks = this._req2respCallbacks[ret.cmd];
-        if (reqCallbacks && reqCallbacks.length > 0) {
-            let cb = reqCallbacks.shift();
-            cb(ret.content);
-        }
+        if (ret.cmd >= 0) {
+            let reqCallbacks = this._req2respCallbacks[ret.cmd];
+            if (reqCallbacks && reqCallbacks.length > 0) {
+                let cb = reqCallbacks.shift();
+                cb(ret.content);
+            }
 
-        let s2cCallbacks = this._server2ClientListeners[ret.cmd];
-        if (s2cCallbacks) {
-            for (const obj of s2cCallbacks) {
-                obj.callback.call(obj.target, ret.content);
+            let s2cCallbacks = this._server2ClientListeners[ret.cmd];
+            if (s2cCallbacks) {
+                for (const obj of s2cCallbacks) {
+                    obj.callback.call(obj.target, ret.content);
+                }
             }
         }
+
     }
 
     private _doReconnect() {

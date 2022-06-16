@@ -30,6 +30,12 @@ class SocketCenter {
     async connect(url: string) {
         await ceo.socketMgr.asyncConnect({
             url: url,
+            parseNetData: (data: any) => {
+                return {
+                    cmd: CMDID.CMD_HELLO,
+                    content: data
+                }
+            },
             tips: this.tips
         });
     }
@@ -46,16 +52,19 @@ class SocketCenter {
         ceo.socketMgr.off(cmd, callback, target);
     }
 
-    async req(cmd: number) {
+    async req(cmd: number, args?: any) {
         let content: string = "";
 
         switch (cmd) {
             case CMDID.CMD_HELLO:
-                content = "Hello~";
+                content = "Hello~" + args;
                 break;
         }
-        
-        return await ceo.socketMgr.asyncReq(cmd, content);
+        cc.log("-----------> send ", content);
+        return await ceo.socketMgr.asyncReq(cmd, JSON.stringify({
+            cmd: cmd,
+            data: content
+        }));
     }
     
     

@@ -60,6 +60,11 @@ export const PopupConf = {
         name: "QuadTreePopup",
     },
 
+    Socket: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "SocketPopup",
+    },
+
     //********** GameA **********/
     GameAHelperPopup: <IUIConfig> {
         bundle: BundleConf.GameA,
