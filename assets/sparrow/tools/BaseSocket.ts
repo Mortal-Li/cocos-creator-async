@@ -72,7 +72,7 @@ export interface IConnectOptions {
     getHearbeat?: () => any;
 
     /**
-     * 对接收的数据进行自定义解包，返回空NULL表示解析失败；
+     * 对接收的数据进行自定义解包，返回空null表示解析失败；
      * 默认cmd为0，content返回原数据
      */
     parseNetData?: (data: any) => {
@@ -254,7 +254,7 @@ export class BaseSocket {
     private _onRecv(data: any) {
         let ret = this._connectOptions.parseNetData(data);
         
-        if (!ret) {
+        if (ret === null || ret === undefined) {
             cc.error("ParseNetData Error!", data);
             return;
         }
