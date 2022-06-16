@@ -15,7 +15,7 @@ Sparrow是一个基于Cocos-creator的轻量级代码开发框架，它主要有
 希望能用更简洁的代码提供更效率的开发体验。
 
 **简要声明**：
-- 本项目基于 Cocos Creator 2.4.6，并未验证低版本兼容性。
+- 本项目基于 Cocos Creator 2.4.6，并未验证低版本兼容性，理论上支持2.4.x。
 - 本项目使用 *MIT License* 开源协议，主要供读者学习参考。
 
 ### 基本使用指南
@@ -153,6 +153,21 @@ let ret = await ceo.uiMgr.showPopup(PopupConf.Settings, data);
 // 都是异步方法，跟前面不同的是，这两种类型创建后，需要自行设置父节点才会显示。
 ceo.uiMgr.createPanel(PanelConf.Game);
 ceo.uiMgr.createWidget(WidgetConf.Toast);
+
+```
+#### 4、网络模块使用示范
+http和websocket都使用async/await、Promise进行封装，既支持异步也支持同步。
+```typescript
+// http
+let ret = await ceo.httpMgr.request(...);
+ceo.httpMgr.request(...).then(...).catch(...);
+
+// websocket
+await ceo.socketMgr.asyncConnect(...);
+let ret = await ceo.socketMgr.asyncReq(...);
+
+ceo.socketMgr.on(cmd, callback, target);
+ceo.socketMgr.off(cmd, callback, target);
 
 ```
 详细使用以及其他使用示例请运行demo工程查看。  
