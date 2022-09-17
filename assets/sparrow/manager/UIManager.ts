@@ -29,10 +29,13 @@ export default class UIManager {
     async gotoLayer(newConf: IUIConfig, data?: any) {
         let T = this;
 
-        if (T._curLayerConf && T._curLayerConf.name === newConf.name) {
+        let preConf = T._curLayerConf;
+        if (preConf && preConf.name === newConf.name) {
             T.resetCurLayer(data);
             return ;
         }
+
+        T._curLayerConf = newConf;
 
         if (newConf.cacheMode == UICacheMode.Stay) {
             let layer = ceo.godNode.getChildByName(newConf.name);
@@ -43,7 +46,7 @@ export default class UIManager {
                 scpt.recvData = data;
                 scpt.refresh();
                 cc.log("show Layer", newConf.name);
-                T.exchangeLayer(newConf);
+                T.clearLayer(preConf);
                 return ;
             }
         }
@@ -52,25 +55,20 @@ export default class UIManager {
         layer.parent = ceo.godNode;
         cc.log("create Layer", newConf.name);
 
-        T.exchangeLayer(newConf);
+        T.clearLayer(preConf);
     }
 
-    private exchangeLayer(newConf: IUIConfig) {
-        let T = this;
-
-        let curConf = T._curLayerConf;
-        if (curConf) {
-            let curLayer = ceo.godNode.getChildByName(curConf.name);
-            if (curConf.cacheMode == UICacheMode.Stay) {
+    private clearLayer(preConf: IUIConfig) {
+        if (preConf) {
+            let curLayer = ceo.godNode.getChildByName(preConf.name);
+            if (preConf.cacheMode == UICacheMode.Stay) {
                 curLayer.active = false;
-                cc.log("hide Layer", curConf.name);
+                cc.log("hide Layer", preConf.name);
             } else {
                 curLayer.destroy();
-                cc.log("destroy Layer", curConf.name);
+                cc.log("destroy Layer", preConf.name);
             }
         }
-
-        T._curLayerConf = newConf;
     }
 
     /**
@@ -135,7 +133,7 @@ export default class UIManager {
         scpt.showAnim();
         cc.log("show Popup", conf.name);
 
-        return await new Promise<any>((resolve, reject) => {
+        return new Promise<any>((resolve, reject) => {
             scpt.onDestroyCall = resolve;
         });
     }

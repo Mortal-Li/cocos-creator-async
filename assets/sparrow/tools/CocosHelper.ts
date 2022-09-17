@@ -74,7 +74,7 @@ export default class CocosHelper {
         sprFrm.setTexture(ttx);
         sprFrm.setRect(cc.rect(0, 0, cc.winSize.width, cc.winSize.height));
 
-        let grayBg = new cc.Node();
+        let grayBg = new cc.Node("gray");
         grayBg.opacity = 200;
         grayBg.addComponent(cc.Sprite).spriteFrame = sprFrm;
 

@@ -69,7 +69,7 @@ export interface IConnectOptions {
     /**
      * 获取自定义的心跳包数据的方法，默认返回空字符串 ""
      */
-    getHearbeat?: () => any;
+    getHeartbeat?: () => any;
 
     /**
      * 对接收的数据进行自定义解包，返回空null表示解析失败；
@@ -110,7 +110,7 @@ export class BaseSocket {
                 reconnectTime: options.reconnectTime ? options.reconnectTime : 10,
                 heartTime: options.heartTime ? options.heartTime : 3,
                 heartOutCount: options.heartOutCount ? options.heartOutCount : 3,
-                getHearbeat: options.getHearbeat ? options.getHearbeat : () => "",
+                getHeartbeat: options.getHeartbeat ? options.getHeartbeat : () => "",
                 parseNetData: options.parseNetData ? options.parseNetData : (data: any) => { return { cmd: 0, content: data } },
                 tips: options.tips ? options.tips : {}
             };
@@ -333,7 +333,7 @@ export class BaseSocket {
                 return;
             }
             
-            this.send(this._connectOptions.getHearbeat());
+            this.send(this._connectOptions.getHeartbeat());
         }, this._connectOptions.heartTime * 1000);
     }
 
