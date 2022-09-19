@@ -108,11 +108,12 @@ export default class UIManager {
     /**
      * 可返回弹窗界面中用户设置的数据
      */
-    async showPopup(conf: IUIConfig, data?: any) {
+    async showPopup(conf: IUIConfig, data?: any, parent?: cc.Node) {
         let T = this;
 
         let zIdx = 99;
-        let p = ceo.godNode.getChildByName(T._curLayerConf.name);
+        let p = parent;
+        if (!p) p =ceo.godNode.getChildByName(T._curLayerConf.name);
 
         let popNd = new cc.Node();
         popNd.name = conf.name;
