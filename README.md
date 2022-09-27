@@ -11,11 +11,12 @@ Sparrow是一个基于Cocos-creator的轻量级代码开发框架，它主要有
 - 单场景 + 多层级
 - 使用引擎的Bundle思想来管理游戏代码和资源
 - 提供常用的功能模块和通用的解决方案（不需要的功能模块可自行删除）
+- 配合插件 **sparrow-helper** 使用，效率更高
 
 希望能用更简洁的代码提供更效率的开发体验。
 
 **简要声明**：
-- 本项目基于 Cocos Creator 2.4.6，并未验证低版本兼容性，理论上支持2.4.x。
+- 本项目基于 Cocos Creator 2.4.6，并未验证低版本兼容性，理论上支持所有2.4.x。
 - 本项目使用 *MIT License* 开源协议，主要供读者学习参考。
 
 ### 基本使用指南
@@ -34,23 +35,22 @@ assets
 │   ├───Scripts
 │   │   ├───AssetConfig.ts -------> 记录不同预制体的配置脚本
 │   └───Stage.fire ---------------> 主场景
-├───Games ------------------------> 不同的子游戏或子玩法
-│   ├───GameABundle --------------> GameA Bundle 优先级 1
-│   │   ├───Prefabs
-│   │   │   ├───Layer ------------> Layer预制体
-│   │   │   ├───Panel ------------> Panel预制体
-│   │   │   ├───Popup ------------> Popup预制体
-│   │   │   └───Widget -----------> Widget预制体
-│   │   ├───Scripts --------------> GameA 相关脚本
-│   │   └───Textures -------------> GameA 相关资源
-│   └───GameBBundle --------------> GameB Bundle 优先级 1
-│       ├───Prefabs
-│       │   ├───Layer
-│       │   ├───Panel
-│       │   ├───Popup
-│       │   └───Widget
-│       ├───Scripts
-│       └───Textures
+├───GameABundle --------------> GameA Bundle 优先级 1
+│   ├───Prefabs
+│   │   ├───Layer ------------> Layer预制体
+│   │   ├───Panel ------------> Panel预制体
+│   │   ├───Popup ------------> Popup预制体
+│   │   └───Widget -----------> Widget预制体
+│   ├───Scripts --------------> GameA 相关脚本
+│   └───Textures -------------> GameA 相关资源
+├───GameBBundle --------------> GameB Bundle 优先级 1
+│   ├───Prefabs
+│   │   ├───Layer
+│   │   ├───Panel
+│   │   ├───Popup
+│   │   └───Widget
+│   ├───Scripts
+│   └───Textures
 ├───HallBundle -------------------> 大厅 bundle 优先级 3
 │   ├───Prefabs
 │   │   ├───Layer

@@ -113,7 +113,7 @@ export default class UIManager {
 
         let zIdx = 99;
         let p = parent;
-        if (!p) p =ceo.godNode.getChildByName(T._curLayerConf.name);
+        if (!p) p = ceo.godNode.getChildByName(T._curLayerConf.name);
 
         let popNd = new cc.Node();
         popNd.name = conf.name;

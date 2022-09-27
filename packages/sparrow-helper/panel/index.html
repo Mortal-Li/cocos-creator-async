@@ -1,0 +1,51 @@
+<ui-box-container>
+    <h3>新建Bundle</h3>
+    <div class="layout horizontal center">
+        <span>Bundle名:&nbsp;</span>
+        <ui-input placeholder="Bundle Name" v-value="bundleName"></ui-input>
+        <span>优先级:&nbsp;</span>
+        <ui-select v-value="bundlePriority">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </ui-select>
+        <ui-button class="green" @click="createBundle()">Create Bundle</ui-button>
+    </div>
+</ui-box-container>
+<br/>
+<ui-box-container>
+    <h3>新建Layer</h3>
+    <div class="layout horizontal center">
+        <span>Layer名:&nbsp;</span>
+        <ui-input placeholder="Layer Name" v-value="layerName"></ui-input>
+        <span>属于:&nbsp;</span>
+        <ui-select v-value="bundleChoice1">
+            <template v-for="item in bundles">
+                <option>{{item}}</option>
+            </template>
+        </ui-select>
+        <ui-button class="green" @click="createLayer()">Create Layer</ui-button>
+    </div>
+</ui-box-container>
+<br/>
+<ui-box-container>
+    <h3>新建Popup</h3>
+    <div class="layout horizontal center">
+        <span>Popup名:&nbsp;</span>
+        <ui-input placeholder="Popup Name" v-value="popupName"></ui-input>
+        <span>属于:&nbsp;</span>
+        <ui-select v-value="bundleChoice2">
+            <template v-for="item in bundles">
+                <option>{{item}}</option>
+            </template>
+        </ui-select>
+        <ui-button class="green" @click="createPopup()">Create Popup</ui-button>
+    </div>
+</ui-box-container>
