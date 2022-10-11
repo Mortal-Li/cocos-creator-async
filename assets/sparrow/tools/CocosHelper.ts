@@ -21,6 +21,16 @@ export default class CocosHelper {
         })
     }
 
+    static preloadDir(bundle: cc.AssetManager.Bundle, dirPath: string, onProgress?: Function) {
+        return new Promise<void>((resolve, reject) => {
+            bundle.preloadDir(dirPath, (cur, total, itm) => {
+                if (onProgress) onProgress(cur / total);
+            }, (err, res) => {
+                err ? reject(err) : resolve()
+            });
+        });
+    }
+
     static asyncLoadBundle(bundleName: string) {
         return new Promise<cc.AssetManager.Bundle>((resolve, reject) => {
             cc.assetManager.loadBundle(bundleName, (error: Error, bundle: cc.AssetManager.Bundle) => {

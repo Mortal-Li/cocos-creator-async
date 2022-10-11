@@ -8,6 +8,7 @@
 import EventManager from "./manager/EventManager";
 import HttpManager from "./manager/HttpManager";
 import LocalManager from "./manager/LocalManager";
+import LogManager from "./manager/LogManager";
 import QCollisionManager from "./manager/QCollisionManager";
 import SocketManager from "./manager/SocketManager";
 import SoundManager from "./manager/SoundManager";
@@ -16,15 +17,16 @@ import UIManager from "./manager/UIManager";
 
 const ceo = {
     uiMgr: new UIManager(),
-    eventMgr : new EventManager(),
-    localMgr : new LocalManager(),
-    soundMgr : new SoundManager(),
-    httpMgr  : new HttpManager(),
+    eventMgr: new EventManager(),
+    localMgr: new LocalManager(),
+    soundMgr: new SoundManager(),
+    httpMgr: new HttpManager(),
+    logMgr: new LogManager(),
 
     qCollisionMgr: <QCollisionManager> null,
     socketMgr: <SocketManager> null,
     
-    godNode  : <cc.Node> null,
+    godNode: <cc.Node> null,
     
     init: (switchs: {
         /**
