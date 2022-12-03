@@ -79,14 +79,24 @@ export default class UIManager {
 
         let conf = T._curLayerConf;
         if (conf) {
-            let layer = await T._initUIBase(conf, LAYER_PATH, data);
-            layer.parent = ceo.godNode;
-            layer.name = "tempName";
-    
-            ceo.godNode.getChildByName(conf.name).destroy();
-            layer.name = conf.name;
-            
-            cc.log("reset Layer", conf.name);
+            if (conf.cacheMode == UICacheMode.Stay) {
+                let layer = ceo.godNode.getChildByName(conf.name);
+                let scptName = conf.script ? conf.script : conf.name;
+                let scpt: LayerBase = layer.getComponent(scptName);
+                scpt.recvData = data;
+                scpt.refresh();
+                cc.log("refresh Layer", conf.name);
+            } else {
+                let layer = await T._initUIBase(conf, LAYER_PATH, data);
+                layer.parent = ceo.godNode;
+                layer.name = "tempName";
+        
+                ceo.godNode.getChildByName(conf.name).destroy();
+                layer.name = conf.name;
+                
+                cc.log("reset Layer", conf.name);
+            }
+
         }
 
     }

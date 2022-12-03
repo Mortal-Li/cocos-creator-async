@@ -40,6 +40,11 @@ export interface IConnectOptions {
     protocol?: string;
 
     /**
+     * 证书：默认空
+     */
+    ca?: any;
+
+    /**
      * 默认 "arraybuffer"
      */
     binaryType?: BinaryType;
@@ -105,6 +110,7 @@ export class BaseSocket {
         if (this._connectOptions == null) {
             this._connectOptions = {
                 url: options.url ? options.url : `${(options.protocol ? options.protocol : "ws")}://${options.ip}:${options.port}`,
+                ca: options.ca,
                 binaryType: options.binaryType ? options.binaryType : "arraybuffer",
                 autoReconnect: options.autoReconnect ? options.autoReconnect : 0,
                 reconnectTime: options.reconnectTime ? options.reconnectTime : 10,
@@ -134,7 +140,12 @@ export class BaseSocket {
 
             this._connectOptions.tips?.showConnecting(true);
     
-            this._ws = new WebSocket(this._connectOptions.url);
+            if (cc.sys.isNative && cc.sys.os == cc.sys.OS_ANDROID) {
+                //@ts-ignore
+                this._ws = new WebSocket(this._connectOptions.url, null, this._connectOptions.ca);
+            } else {
+                this._ws = new WebSocket(this._connectOptions.url);
+            }
             this._ws.binaryType = this._connectOptions.binaryType;
             
             this._ws.onopen = (ev) => {

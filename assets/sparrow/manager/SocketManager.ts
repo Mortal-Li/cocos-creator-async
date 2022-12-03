@@ -35,7 +35,7 @@ export default class SocketManager {
                 this._sockets[socketId].asyncReq(cmd, data, showWaiting).then(resolve).catch(reject);
             } else {
                 cc.warn("This ws does not exist!");
-                reject();
+                reject(101);
             }
         });
     }
