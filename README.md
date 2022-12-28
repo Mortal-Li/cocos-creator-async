@@ -1,7 +1,7 @@
 ## <center>Cocos-Creator-Sparrow</center>
 <center>
 
-![Def](https://img.shields.io/badge/cocos--creator-2.4.6+-blue)
+![Def](https://img.shields.io/badge/cocos--creator-2.4.x-blue)
 ![GitHub](https://img.shields.io/github/license/Mortal-Li/cocos-creator-sparrow)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Mortal-Li/cocos-creator-sparrow)
 
@@ -16,7 +16,7 @@ Sparrow是一个基于Cocos-creator的轻量级代码开发框架，它主要有
 希望能用更简洁的代码提供更效率的开发体验。
 
 **简要声明**：
-- 本项目基于 Cocos Creator 2.4.6，并未验证低版本兼容性，理论上支持所有2.4.x。
+- 本项目基于 Cocos Creator 2.4.x。
 - 本项目使用 *MIT License* 开源协议，主要供读者学习参考。
 
 ### 基本使用指南
@@ -33,7 +33,7 @@ Sparrow是一个基于Cocos-creator的轻量级代码开发框架，它主要有
 assets
 ├───Boot
 │   ├───Scripts
-│   │   ├───AssetConfig.ts -------> 记录不同预制体的配置脚本
+│   │   ├───AssetConfig.ts -------> 记录不同预制体的配置脚本(也可以分散在各bundle)
 │   └───Stage.fire ---------------> 主场景
 ├───GameABundle --------------> GameA Bundle 优先级 1
 │   ├───Prefabs
@@ -163,8 +163,8 @@ let ret = await ceo.httpMgr.request(...);
 ceo.httpMgr.request(...).then(...).catch(...);
 
 // websocket
-await ceo.socketMgr.asyncConnect(...);
 let ret = await ceo.socketMgr.asyncReq(...);
+ceo.socketMgr.asyncConnect(...).then(...).catch(...);
 
 ceo.socketMgr.on(cmd, callback, target);
 ceo.socketMgr.off(cmd, callback, target);

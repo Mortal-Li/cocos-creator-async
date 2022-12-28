@@ -87,12 +87,12 @@ export default class UIManager {
                 scpt.refresh();
                 cc.log("refresh Layer", conf.name);
             } else {
+                let delLayer = ceo.godNode.getChildByName(conf.name);
+                delLayer.name = "removed";
+
                 let layer = await T._initUIBase(conf, LAYER_PATH, data);
                 layer.parent = ceo.godNode;
-                layer.name = "tempName";
-        
-                ceo.godNode.getChildByName(conf.name).destroy();
-                layer.name = conf.name;
+                delLayer.destroy();
                 
                 cc.log("reset Layer", conf.name);
             }
