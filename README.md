@@ -67,7 +67,7 @@ assets
 │   │   └───Widget
 │   ├───Scripts
 │   │   └───common ---------------> 一些通用脚本
-│   ├───Sounds -------------------> 项目音频资源
+│   ├───Sounds -------------------> 项目音频资源(也可分散在各bundle)
 │   └───Textures -----------------> 通用资源
 └───sparrow ----------------------> 框架代码所在
     ├───manager ------------------> 一些管理类，如自定义事件分发、UI控制管理、本地存储等
@@ -79,6 +79,7 @@ assets
 #### 3、UI创建示范
 ```typescript
 // 创建四种类型的界面：先在编辑器创建对应的预制体，挂载对应的脚本，该脚本继承对应的基类；
+// 推荐使用 sparrow-helper 插件来创建，快捷键CTRL+F12；
 // 然后在AssetConfig里面配置对应的信息，再调用对应的API函数即可。
 
 // UI的配置格式如下，定义在UIConfig.ts中
@@ -163,6 +164,7 @@ let ret = await ceo.httpMgr.request(...);
 ceo.httpMgr.request(...).then(...).catch(...);
 
 // websocket
+await ceo.socketMgr.asyncConnect(...)
 let ret = await ceo.socketMgr.asyncReq(...);
 ceo.socketMgr.asyncConnect(...).then(...).catch(...);
 

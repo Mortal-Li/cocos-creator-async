@@ -1,19 +1,19 @@
-<ui-box-container>
+﻿<ui-box-container>
     <h3>新建Bundle</h3>
     <div class="layout horizontal center">
         <span>Bundle名:&nbsp;</span>
         <ui-input placeholder="Bundle Name" v-value="bundleName"></ui-input>
         <span>优先级:&nbsp;</span>
         <ui-select v-value="bundlePriority">
-            <option value="1">1</option>
+            <option value="1">1(Game)</option>
             <option value="2">2</option>
-            <option value="3">3</option>
+            <option value="3">3(Hall)</option>
             <option value="4">4</option>
-            <option value="5">5</option>
+            <option value="5">5(Main)</option>
             <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
+            <option value="7">7(main)</option>
+            <option value="8">8(resources)</option>
+            <option value="9">9(start-scene)</option>
             <option value="10">10</option>
         </ui-select>
         <ui-button class="green" @click="createBundle()">Create Bundle</ui-button>
