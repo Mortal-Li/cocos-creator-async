@@ -250,6 +250,14 @@ export class BaseSocket {
 
         if (this._ws && this._ws.readyState != WebSocket.CLOSED) {
             
+            if (this._ws.readyState == WebSocket.CONNECTING || this._ws.readyState == WebSocket.CLOSING) {
+                this._connectOptions.tips?.showConnecting(false);
+            }
+
+            for (const cmd in this._req2respCallbacks) {
+                const reqs = this._req2respCallbacks[cmd];
+                reqs.forEach((cb, i) => { cb(null); });
+            }
             this._req2respCallbacks = {};
             if (isClean) this._server2ClientListeners = {};
             this._ws.onopen = (ev) => {};
