@@ -31,6 +31,10 @@ module.exports = {
 
     'create-popup' (event, popupName, bundleName) {
       Utils.genUIUnit("Popup", popupName, bundleName);
+    },
+
+    'create-panel' (event, panelName, bundleName) {
+      Utils.genUIUnit("Panel", panelName, bundleName);
     }
 
   },

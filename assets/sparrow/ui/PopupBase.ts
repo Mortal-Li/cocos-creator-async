@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 弹窗基类
  * @author Mortal-Li
  * @created 2021年9月2日
@@ -47,5 +47,10 @@ export default class PopupBase extends UIBase {
      */
     closeAnim() {
         cc.tween(this.node).to(0.2, { scale: 0 }, cc.easeBackIn()).call(()=>{ this.node.destroy(); }).start();
+    }
+
+
+    setGrayBgOpacity(opacity: number) {
+        this.node.parent.getChildByName("gray").opacity = opacity;
     }
 }

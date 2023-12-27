@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 
  * @author Mortal-Li
  * @created 2022年5月7日
@@ -138,6 +138,7 @@ export class BaseSocket {
                 }
             }
 
+            cc.log("net is connecting!");
             this._connectOptions.tips?.showConnecting(true);
     
             if (cc.sys.isNative && cc.sys.os == cc.sys.OS_ANDROID) {
@@ -149,11 +150,9 @@ export class BaseSocket {
             this._ws.binaryType = this._connectOptions.binaryType;
             
             this._ws.onopen = (ev) => {
-                if (this._inPromise) {
-                    this._inPromise = false;
-                    this._connectOptions.tips?.showConnecting(false);
-                    resolve(null);
-                }
+                this._inPromise = false;
+                this._connectOptions.tips?.showConnecting(false);
+                resolve(null);
 
                 this._connectedCB();
                 this._onOpen(ev);
@@ -207,6 +206,8 @@ export class BaseSocket {
         cc.log("ws closed!", ev.code, ev.reason);
         this._stopHeartTimer();
         this._stopReconnectTimer();
+        this._clearReqList();
+
         this._doReconnect();
     }
 
@@ -241,6 +242,14 @@ export class BaseSocket {
         }
     }
 
+    private _clearReqList() {
+        for (const cmd in this._req2respCallbacks) {
+            const reqs = this._req2respCallbacks[cmd];
+            reqs.forEach((cb, i) => { cb(null); });
+        }
+        this._req2respCallbacks = {};
+    }
+
     /**
      * 主动断开
      */
@@ -254,12 +263,9 @@ export class BaseSocket {
                 this._connectOptions.tips?.showConnecting(false);
             }
 
-            for (const cmd in this._req2respCallbacks) {
-                const reqs = this._req2respCallbacks[cmd];
-                reqs.forEach((cb, i) => { cb(null); });
-            }
-            this._req2respCallbacks = {};
+            this._clearReqList();
             if (isClean) this._server2ClientListeners = {};
+
             this._ws.onopen = (ev) => {};
             this._ws.onmessage = (ev) => {};
             this._ws.onerror = (ev) => {};
@@ -301,6 +307,7 @@ export class BaseSocket {
             this._connectOptions.tips?.manualReconnect();
         } else {
             if (limitReconnect > 0) ++this._curAutoReconnect;
+            cc.log("net is reconnecing!");
             this._connectOptions.tips?.showReconnecting(true);
             this._reconnectTimer = setTimeout(() => {
                 this._connectOptions.tips?.showReconnecting(false);

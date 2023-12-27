@@ -31,7 +31,7 @@ export function doOnceFirst(time = 1) {
 export function doOnceLast(time = 0.5) {
     return (target: any, key: string, desc: PropertyDescriptor) => {
         let original: Function = desc.value;
-        let tid: number;
+        let tid;
         desc.value = function(...args) {
             if (tid) clearTimeout(tid)
     

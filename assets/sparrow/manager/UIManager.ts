@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 管理所有UI
  * 
  * @author Mortal-Li
@@ -21,6 +21,10 @@ export default class UIManager {
 
     getCurLayerConf() {
         return this._curLayerConf;
+    }
+
+    getCurLayer() {
+        return ceo.godNode.getChildByName(this._curLayerConf.name);
     }
 
     /**
@@ -101,16 +105,20 @@ export default class UIManager {
 
     }
 
-    async preLoadLayer(conf: IUIConfig, onCompleted?: (error?: Error) => void, onProgress?: (finish: number, total: number) => void) {
-        let bundle = await CocosHelper.getBundle(conf.bundle);
-        bundle.preload(LAYER_PATH + conf.name, cc.Prefab, (cur: number, all: number, _ignore) => {
-            if (onProgress) {
-                onProgress(cur, all);
-            }
-        }, (err: Error, _ignores) => {
-            if (onCompleted) {
-                onCompleted(err);
-            }
+    preLoadLayer(conf: IUIConfig, onCompleted?: (error?: Error) => void, onProgress?: (finish: number, total: number) => void) {
+        return new Promise<void>((resolve, reject) => {
+            CocosHelper.getBundle(conf.bundle).then((bundle) => {
+                bundle.preload(LAYER_PATH + conf.name, cc.Prefab, (cur: number, all: number, _ignore) => {
+                    if (onProgress) {
+                        onProgress(cur, all);
+                    }
+                }, (err: Error, _ignores) => {
+                    if (onCompleted) {
+                        onCompleted(err);
+                    }
+                    err ? reject(err) : resolve()
+                });
+            }).catch(reject);
         });
     }
 
@@ -123,7 +131,7 @@ export default class UIManager {
 
         let zIdx = 99;
         let p = parent;
-        if (!p) p = ceo.godNode.getChildByName(T._curLayerConf.name);
+        if (!p) p = T.getCurLayer();
 
         let popNd = new cc.Node();
         popNd.name = conf.name;
@@ -163,6 +171,17 @@ export default class UIManager {
         }
 
         return null;
+    }
+
+    closeAllPopup() {
+        let layer = ceo.godNode.getChildByName(this._curLayerConf.name);
+        if (layer) {
+            layer.children.forEach((nd, i) => {
+                if (nd.name.endsWith("Popup")) {
+                    nd.destroy();
+                }
+            });
+        }
     }
 
     // ********************* Panel *********************

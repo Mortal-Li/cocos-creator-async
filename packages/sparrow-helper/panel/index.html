@@ -1,4 +1,4 @@
-﻿<ui-box-container>
+<ui-box-container>
     <h3>新建Bundle</h3>
     <div class="layout horizontal center">
         <span>Bundle名:&nbsp;</span>
@@ -47,5 +47,20 @@
             </template>
         </ui-select>
         <ui-button class="green" @click="createPopup()">Create Popup</ui-button>
+    </div>
+</ui-box-container>
+<br/>
+<ui-box-container>
+    <h3>新建Panel</h3>
+    <div class="layout horizontal center">
+        <span>Panel名:&nbsp;</span>
+        <ui-input placeholder="Panel Name" v-value="panelName"></ui-input>
+        <span>属于:&nbsp;</span>
+        <ui-select v-value="bundleChoice3">
+            <template v-for="item in bundles">
+                <option>{{item}}</option>
+            </template>
+        </ui-select>
+        <ui-button class="green" @click="createPanel()">Create Panel</ui-button>
     </div>
 </ui-box-container>

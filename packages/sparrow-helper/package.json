@@ -14,7 +14,7 @@
     "main": "panel/index.js",
     "type": "float",
     "title": "sparrow-helper",
-    "width": 600,
-    "height": 500
+    "width": 650,
+    "height": 600
   }
 }

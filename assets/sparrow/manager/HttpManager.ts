@@ -72,7 +72,7 @@ export default class HttpManager {
             params.error('Network Abort');
         };
         xhr.onerror = () => {
-            params.error('Network Error');
+            params.error('Network Error', params.url);
         };
         xhr.open(params.method, params.url, true);
 

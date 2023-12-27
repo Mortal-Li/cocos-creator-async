@@ -23,6 +23,8 @@ Editor.Panel.extend({
           bundleChoice1: "",
           popupName: "",
           bundleChoice2: "",
+          panelName: "",
+          bundleChoice3: "",
         }
       },
 
@@ -50,6 +52,14 @@ Editor.Panel.extend({
             Editor.warn("Popup name is empty!");
           } else {
             Editor.Ipc.sendToMain("sparrow-helper:create-popup", this.popupName, this.bundleChoice2);
+          }
+        },
+
+        createPanel() {
+          if (this.panelName.length == 0) {
+            Editor.warn("Panel name is empty!");
+          } else {
+            Editor.Ipc.sendToMain("sparrow-helper:create-panel", this.panelName, this.bundleChoice3);
           }
         },
 

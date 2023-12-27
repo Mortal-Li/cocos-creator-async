@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 对cocos api的一些功能性封装
  * @author Mortal-Li
  * @created 2021年9月2日
@@ -7,9 +7,10 @@
 
 export default class CocosHelper {
     
-    static asynSleep = function(t: number) {
+    static asynSleep = function(t: number, target: cc.Component = null) {
         return new Promise((resolve, reject) => {
-            cc.Canvas.instance.scheduleOnce(() => {
+            if (!target) target = cc.Canvas.instance;
+            target.scheduleOnce(() => {
                 resolve(null);
             }, t);
         });
@@ -19,6 +20,16 @@ export default class CocosHelper {
         return new Promise((resolve) => {
             cc.tween(node).then(tween).call(resolve).start();
         })
+    }
+
+    static preload(bundle: cc.AssetManager.Bundle, dirPath: string, type: typeof cc.Asset, onProgress?: Function) {
+        return new Promise<void>((resolve, reject) => {
+            bundle.preload(dirPath, type, (cur, total, itm) => {
+                if (onProgress) onProgress(cur / total);
+            }, (err, res) => {
+                err ? reject(err) : resolve()
+            });
+        });
     }
 
     static preloadDir(bundle: cc.AssetManager.Bundle, dirPath: string, onProgress?: Function) {
