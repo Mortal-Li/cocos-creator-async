@@ -15,9 +15,9 @@ export default class CompBase extends cc.Component {
      * @param parentNode 从哪个节点开始检索，默认根节点
      * @param type 组件类型，可选
      */
-    getUIObj<T = cc.Node>(pathStr: string, type?: {prototype: T}) : T;
-    getUIObj<T = cc.Node>(parentNode: cc.Node, pathStr: string, type?: {prototype: T}) : T;
-    getUIObj(param1: any, param2?: any, param3?: any) : any {
+    getObj<T = cc.Node>(pathStr: string, type?: {prototype: T}) : T;
+    getObj<T = cc.Node>(parentNode: cc.Node, pathStr: string, type?: {prototype: T}) : T;
+    getObj(param1: any, param2?: any, param3?: any) : any {
         let p: cc.Node;
         let pathStr: string;
         let typ: any;

@@ -27,9 +27,9 @@ export default class SafeAdapterPopup extends PopupBase {
 
         switch (name) {
             case "switch":
-                T.getUIObj("top" + T.preIdx).active = false;
+                T.getObj("top" + T.preIdx).active = false;
                 T.preIdx = (T.preIdx + 1) % 5;
-                T.getUIObj("top" + T.preIdx).active = true;
+                T.getObj("top" + T.preIdx).active = true;
 
                 break;
 
@@ -38,16 +38,16 @@ export default class SafeAdapterPopup extends PopupBase {
                 break;
 
             case "back2":
-                T.getUIObj("safeBg").active = false;
+                T.getObj("safeBg").active = false;
                 break;
 
             case "safe":
-                let safeBg = T.getUIObj("safeBg");
+                let safeBg = T.getObj("safeBg");
                 safeBg.active = true;
 
                 let box = safeBg.getContentSize();
 
-                this.getUIObj("safeBg.info", cc.Label).string = `design w:${cc.view.getDesignResolutionSize().width} h:${cc.view.getDesignResolutionSize().height}
+                this.getObj("safeBg.info", cc.Label).string = `design w:${cc.view.getDesignResolutionSize().width} h:${cc.view.getDesignResolutionSize().height}
 cc.winSize w:${cc.winSize.width} h:${cc.winSize.height}
 visible w:${cc.view.getVisibleSize().width} h:${cc.view.getVisibleSize().height}
 frame w:${cc.view.getFrameSize().width} h:${cc.view.getFrameSize().height}
@@ -60,7 +60,7 @@ box w:${box.width} h:${box.height} x:${T.node.width/2 + safeBg.x - safeBg.width 
                     let bottom = T.node.height/2 + safeBg.y - safeBg.height * safeBg.anchorY;
                     let top = T.node.height - safeBg.height - bottom;
                     let right = T.node.width - safeBg.width - left;
-                    T.getUIObj("safeBg.desc", cc.Label).string = `box2 top:${top} bottom:${bottom} left:${left} right:${right}`;
+                    T.getObj("safeBg.desc", cc.Label).string = `box2 top:${top} bottom:${bottom} left:${left} right:${right}`;
                 });
 
                 break;

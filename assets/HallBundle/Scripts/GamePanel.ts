@@ -25,7 +25,7 @@ export default class GamePanel extends UIBase {
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         switch (name) {
             case "gameA":
-                ceo.uiMgr.gotoLayer(LayerConf.GameA);
+                ceo.uiMgr.goLayerAsync(LayerConf.GameA);
                 break;
                 
         }

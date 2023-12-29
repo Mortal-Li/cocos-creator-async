@@ -25,7 +25,7 @@ export default class GameALayer extends LayerBase {
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         switch (name) {
             case "back":
-                ceo.uiMgr.gotoLayer(LayerConf.Hall);
+                ceo.uiMgr.goLayerAsync(LayerConf.Hall);
                 break;
                 
         }

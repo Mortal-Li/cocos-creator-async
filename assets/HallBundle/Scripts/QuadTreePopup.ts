@@ -52,7 +52,7 @@ export default class QuadTreePopup extends PopupBase {
 
         cc.director.getCollisionManager().enabled = true;
 
-        let bg = T.getUIObj("bg");
+        let bg = T.getObj("bg");
         for (let i = 0; i < 1500; ++i) {
             let ball = cc.instantiate(T.ballNd);
             ball.parent = bg;
@@ -68,13 +68,13 @@ export default class QuadTreePopup extends PopupBase {
     reset() {
         ceo.qCollisionMgr.enabled = false;
         cc.director.getCollisionManager().enabled = false;
-        this.getUIObj("bg").removeAllChildren();
+        this.getObj("bg").removeAllChildren();
     }
 
     showQuad() {
         let T = this;
 
-        let bg = T.getUIObj("bg");
+        let bg = T.getObj("bg");
         ceo.qCollisionMgr.resetQt(bg.getBoundingBoxToWorld());
         ceo.qCollisionMgr.enabled = true;
 

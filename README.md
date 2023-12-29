@@ -117,9 +117,9 @@ interface IUIConfig {
 // 异步方法，跳转到指定的Layer;
 // 第一个参数类型是IUIConfig，下面一样；
 // 第二个参数表示传入这个Layer的任意类型数据，可选；传入的数据会被脚本自动保存。
-ceo.uiMgr.gotoLayer(LayerConf.Hall, data);
+ceo.uiMgr.goLayerAsync(LayerConf.Hall, data);
 // 异步方法，重置刷新当前Layer，data为传入的数据，可选。
-ceo.uiMgr.resetCurLayer(data)
+ceo.uiMgr.resetCurLayerAsync(data)
 
 // ---------------- Popup类型 ----------------
 // const PopupConf = {
@@ -131,9 +131,9 @@ ceo.uiMgr.resetCurLayer(data)
 
 // 异步方法，显示指定的弹窗；
 // 第一个参数类型是IUIConfig；第二个是要传入的数据，可选
-ceo.uiMgr.showPopup(PopupConf.Settings);
+ceo.uiMgr.showPopupAsync(PopupConf.Settings);
 // 弹窗关闭后，会返回用户在弹窗脚本中设置的任意类型数据。
-let ret = await ceo.uiMgr.showPopup(PopupConf.Settings, data);
+let ret = await ceo.uiMgr.showPopupAsync(PopupConf.Settings, data);
 
 // ---------------- Panel、Widget类型 ----------------
 // const PanelConf = {
@@ -152,8 +152,8 @@ let ret = await ceo.uiMgr.showPopup(PopupConf.Settings, data);
 // }
 
 // 都是异步方法，跟前面不同的是，这两种类型创建后，需要自行设置父节点才会显示。
-ceo.uiMgr.createPanel(PanelConf.Game);
-ceo.uiMgr.createWidget(WidgetConf.Toast);
+ceo.uiMgr.createPanelAsync(PanelConf.Game);
+ceo.uiMgr.createWidgetAsync(WidgetConf.Toast);
 
 ```
 #### 4、网络模块使用示范

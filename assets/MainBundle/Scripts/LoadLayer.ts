@@ -6,7 +6,7 @@
 
 import { LayerConf } from "../../Boot/Scripts/AssetConfig";
 import ceo from "../../sparrow/ceo";
-import CocosHelper from "../../sparrow/tools/CocosHelper";
+import AsyncHelper from "../../sparrow/tools/AsyncHelper";
 import LayerBase from "../../sparrow/ui/LayerBase";
 import GameData from "./common/GameData";
 import { SoundID, LocalKey } from "./common/MainConst";
@@ -27,17 +27,22 @@ export default class LoadLayer extends LayerBase {
         ceo.soundMgr.setEffectsVolume(effectState ? 1 : 0);
         GameData.music_switch = musicState;
         GameData.effect_switch = effectState;
-
-        CocosHelper.asyncTween(this.pb, cc.tween().to(0.1, { progress: 0.1 }));
     }
 
     async start () {
-        // net req、res load ...  
-        await CocosHelper.asyncTween(this.pb, cc.tween().to(0.2, { progress: 0.4 }));
-        await CocosHelper.asyncTween(this.pb, cc.tween().to(0.3, { progress: 0.8 }));
+        // net req、res load ...
         
-        await CocosHelper.asyncTween(this.pb, cc.tween().to(0.5, { progress: 1 }));
-        ceo.uiMgr.gotoLayer(LayerConf.Hall);
+        await AsyncHelper.tweenAsync(this.pb, cc.tween().to(1, { progress: 0.5 }));
+
+        // ...
+        // ...
+        // ...
+
+        await ceo.uiMgr.preLoadLayerAsync(LayerConf.Hall, (cur, total) => {
+            this.pb.progress = 0.5 + cur / total * 0.5;
+        });
+
+        ceo.uiMgr.goLayerAsync(LayerConf.Hall);
     }
 
 }

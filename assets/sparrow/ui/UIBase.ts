@@ -21,6 +21,9 @@ export default class UIBase extends CompBase {
      */
     recvData?: any;
 
+    /**
+     * 按钮点击监听
+     */
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         
     }

@@ -46,17 +46,17 @@ export default class HallLayer extends LayerBase {
     async doPanelChange(isTest: boolean) {
         let T = this;
 
-        T.getUIObj("btn_test").color = cc.color().fromHEX(isTest ? "#5AC5F2" : "#32A0CF");
-        T.getUIObj("btn_game").color = cc.color().fromHEX(isTest ? "#32A0CF" : "#5AC5F2");
+        T.getObj("btn_test").color = cc.color().fromHEX(isTest ? "#5AC5F2" : "#32A0CF");
+        T.getObj("btn_game").color = cc.color().fromHEX(isTest ? "#32A0CF" : "#5AC5F2");
 
-        let panel = T.getUIObj("panel");
+        let panel = T.getObj("panel");
         panel.removeAllChildren();
 
-        let pnl = await ceo.uiMgr.createPanel(isTest ? PanelConf.Test : PanelConf.Game);
+        let pnl = await ceo.uiMgr.createPanelAsync(isTest ? PanelConf.Test : PanelConf.Game);
         pnl.parent = panel;
     }
 
     updateGems() {
-        this.getUIObj("bar.lo.num", cc.Label).string = String(GameData.gems);
+        this.getObj("bar.lo.num", cc.Label).string = String(GameData.gems);
     }
 }

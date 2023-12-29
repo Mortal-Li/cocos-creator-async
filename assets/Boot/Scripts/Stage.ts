@@ -17,7 +17,7 @@ export default class Stage extends cc.Component {
             qt: true,
             socket: true,
         });
-        ceo.uiMgr.gotoLayer(LayerConf.Load);
+        ceo.uiMgr.goLayerAsync(LayerConf.Load);
     }
 
 }

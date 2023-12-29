@@ -6,6 +6,7 @@
  */
 
 import ceo from "../ceo";
+import AsyncHelper from "../tools/AsyncHelper";
 import CocosHelper from "../tools/CocosHelper";
 import LayerBase from "../ui/LayerBase";
 import PopupBase from "../ui/PopupBase";
@@ -16,7 +17,7 @@ import { IUIConfig, LAYER_PATH, PANEL_PATH, POPUP_PATH, UICacheMode, WIDGET_PATH
 
 export default class UIManager {
 
-    // ********************* Layer *********************
+    //////////////////////////////////////////// Layer ////////////////////////////////////////////
     private _curLayerConf : IUIConfig;
 
     getCurLayerConf() {
@@ -26,16 +27,18 @@ export default class UIManager {
     getCurLayer() {
         return ceo.godNode.getChildByName(this._curLayerConf.name);
     }
-
+    
     /**
-     * 跳转到下一个Layer
+     * 切换Layer
+     * @param newConf 要切换的Layer配置
+     * @param data 传给Layer的数据，可选
      */
-    async gotoLayer(newConf: IUIConfig, data?: any) {
+    async goLayerAsync(newConf: IUIConfig, data?: any) {
         let T = this;
 
         let preConf = T._curLayerConf;
         if (preConf && preConf.name === newConf.name) {
-            T.resetCurLayer(data);
+            T.resetCurLayerAsync(data);
             return ;
         }
 
@@ -50,35 +53,23 @@ export default class UIManager {
                 scpt.recvData = data;
                 scpt.refresh();
                 cc.log("show Layer", newConf.name);
-                T.clearLayer(preConf);
+                T._clearLayer(preConf);
                 return ;
             }
         }
 
-        let layer = await T._initUIBase(newConf, LAYER_PATH, data);
+        let layer = await T._genUIBaseAsync(newConf, LAYER_PATH, data);
         layer.parent = ceo.godNode;
         cc.log("create Layer", newConf.name);
 
-        T.clearLayer(preConf);
-    }
-
-    private clearLayer(preConf: IUIConfig) {
-        if (preConf) {
-            let curLayer = ceo.godNode.getChildByName(preConf.name);
-            if (preConf.cacheMode == UICacheMode.Stay) {
-                curLayer.active = false;
-                cc.log("hide Layer", preConf.name);
-            } else {
-                curLayer.destroy();
-                cc.log("destroy Layer", preConf.name);
-            }
-        }
+        T._clearLayer(preConf);
     }
 
     /**
      * 刷新、重置当前Layer
+     * @param data 传给Layer的数据，可选
      */
-    async resetCurLayer(data?: any) {
+    async resetCurLayerAsync(data?: any) {
         let T = this;
 
         let conf = T._curLayerConf;
@@ -94,7 +85,7 @@ export default class UIManager {
                 let delLayer = ceo.godNode.getChildByName(conf.name);
                 delLayer.name = "removed";
 
-                let layer = await T._initUIBase(conf, LAYER_PATH, data);
+                let layer = await T._genUIBaseAsync(conf, LAYER_PATH, data);
                 layer.parent = ceo.godNode;
                 delLayer.destroy();
                 
@@ -105,50 +96,54 @@ export default class UIManager {
 
     }
 
-    preLoadLayer(conf: IUIConfig, onCompleted?: (error?: Error) => void, onProgress?: (finish: number, total: number) => void) {
-        return new Promise<void>((resolve, reject) => {
-            CocosHelper.getBundle(conf.bundle).then((bundle) => {
-                bundle.preload(LAYER_PATH + conf.name, cc.Prefab, (cur: number, all: number, _ignore) => {
-                    if (onProgress) {
-                        onProgress(cur, all);
-                    }
-                }, (err: Error, _ignores) => {
-                    if (onCompleted) {
-                        onCompleted(err);
-                    }
-                    err ? reject(err) : resolve()
-                });
-            }).catch(reject);
-        });
+    /**
+     * 预加载指定的layer
+     */
+    async preLoadLayerAsync(conf: IUIConfig, onProgress?: (cur: number, total: number) => void) {
+        let bundle = cc.assetManager.getBundle(conf.bundle);
+        if (!bundle) bundle = await AsyncHelper.loadBundleAsync(conf.bundle);
+        await AsyncHelper.preloadAsync(bundle, LAYER_PATH + conf.name, cc.Prefab, onProgress);
     }
 
-    // ********************* Popup *********************
+    private _clearLayer(preConf: IUIConfig) {
+        if (preConf) {
+            let layer = ceo.godNode.getChildByName(preConf.name);
+            if (preConf.cacheMode == UICacheMode.Stay) {
+                layer.active = false;
+                cc.log("hide Layer", preConf.name);
+            } else {
+                layer.destroy();
+                cc.log("destroy Layer", preConf.name);
+            }
+        }
+    }
+
+    //////////////////////////////////////////// Popup ////////////////////////////////////////////
     /**
      * 可返回弹窗界面中用户设置的数据
+     * @param conf 要显示的弹窗配置
+     * @param data 传给Popup的数据，可选
+     * @returns 当关闭弹窗时，可返回弹窗脚本中用户设置的任意数据
      */
-    async showPopup(conf: IUIConfig, data?: any, parent?: cc.Node) {
+    async showPopupAsync(conf: IUIConfig, data?: any) {
         let T = this;
 
-        let zIdx = 99;
-        let p = parent;
-        if (!p) p = T.getCurLayer();
+        let nd = new cc.Node(conf.name);
+        T.getCurLayer().addChild(nd, 99);
+        nd.addComponent(cc.BlockInputEvents);
+        
+        CocosHelper.addWidget(nd, { left: 0, right: 0, top: 0, bottom: 0 });
 
-        let popNd = new cc.Node();
-        popNd.name = conf.name;
-        popNd.zIndex = zIdx;
-        popNd.parent = p;
-        let wgt = popNd.addComponent(cc.Widget);
-        wgt.isAlignTop = wgt.isAlignBottom = wgt.isAlignLeft = wgt.isAlignRight = true;
-        wgt.top = wgt.bottom = wgt.left = wgt.right = 0;
-        wgt.updateAlignment();
-        popNd.addComponent(cc.BlockInputEvents);
+        let darkBg = new cc.Node("dark");
+        darkBg.opacity = 200;
+        darkBg.addComponent(cc.Sprite).spriteFrame = CocosHelper.genDarkSpriteFrame();
+        darkBg.parent = nd;
+        CocosHelper.addWidget(darkBg, { left: 0, right: 0, top: 0, bottom: 0 });
 
-        CocosHelper.getGrayBg().parent = popNd;
-
-        let popup = await T._initUIBase(conf, POPUP_PATH, data);
+        let popup = await T._genUIBaseAsync(conf, POPUP_PATH, data);
         let scptName = conf.script ? conf.script : conf.name;
         let scpt: PopupBase = popup.getComponent(scptName);
-        popup.parent = popNd;
+        popup.parent = nd;
         scpt.showAnim();
         cc.log("show Popup", conf.name);
 
@@ -157,11 +152,9 @@ export default class UIManager {
         });
     }
 
-    autoRemovePopup(p: cc.Node) {
-        p?.destroy();
-        cc.log("close Popup", p.name);
-    }
-
+    /**
+     * 根据配置获取已展示的弹窗
+     */
     getPopup(popupConf: IUIConfig, layerConf: IUIConfig = null) {
         if (!layerConf) layerConf = this._curLayerConf;
         
@@ -173,6 +166,9 @@ export default class UIManager {
         return null;
     }
 
+    /**
+     * 关闭所有已展示的弹窗
+     */
     closeAllPopup() {
         let layer = ceo.godNode.getChildByName(this._curLayerConf.name);
         if (layer) {
@@ -184,31 +180,62 @@ export default class UIManager {
         }
     }
 
-    // ********************* Panel *********************
-    async createPanel(conf: IUIConfig, data?: any) {
-        return await this._initUIBase(conf, PANEL_PATH, data);
+    autoRemovePopup(p: cc.Node) {
+        p?.destroy();
+        cc.log("close Popup", p.name);
     }
 
-    // ********************* Widget *********************
-    async createWidget(conf: IUIConfig, data?: any) {
-        return await this._initUIBase(conf, WIDGET_PATH, data);
+    //////////////////////////////////////////// Panel ////////////////////////////////////////////
+    async createPanelAsync(conf: IUIConfig, data?: any) {
+        return await this._genUIBaseAsync(conf, PANEL_PATH, data);
     }
 
-    // ********************* Common ********************* 
-    private async _initUIBase(conf: IUIConfig, prefixPath: string, data?: any) {
-        let bundle = await CocosHelper.getBundle(conf.bundle);
-        let prefab = await CocosHelper.asyncLoadPrefab(bundle, prefixPath + conf.name);
+    //////////////////////////////////////////// Widget ////////////////////////////////////////////
+    async createWidgetAsync(conf: IUIConfig, data?: any) {
+        return await this._genUIBaseAsync(conf, WIDGET_PATH, data);
+    }
+
+    //////////////////////////////////////////// Common //////////////////////////////////////////// 
+    private async _genUIBaseAsync(conf: IUIConfig, prefixPath: string, data?: any) {
+        let bundle = cc.assetManager.getBundle(conf.bundle);
+        if (!bundle) bundle = await AsyncHelper.loadBundleAsync(conf.bundle);
+
+        let prefab = await AsyncHelper.loadAsync<cc.Prefab>(bundle, prefixPath + conf.name, cc.Prefab);
         let node = cc.instantiate(prefab);
         let scptName = conf.script ? conf.script : conf.name;
         let scpt: UIBase = node.getComponent(scptName);
         if (!scpt) scpt = node.addComponent(UIBase);
         scpt.recvData = data;
+
         if (conf.cacheMode == UICacheMode.Cache) {
             if (prefab.refCount == 0) prefab.addRef();
         } else {
             prefab.addRef();
             scpt.refAssets.push(prefab);
         }
+
         return node;
+    }
+
+    //////////////////////////////////////////// Other ////////////////////////////////////////////
+    /**
+     * 屏蔽UI触摸
+     */
+    banTouch() {
+        let ban = ceo.godNode.getChildByName("_ban");
+        if (!ban) {
+            let node = new cc.Node("_ban");
+            node.setContentSize(ceo.godNode.getContentSize());
+            ceo.godNode.addChild(node, 9);
+            node.addComponent(cc.BlockInputEvents);
+        }
+    }
+
+    /**
+     * 恢复UI触摸
+     */
+    unbanTouch() {
+        let ban = ceo.godNode.getChildByName("_ban");
+        if (ban) ban.destroy();
     }
 }

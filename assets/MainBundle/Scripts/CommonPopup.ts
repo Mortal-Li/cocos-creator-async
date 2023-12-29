@@ -34,10 +34,10 @@ export default class CommonPopup extends PopupBase {
         }
 
         if (d.hideNO) {
-            T.getUIObj("bg.close").active = false;
+            T.getObj("bg.close").active = false;
         }
         if (d.height) {
-            T.getUIObj("bg").height = d.height;
+            T.getObj("bg").height = d.height;
         }
     }
 

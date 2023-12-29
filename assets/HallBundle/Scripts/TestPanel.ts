@@ -27,7 +27,7 @@ export default class TestPanel extends UIBase {
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         switch (name) {
             case "set":
-                ceo.uiMgr.showPopup(PopupConf.Settings);
+                ceo.uiMgr.showPopupAsync(PopupConf.Settings);
                 break;
         
             case "toast":
@@ -46,19 +46,19 @@ export default class TestPanel extends UIBase {
                 break;
 
             case "table":
-                ceo.uiMgr.showPopup(PopupConf.TableView);
+                ceo.uiMgr.showPopupAsync(PopupConf.TableView);
                 break;
 
             case "adapter":
-                ceo.uiMgr.showPopup(PopupConf.SafeAdapter);
+                ceo.uiMgr.showPopupAsync(PopupConf.SafeAdapter);
                 break;
 
             case "quad":
-                ceo.uiMgr.showPopup(PopupConf.QuadTree);
+                ceo.uiMgr.showPopupAsync(PopupConf.QuadTree);
                 break;
 
             case "socket":
-                ceo.uiMgr.showPopup(PopupConf.Socket);
+                ceo.uiMgr.showPopupAsync(PopupConf.Socket);
                 break;
         }
     }

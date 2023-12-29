@@ -39,7 +39,7 @@ export default class SocketPopup extends PopupBase {
             case "conn":
                 if (this.urlEB.string.length > 0) {
                     await socketCenter.connect(this.urlEB.string);
-                    let lblNd = cc.instantiate(this.getUIObj("help.txt"));
+                    let lblNd = cc.instantiate(this.getObj("help.txt"));
                     lblNd.getComponent(cc.Label).string = "Connected!";
                     lblNd.parent = this.loNd;
                 }
@@ -48,7 +48,7 @@ export default class SocketPopup extends PopupBase {
             case "send":
                 if (this.txtEB.string.length > 0) {
                     let ret = await socketCenter.req(CMDID.CMD_HELLO, this.txtEB.string);
-                    let lblNd = cc.instantiate(this.getUIObj("help.txt"));
+                    let lblNd = cc.instantiate(this.getObj("help.txt"));
                     lblNd.getComponent(cc.Label).string = "response:" + ret;
                     lblNd.parent = this.loNd;
                 }

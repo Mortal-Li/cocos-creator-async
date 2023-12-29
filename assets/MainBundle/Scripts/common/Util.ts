@@ -13,7 +13,7 @@ import Toast from "../Toast";
 export default class Util {
     
     static async showToast(str: string) {
-        let tst = await ceo.uiMgr.createWidget(WidgetConf.Toast);
+        let tst = await ceo.uiMgr.createWidgetAsync(WidgetConf.Toast);
         let scrpt = tst.getComponent(Toast);
         scrpt.msg = str;
         ceo.godNode.addChild(tst);
@@ -50,21 +50,7 @@ export default class Util {
         height?: number;
         }) {
 
-        return await ceo.uiMgr.showPopup(PopupConf.Common, options);
+        return await ceo.uiMgr.showPopupAsync(PopupConf.Common, options);
     }
 
-    static banTouch() {
-        let ban = ceo.godNode.getChildByName("ban");
-        if (!ban) {
-            let node = new cc.Node("ban");
-            node.setContentSize(ceo.godNode.getContentSize())
-            ceo.godNode.addChild(node, 9);
-            node.addComponent(cc.BlockInputEvents);
-        }
-    }
-
-    static unbanTouch() {
-        let ban = ceo.godNode.getChildByName("ban");
-        if (ban) ban.destroy();
-    }
 }

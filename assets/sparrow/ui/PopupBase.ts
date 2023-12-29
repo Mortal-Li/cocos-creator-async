@@ -39,7 +39,8 @@ export default class PopupBase extends UIBase {
         this.node.scale = 0;
         cc.tween(this.node)
             .set({ width: ceo.godNode.width, height: ceo.godNode.height })    // bug fix, scale may cause cc.Widget wrong
-            .to(0.2, { scale: 1 }, cc.easeBackOut()).start();
+            .to(0.2, { scale: 1 }, cc.easeBackOut())
+            .start();
     }
 
     /**
@@ -49,8 +50,7 @@ export default class PopupBase extends UIBase {
         cc.tween(this.node).to(0.2, { scale: 0 }, cc.easeBackIn()).call(()=>{ this.node.destroy(); }).start();
     }
 
-
-    setGrayBgOpacity(opacity: number) {
-        this.node.parent.getChildByName("gray").opacity = opacity;
+    setDarkBgOpacity(opacity: number) {
+        this.node.parent.getChildByName("dark").opacity = opacity;
     }
 }

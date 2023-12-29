@@ -6,73 +6,95 @@
 
 
 export default class CocosHelper {
+
+    static addSprite(nd: cc.Node, options: {
+        spriteFrame: cc.SpriteFrame;
+        type?: cc.Sprite.Type;
+        sizeMode?: cc.Sprite.SizeMode;
+        trim?: boolean;
+    }) {
+        if (!nd) return;
+
+        if (typeof options.type !== "number") options.type = cc.Sprite.Type.SIMPLE;
+        if (typeof options.sizeMode !== "number") options.sizeMode = cc.Sprite.SizeMode.TRIMMED;
+        if (typeof options.trim !== "boolean") options.trim = true;
+
+        let spr = nd.addComponent(cc.Sprite);
+        spr.spriteFrame = options.spriteFrame;
+        spr.type = options.type;
+        spr.sizeMode = options.sizeMode;
+        spr.trim = options.trim;
+
+        return spr;
+    }
     
-    static asynSleep = function(t: number, target: cc.Component = null) {
-        return new Promise((resolve, reject) => {
-            if (!target) target = cc.Canvas.instance;
-            target.scheduleOnce(() => {
-                resolve(null);
-            }, t);
-        });
+    static addLabel(nd: cc.Node, options: {
+        string: string;
+        fontSize?: number;
+        color?: cc.Color;
+        lineHeight?: number;
+        horizontalAlign?: cc.Label.HorizontalAlign;
+        verticalAlign?: cc.Label.VerticalAlign;
+        overflow?: cc.Label.Overflow;
+        enableBold?: boolean;
+        enableItalic?: boolean;
+        enableUnderline?: boolean;
+        enableWrapText?: boolean;
+        cacheMode?: cc.Label.CacheMode;
+    }) {
+        if (!nd) return;
+
+        if (!options.fontSize) options.fontSize = 40;
+        if (!options.color) options.color = cc.Color.WHITE;
+        if (!options.lineHeight) options.lineHeight = options.fontSize;
+        if (typeof options.horizontalAlign !== "number") options.horizontalAlign = cc.Label.HorizontalAlign.CENTER;
+        if (typeof options.verticalAlign !== "number") options.verticalAlign = cc.Label.VerticalAlign.CENTER;
+        if (typeof options.overflow !== "number") options.overflow = cc.Label.Overflow.NONE;
+        if (typeof options.cacheMode !== "number") options.cacheMode = cc.Label.CacheMode.NONE;
+
+        let lbl = nd.addComponent(cc.Label);
+        lbl.string = options.string;
+        lbl.fontSize = options.fontSize;
+        lbl.lineHeight = options.lineHeight;
+        lbl.horizontalAlign = options.horizontalAlign;
+        lbl.verticalAlign = options.verticalAlign;
+        lbl.overflow = options.overflow;
+        lbl.enableBold = !!options.enableBold;
+        lbl.enableItalic = !!options.enableItalic;
+        lbl.enableUnderline = !!options.enableUnderline;
+        lbl.enableWrapText = !!options.enableWrapText;
+        lbl.cacheMode = options.cacheMode;
+        nd.color = options.color;
+
+        return lbl;
     }
 
-    static asyncTween<T>(node: T, tween: cc.Tween<T>) {
-        return new Promise((resolve) => {
-            cc.tween(node).then(tween).call(resolve).start();
-        })
-    }
+    static addWidget(nd: cc.Node, paddings: { left?: number; right?: number; top?: number, bottom?: number}) {
+        if (!nd) return;
 
-    static preload(bundle: cc.AssetManager.Bundle, dirPath: string, type: typeof cc.Asset, onProgress?: Function) {
-        return new Promise<void>((resolve, reject) => {
-            bundle.preload(dirPath, type, (cur, total, itm) => {
-                if (onProgress) onProgress(cur / total);
-            }, (err, res) => {
-                err ? reject(err) : resolve()
-            });
-        });
-    }
+        let wgt = nd.addComponent(cc.Widget);
 
-    static preloadDir(bundle: cc.AssetManager.Bundle, dirPath: string, onProgress?: Function) {
-        return new Promise<void>((resolve, reject) => {
-            bundle.preloadDir(dirPath, (cur, total, itm) => {
-                if (onProgress) onProgress(cur / total);
-            }, (err, res) => {
-                err ? reject(err) : resolve()
-            });
-        });
-    }
-
-    static asyncLoadBundle(bundleName: string) {
-        return new Promise<cc.AssetManager.Bundle>((resolve, reject) => {
-            cc.assetManager.loadBundle(bundleName, (error: Error, bundle: cc.AssetManager.Bundle) => {
-                error ? reject(error) : resolve(bundle);
-            });
-        });
-    }
-
-    static asyncLoadPrefab(bundle: cc.AssetManager.Bundle, prefabPath: string) {
-        return new Promise<cc.Prefab>((resolve, reject) => {
-            bundle.load(prefabPath, cc.Prefab, (err: Error, prefab: cc.Prefab) => {
-                err ? reject(err) : resolve(prefab);
-            });
-        });
-    }
-
-    static asyncLoadSpriteFrame(pathStr: string, bundle: cc.AssetManager.Bundle) {
-        return new Promise<cc.SpriteFrame>((resolve, reject) => {
-            bundle.load(pathStr, cc.SpriteFrame, (err: Error, frame: cc.SpriteFrame) => {
-                err ? reject(err) : resolve(frame);
-            });
-        });
-    }
-
-    static async getBundle(bundleName: string, needLoad: boolean = true) {
-        let bundle = cc.assetManager.getBundle(bundleName);
-        if (!bundle && needLoad) {
-            cc.log("load bundle", bundleName);
-            return await CocosHelper.asyncLoadBundle(bundleName);
+        if (typeof paddings.left === "number") {
+            wgt.isAlignLeft = true;
+            wgt.left = paddings.left;
         }
-        return bundle;
+
+        if (typeof paddings.right === "number") {
+            wgt.isAlignRight = true;
+            wgt.right = paddings.right;
+        }
+
+        if (typeof paddings.top === "number") {
+            wgt.isAlignTop = true;
+            wgt.top = paddings.top;
+        }
+
+        if (typeof paddings.bottom === "number") {
+            wgt.isAlignBottom = true;
+            wgt.bottom = paddings.bottom;
+        }
+
+        return wgt;
     }
 
     static grayNode(node: cc.Node, isGray: boolean = true) {
@@ -87,19 +109,16 @@ export default class CocosHelper {
         }
     }
 
-    static getGrayBg() {
+    static genDarkSpriteFrame() {
         let ttx = new cc.Texture2D();
         ttx.initWithData(new Uint8Array([0, 0, 0]), cc.Texture2D.PixelFormat.RGB888, 1, 1);
 
         let sprFrm = new cc.SpriteFrame();
         sprFrm.setTexture(ttx);
-        sprFrm.setRect(cc.rect(0, 0, cc.winSize.width, cc.winSize.height));
+        sprFrm.setRect(cc.rect(0, 0, 8, 8));
 
-        let grayBg = new cc.Node("gray");
-        grayBg.opacity = 200;
-        grayBg.addComponent(cc.Sprite).spriteFrame = sprFrm;
-
-        return grayBg;
+        return sprFrm;
     }
+
 }
 
