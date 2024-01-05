@@ -4,8 +4,8 @@
  * @created 
  */
 
-import ceo from "../../sparrow/ceo";
-import PopupBase from "../../sparrow/ui/PopupBase";
+import ceo from "../../framework/ceo";
+import PopupBase from "../../framework/ui/PopupBase";
 
 const {ccclass, property} = cc._decorator;
 

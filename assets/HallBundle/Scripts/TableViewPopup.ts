@@ -4,8 +4,8 @@
  * @created 2021年12月6日
  */
 
-import PopupBase from "../../sparrow/ui/PopupBase";
-import wTableView from "../../sparrow/widget/wTableView";
+import PopupBase from "../../framework/ui/PopupBase";
+import wTableView from "../../framework/widget/wTableView";
 
 const {ccclass, property} = cc._decorator;
 

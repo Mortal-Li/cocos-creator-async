@@ -4,7 +4,7 @@
  * @created 2021年9月2日
  */
 
-import { IUIConfig, UICacheMode } from "../../sparrow/ui/UIConfig";
+import { IUIConfig, UICacheMode } from "../../framework/ui/UIConfig";
 
 export const BundleConf = {
     Main : "MainBundle",

@@ -5,9 +5,9 @@
  */
 
 import { LayerConf } from "../../Boot/Scripts/AssetConfig";
-import ceo from "../../sparrow/ceo";
-import AsyncHelper from "../../sparrow/tools/AsyncHelper";
-import LayerBase from "../../sparrow/ui/LayerBase";
+import ceo from "../../framework/ceo";
+import AsyncHelper from "../../framework/tools/AsyncHelper";
+import LayerBase from "../../framework/ui/LayerBase";
 import GameData from "./common/GameData";
 import { SoundID, LocalKey } from "./common/MainConst";
 

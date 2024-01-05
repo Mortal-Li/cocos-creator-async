@@ -4,7 +4,7 @@
  * @created 
  */
 
-import LayerBase from "../../sparrow/ui/LayerBase";
+import LayerBase from "../../framework/ui/LayerBase";
 
 const {ccclass, property} = cc._decorator;
 

@@ -8,8 +8,8 @@ import { PopupConf } from "../../Boot/Scripts/AssetConfig";
 import GameData from "../../MainBundle/Scripts/common/GameData";
 import { GameCustomEvent, TxtConst } from "../../MainBundle/Scripts/common/MainConst";
 import Util from "../../MainBundle/Scripts/common/Util";
-import ceo from "../../sparrow/ceo";
-import UIBase from "../../sparrow/ui/UIBase";
+import ceo from "../../framework/ceo";
+import UIBase from "../../framework/ui/UIBase";
 
 const {ccclass, property} = cc._decorator;
 

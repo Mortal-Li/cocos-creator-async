@@ -7,9 +7,9 @@
 import { PanelConf } from "../../Boot/Scripts/AssetConfig";
 import GameData from "../../MainBundle/Scripts/common/GameData";
 import { GameCustomEvent } from "../../MainBundle/Scripts/common/MainConst";
-import ceo from "../../sparrow/ceo";
-import { doOnceFirst } from "../../sparrow/tools/Decorators";
-import LayerBase from "../../sparrow/ui/LayerBase";
+import ceo from "../../framework/ceo";
+import { doOnceFirst } from "../../framework/tools/Decorators";
+import LayerBase from "../../framework/ui/LayerBase";
 
 const {ccclass, property} = cc._decorator;
 

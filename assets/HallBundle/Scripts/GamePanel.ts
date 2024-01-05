@@ -6,8 +6,8 @@
  */
 
 import { LayerConf } from "../../Boot/Scripts/AssetConfig";
-import ceo from "../../sparrow/ceo";
-import UIBase from "../../sparrow/ui/UIBase";
+import ceo from "../../framework/ceo";
+import UIBase from "../../framework/ui/UIBase";
 
 const {ccclass, property} = cc._decorator;
 

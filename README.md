@@ -1,13 +1,13 @@
-## <center>Cocos-Creator-Sparrow</center>
+## <center>Cocos-Creator-Async</center>
 <center>
 
 ![Def](https://img.shields.io/badge/cocos--creator-2.4.x-blue)
-![GitHub](https://img.shields.io/github/license/Mortal-Li/cocos-creator-sparrow)
-![GitHub last commit](https://img.shields.io/github/last-commit/Mortal-Li/cocos-creator-sparrow)
+![GitHub](https://img.shields.io/github/license/Mortal-Li/cocos-creator-async)
+![GitHub last commit](https://img.shields.io/github/last-commit/Mortal-Li/cocos-creator-async)
 
 </center>
 
-Sparrow是一个基于Cocos-creator的轻量级代码开发框架，它主要有以下特征：
+Cocos-Creator-Async是一个基于Cocos-creator的轻量级代码开发框架，它主要有以下特征：
 - 单场景 + 多层级
 - 使用引擎的Bundle思想来管理游戏代码和资源
 - 提供常用的功能模块和通用的解决方案（不需要的功能模块可自行删除）
@@ -69,7 +69,7 @@ assets
 │   │   └───common ---------------> 一些通用脚本
 │   ├───Sounds -------------------> 项目音频资源(也可分散在各bundle)
 │   └───Textures -----------------> 通用资源
-└───sparrow ----------------------> 框架代码所在
+└───framework --------------------> 框架代码所在
     ├───manager ------------------> 一些管理类，如自定义事件分发、UI控制管理、本地存储等
     ├───tools --------------------> 一些工具类，如通用加密、装饰器等
     ├───ui -----------------------> 主要是对4种UI界面类型的封装
@@ -173,5 +173,5 @@ ceo.socketMgr.off(cmd, callback, target);
 
 ```
 详细使用以及其他使用示例请运行demo工程查看。  
-[更新日志](https://github.com/Mortal-Li/cocos-creator-sparrow/blob/main/CHANGELOG.md)
+[更新日志](https://github.com/Mortal-Li/cocos-creator-async/blob/main/CHANGELOG.md)
  

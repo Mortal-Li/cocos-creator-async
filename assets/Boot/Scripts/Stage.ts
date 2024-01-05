@@ -4,7 +4,7 @@
  * @created 2021年9月2日
  */
 
-import ceo from "../../sparrow/ceo";
+import ceo from "../../framework/ceo";
 import { LayerConf } from "./AssetConfig";
 
 const {ccclass, property} = cc._decorator;
@@ -22,4 +22,4 @@ export default class Stage extends cc.Component {
 
 }
 
-ceo.log("Welcome~ https://github.com/Mortal-Li/cocos-creator-sparrow");
+ceo.log("Welcome~ https://github.com/Mortal-Li/cocos-creator-async");

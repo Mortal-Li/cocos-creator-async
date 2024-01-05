@@ -4,7 +4,7 @@
  * @created 2022年5月7日
  */
 
-import ceo from "../../../sparrow/ceo";
+import ceo from "../../../framework/ceo";
 
 export const CMDID = {
      CMD_HELLO: 1000,

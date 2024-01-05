@@ -4,7 +4,7 @@
  * @created 2021年9月22日
  */
 
-import ceo from "../../../sparrow/ceo";
+import ceo from "../../../framework/ceo";
 import Loading from "../Loading";
 import GameData from "./GameData";
 import { TxtConst } from "./MainConst";

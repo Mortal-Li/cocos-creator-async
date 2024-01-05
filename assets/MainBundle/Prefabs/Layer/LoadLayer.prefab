@@ -256,8 +256,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 607.58,
-      "height": 100.8
+      "width": 455.68,
+      "height": 75.6
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -310,8 +310,8 @@
     "_dstBlendFactor": 771,
     "_string": "Welcome to use",
     "_N$string": "Welcome to use",
-    "_fontSize": 80,
-    "_lineHeight": 80,
+    "_fontSize": 60,
+    "_lineHeight": 60,
     "_enableWrapText": true,
     "_N$file": null,
     "_isSystemFontUsed": true,
@@ -364,8 +364,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 350.11,
-      "height": 113.4
+      "width": 616.82,
+      "height": 75.6
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -416,10 +416,10 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_string": "sparrow",
-    "_N$string": "sparrow",
-    "_fontSize": 90,
-    "_lineHeight": 90,
+    "_string": "Cocos-Creator-Async",
+    "_N$string": "Cocos-Creator-Async",
+    "_fontSize": 60,
+    "_lineHeight": 60,
     "_enableWrapText": true,
     "_N$file": null,
     "_isSystemFontUsed": true,

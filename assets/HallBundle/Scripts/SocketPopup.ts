@@ -5,7 +5,7 @@
  */
 
 import { CMDID, socketCenter } from "../../MainBundle/Scripts/common/SocketCenter";
-import PopupBase from "../../sparrow/ui/PopupBase";
+import PopupBase from "../../framework/ui/PopupBase";
 
 const {ccclass, property} = cc._decorator;
 

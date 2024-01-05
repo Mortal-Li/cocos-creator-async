@@ -5,7 +5,7 @@
  */
 
 import { PopupConf, WidgetConf } from "../../../Boot/Scripts/AssetConfig";
-import ceo from "../../../sparrow/ceo";
+import ceo from "../../../framework/ceo";
 import Toast from "../Toast";
 
 

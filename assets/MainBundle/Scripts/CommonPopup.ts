@@ -4,7 +4,7 @@
  * @created 2021年9月18日
  */
 
-import PopupBase from "../../sparrow/ui/PopupBase";
+import PopupBase from "../../framework/ui/PopupBase";
 
 const {ccclass, property} = cc._decorator;
 

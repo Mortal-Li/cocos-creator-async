@@ -4,7 +4,7 @@
  * @created 
  */
 
-import UIBase from "../../sparrow/ui/UIBase";
+import UIBase from "../../framework/ui/UIBase";
 
 const {ccclass, property} = cc._decorator;
 

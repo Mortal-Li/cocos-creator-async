@@ -4,7 +4,7 @@
  * @created 
  */
 
-import PopupBase from "../../sparrow/ui/PopupBase";
+import PopupBase from "../../framework/ui/PopupBase";
 
 const {ccclass, property} = cc._decorator;
 
