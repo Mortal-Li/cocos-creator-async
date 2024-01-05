@@ -120,9 +120,9 @@ export default class UIManager {
 
     //////////////////////////////////////////// Popup ////////////////////////////////////////////
     /**
-     * 可返回弹窗界面中用户设置的数据
+     * 显示对应配置的弹窗，可返回弹窗界面中用户设置的数据
      * @param conf 要显示的弹窗配置
-     * @param data 传给Popup的数据，可选
+     * @param data 传给弹窗的数据，可选
      * @returns 当关闭弹窗时，可返回弹窗脚本中用户设置的任意数据
      */
     async showPopupAsync(conf: IUIConfig, data?: any) {
@@ -136,7 +136,7 @@ export default class UIManager {
 
         let darkBg = new cc.Node("dark");
         darkBg.opacity = 200;
-        darkBg.addComponent(cc.Sprite).spriteFrame = CocosHelper.genDarkSpriteFrame();
+        darkBg.addComponent(cc.Sprite).spriteFrame = CocosHelper.genPureColorSpriteFrame();
         darkBg.parent = nd;
         CocosHelper.addWidget(darkBg, { left: 0, right: 0, top: 0, bottom: 0 });
 
@@ -180,7 +180,7 @@ export default class UIManager {
         }
     }
 
-    autoRemovePopup(p: cc.Node) {
+    _autoRemovePopup(p: cc.Node) {
         p?.destroy();
         cc.log("close Popup", p.name);
     }

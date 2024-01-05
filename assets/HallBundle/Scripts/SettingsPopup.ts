@@ -25,6 +25,8 @@ export default class SettingsPopup extends PopupBase {
 
         T.musicTgl.isChecked = GameData.music_switch;
         T.effectTgl.isChecked = GameData.effect_switch;
+
+        T.enableClickToClose([T.getObj("bg")]);
     }
 
     start () {

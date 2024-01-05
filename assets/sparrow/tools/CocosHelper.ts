@@ -9,8 +9,17 @@ export default class CocosHelper {
 
     static addSprite(nd: cc.Node, options: {
         spriteFrame: cc.SpriteFrame;
+        /**
+         * 默认值 cc.Sprite.Type.SIMPLE
+         */
         type?: cc.Sprite.Type;
+        /**
+         * 默认值 cc.Sprite.SizeMode.TRIMMED
+         */
         sizeMode?: cc.Sprite.SizeMode;
+        /**
+         * 默认值 true
+         */
         trim?: boolean;
     }) {
         if (!nd) return;
@@ -30,17 +39,41 @@ export default class CocosHelper {
     
     static addLabel(nd: cc.Node, options: {
         string: string;
+        /**
+         * 默认值 40
+         */
         fontSize?: number;
+        /**
+         * 默认值 cc.Color.WHITE
+         */
         color?: cc.Color;
+        /**
+         * 默认值 等于fontSize
+         */
         lineHeight?: number;
+        /**
+         * 默认值 cc.Label.HorizontalAlign.CENTER
+         */
         horizontalAlign?: cc.Label.HorizontalAlign;
+        /**
+         * 默认值 cc.Label.VerticalAlign.CENTER
+         */
         verticalAlign?: cc.Label.VerticalAlign;
+        /**
+         * 默认值 cc.Label.Overflow.NONE
+         */
         overflow?: cc.Label.Overflow;
+        /**
+         * 默认值 cc.Label.CacheMode.NONE
+         */
+        cacheMode?: cc.Label.CacheMode;
         enableBold?: boolean;
         enableItalic?: boolean;
         enableUnderline?: boolean;
+        /**
+         * 默认值 false
+         */
         enableWrapText?: boolean;
-        cacheMode?: cc.Label.CacheMode;
     }) {
         if (!nd) return;
 
@@ -97,6 +130,77 @@ export default class CocosHelper {
         return wgt;
     }
 
+    static addLayout(nd: cc.Node, options: {
+        type: cc.Layout.Type;
+        /**
+         * 默认值 cc.Layout.ResizeMode.CONTAINER
+         */
+        resizeMode?: cc.Layout.ResizeMode;
+        /**
+         * 默认值 false
+         */
+        affectedByScale?: boolean;
+        width?: number;
+        height?: number;
+        spacingX?: number;
+        paddingLeft?: number;
+        paddingRight?: number;
+        /**
+         * 默认值 cc.Layout.HorizontalDirection.LEFT_TO_RIGHT
+         */
+        horizontalDirection?: cc.Layout.HorizontalDirection;
+        spacingY?: number;
+        paddingTop?: number;
+        paddingBottom?: number;
+        /**
+         * 默认值 cc.Layout.VerticalDirection.TOP_TO_BOTTOM
+         */
+        verticalDirection?: cc.Layout.VerticalDirection;
+        /**
+         * 默认值 cc.Layout.AxisDirection.HORIZONTAL
+         */
+        startAxis?: cc.Layout.AxisDirection;
+    }) {
+        if (!nd) return;
+
+        if (typeof options.resizeMode !== "number") options.resizeMode = cc.Layout.ResizeMode.CONTAINER;
+
+        if (options.width) nd.width = options.width;
+        if (options.height) nd.height = options.height;
+
+        let lo = nd.addComponent(cc.Layout);
+        lo.type = options.type;
+        lo.resizeMode = options.resizeMode;
+        lo.affectedByScale = !!options.affectedByScale;
+
+        if (lo.type == cc.Layout.Type.HORIZONTAL) {
+            lo.horizontalDirection = (typeof options.horizontalDirection === "number") ? options.horizontalDirection : cc.Layout.HorizontalDirection.LEFT_TO_RIGHT;
+            lo.spacingX = options.spacingX ? options.spacingX : 0;
+            lo.paddingLeft = options.paddingLeft ? options.paddingLeft : 0;
+            lo.paddingRight = options.paddingRight ? options.paddingRight : 0;
+        } else if (lo.type == cc.Layout.Type.VERTICAL) {
+            lo.verticalDirection = (typeof options.verticalDirection === "number") ? options.verticalDirection : cc.Layout.VerticalDirection.TOP_TO_BOTTOM;
+            lo.spacingY = options.spacingY ? options.spacingY : 0;
+            lo.paddingTop = options.paddingTop ? options.paddingTop : 0;
+            lo.paddingBottom = options.paddingBottom ? options.paddingBottom : 0;
+        } else if (lo.type == cc.Layout.Type.GRID) {
+            lo.startAxis = (typeof options.startAxis === "number") ? options.startAxis : cc.Layout.AxisDirection.HORIZONTAL;
+            lo.horizontalDirection = (typeof options.horizontalDirection === "number") ? options.horizontalDirection : cc.Layout.HorizontalDirection.LEFT_TO_RIGHT;
+            lo.verticalDirection = (typeof options.verticalDirection === "number") ? options.verticalDirection : cc.Layout.VerticalDirection.TOP_TO_BOTTOM;
+            lo.spacingX = options.spacingX ? options.spacingX : 0;
+            lo.paddingLeft = options.paddingLeft ? options.paddingLeft : 0;
+            lo.paddingRight = options.paddingRight ? options.paddingRight : 0;
+            lo.spacingY = options.spacingY ? options.spacingY : 0;
+            lo.paddingTop = options.paddingTop ? options.paddingTop : 0;
+            lo.paddingBottom = options.paddingBottom ? options.paddingBottom : 0;
+        }
+
+        return lo;
+    }
+
+    /**
+     * 递归置灰或还原节点
+     */
     static grayNode(node: cc.Node, isGray: boolean = true) {
         if (node.getComponent(cc.Sprite)) {
             node.getComponent(cc.Sprite).setMaterial(0, cc.Material.getBuiltinMaterial(isGray ? "2d-gray-sprite" : "2d-sprite"));
@@ -109,9 +213,13 @@ export default class CocosHelper {
         }
     }
 
-    static genDarkSpriteFrame() {
+    /**
+     * 生成一张纯色的图片帧，默认黑色
+     * @param color 图片的颜色
+     */
+    static genPureColorSpriteFrame(color: cc.Color = cc.Color.BLACK) {
         let ttx = new cc.Texture2D();
-        ttx.initWithData(new Uint8Array([0, 0, 0]), cc.Texture2D.PixelFormat.RGB888, 1, 1);
+        ttx.initWithData(new Uint8Array([color.r, color.g, color.b]), cc.Texture2D.PixelFormat.RGB888, 1, 1);
 
         let sprFrm = new cc.SpriteFrame();
         sprFrm.setTexture(ttx);

@@ -10,15 +10,15 @@
  */
 export const UICacheMode = {
     /**
-     * 不缓存加载的资源
+     * 不缓存加载的资源，销毁即释放
      */
     NoCache: 0,
     /**
-     * 缓存加载的资源
+     * 缓存加载的资源，销毁不会释放
      */
     Cache: 1,
     /**
-     * 常驻节点 (用于Layer)
+     * 常驻节点 (用于Layer)，不销毁不释放
      */
     Stay: 2
 };
@@ -33,11 +33,12 @@ export interface IUIConfig {
      */
     name: string;
     /**
-     * 挂载的脚本名, 可选；缺省表示和prefab资源名一致
+     * 挂载的脚本名, 可选；缺省表示脚本名和prefab资源名一致
+     * 如果没有挂载脚本，也会默认挂载一个基类组件，方便管理
      */
     script?: string;
     /**
-     * 所加载资源的缓存模式，默认为 UICacheMode.NoCache，不缓存
+     * 所加载资源的缓存模式，默认为 UICacheMode.NoCache
      */
     cacheMode?: number;
 }
