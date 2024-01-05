@@ -50,7 +50,7 @@ export default class HallLayer extends LayerBase {
         T.getObj("btn_game").color = cc.color().fromHEX(isTest ? "#32A0CF" : "#5AC5F2");
 
         let panel = T.getObj("panel");
-        panel.removeAllChildren();
+        panel.destroyAllChildren();
 
         let pnl = await ceo.uiMgr.createPanelAsync(isTest ? PanelConf.Test : PanelConf.Game);
         pnl.parent = panel;

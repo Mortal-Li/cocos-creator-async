@@ -33,6 +33,7 @@ export default class AsyncHelper {
 
     static preloadAsync(bundle: cc.AssetManager.Bundle, path: string, type: typeof cc.Asset, onProgress?: (cur: number, total: number)=> void) {
         return new Promise<void>((resolve, reject) => {
+            // 预加载的资源的不会出现在cc.assetManager.assets中
             bundle.preload(path, type, (cur, total, itm) => {
                 if (onProgress) onProgress(cur, total);
             }, (err, res) => {

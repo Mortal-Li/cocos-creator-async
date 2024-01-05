@@ -22,4 +22,4 @@ export default class Stage extends cc.Component {
 
 }
 
-cc.log("Welcome~ https://github.com/Mortal-Li/cocos-creator-sparrow");
+ceo.log("Welcome~ https://github.com/Mortal-Li/cocos-creator-sparrow");

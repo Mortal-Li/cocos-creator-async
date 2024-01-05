@@ -60,9 +60,8 @@ export default class PopupBase extends UIBase {
     /**
      * 点击非nds数组中的对象，则关闭弹窗，需手动调用开启;
      * 其他触摸控件如Button、Toggle等会优先响应，不用加到数组
-     * @param nds ;
      */
-    enableClickToClose(nds: cc.Node[]) {
+    enableClickBlankToClose(nds: cc.Node[]) {
         this.node.on(cc.Node.EventType.TOUCH_END, (evt: cc.Event.EventTouch) => {
             let startPos = evt.getStartLocation();
             let endPos = evt.getLocation();
