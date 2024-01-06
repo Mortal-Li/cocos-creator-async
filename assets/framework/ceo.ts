@@ -8,7 +8,7 @@
 import EventManager from "./manager/EventManager";
 import HttpManager from "./manager/HttpManager";
 import LocalManager from "./manager/LocalManager";
-import LogManager from "./manager/LogManager";
+import DebugManger from "./manager/DebugManger";
 import QCollisionManager from "./manager/QCollisionManager";
 import SocketManager from "./manager/SocketManager";
 import SoundManager from "./manager/SoundManager";
@@ -21,7 +21,7 @@ const ceo = {
     localMgr: new LocalManager(),
     soundMgr: new SoundManager(),
     httpMgr: new HttpManager(),
-    logMgr: new LogManager(),
+    debugMgr: new DebugManger(),
 
     qCollisionMgr: <QCollisionManager> null,
     socketMgr: <SocketManager> null,

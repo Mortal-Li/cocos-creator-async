@@ -60,6 +60,10 @@ export default class TestPanel extends UIBase {
             case "socket":
                 ceo.uiMgr.showPopupAsync(PopupConf.Socket);
                 break;
+
+            case "debug":
+                ceo.debugMgr.switchDebugLogBtn();
+                break;
         }
     }
 }
