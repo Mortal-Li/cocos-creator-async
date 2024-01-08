@@ -8,7 +8,7 @@ import { PopupConf } from "../../Boot/Scripts/AssetConfig";
 import GameData from "../../MainBundle/Scripts/common/GameData";
 import { GameCustomEvent, TxtConst } from "../../MainBundle/Scripts/common/MainConst";
 import Util from "../../MainBundle/Scripts/common/Util";
-import ceo from "../../framework/ceo";
+import fw from "../../framework/fw";
 import UIBase from "../../framework/ui/UIBase";
 
 const {ccclass, property} = cc._decorator;
@@ -27,7 +27,7 @@ export default class TestPanel extends UIBase {
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         switch (name) {
             case "set":
-                ceo.uiMgr.showPopupAsync(PopupConf.Settings);
+                fw.uiMgr.showPopupAsync(PopupConf.Settings);
                 break;
         
             case "toast":
@@ -40,29 +40,29 @@ export default class TestPanel extends UIBase {
                     btnTxtOK: TxtConst.Sure,
                     btnCallOK: () => {
                         GameData.gems += 10;
-                        ceo.eventMgr.emit(GameCustomEvent.Update_GEM);
+                        fw.eventMgr.emit(GameCustomEvent.Update_GEM);
                     }
                 });
                 break;
 
             case "table":
-                ceo.uiMgr.showPopupAsync(PopupConf.TableView);
+                fw.uiMgr.showPopupAsync(PopupConf.TableView);
                 break;
 
             case "adapter":
-                ceo.uiMgr.showPopupAsync(PopupConf.SafeAdapter);
+                fw.uiMgr.showPopupAsync(PopupConf.SafeAdapter);
                 break;
 
             case "quad":
-                ceo.uiMgr.showPopupAsync(PopupConf.QuadTree);
+                fw.uiMgr.showPopupAsync(PopupConf.QuadTree);
                 break;
 
             case "socket":
-                ceo.uiMgr.showPopupAsync(PopupConf.Socket);
+                fw.uiMgr.showPopupAsync(PopupConf.Socket);
                 break;
 
             case "debug":
-                ceo.debugMgr.switchDebugLogBtn();
+                fw.debugMgr.switchDebugLogBtn();
                 break;
         }
     }

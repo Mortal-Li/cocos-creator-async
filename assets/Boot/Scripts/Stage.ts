@@ -4,7 +4,7 @@
  * @created 2021年9月2日
  */
 
-import ceo from "../../framework/ceo";
+import fw from "../../framework/fw";
 import { LayerConf } from "./AssetConfig";
 
 const {ccclass, property} = cc._decorator;
@@ -13,13 +13,13 @@ const {ccclass, property} = cc._decorator;
 export default class Stage extends cc.Component {
 
     start () {
-        ceo.init({
+        fw.init({
             qt: true,
             socket: true,
         });
-        ceo.uiMgr.goLayerAsync(LayerConf.Load);
+        fw.uiMgr.goLayerAsync(LayerConf.Load);
     }
 
 }
 
-ceo.log("Welcome~ https://github.com/Mortal-Li/cocos-creator-async");
+fw.log("Welcome~ https://github.com/Mortal-Li/cocos-creator-async");

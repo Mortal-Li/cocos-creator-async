@@ -6,7 +6,7 @@
  */
 
 import { LayerConf } from "../../Boot/Scripts/AssetConfig";
-import ceo from "../../framework/ceo";
+import fw from "../../framework/fw";
 import LayerBase from "../../framework/ui/LayerBase";
 
 const {ccclass, property} = cc._decorator;
@@ -25,7 +25,7 @@ export default class GameALayer extends LayerBase {
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         switch (name) {
             case "back":
-                ceo.uiMgr.goLayerAsync(LayerConf.Hall);
+                fw.uiMgr.goLayerAsync(LayerConf.Hall);
                 break;
                 
         }

@@ -4,7 +4,7 @@
  * @created 2021年9月22日
  */
 
-import ceo from "../../../framework/ceo";
+import fw from "../../../framework/fw";
 import Loading from "../Loading";
 import GameData from "./GameData";
 import { TxtConst } from "./MainConst";
@@ -62,7 +62,7 @@ class HttpHelper {
 
     private _req(url: string, data: any, option: ReqOptionInterface) {
         return new Promise<any>((resolve, reject) => {
-            ceo.httpMgr.request(url, data, {
+            fw.httpMgr.request(url, data, {
                 show: ()=>{
                     if (option.needLoading) Loading.show();
                 },

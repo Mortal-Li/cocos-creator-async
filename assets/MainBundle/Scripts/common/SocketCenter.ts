@@ -4,7 +4,7 @@
  * @created 2022年5月7日
  */
 
-import ceo from "../../../framework/ceo";
+import fw from "../../../framework/fw";
 
 export const CMDID = {
      CMD_HELLO: 1000,
@@ -28,7 +28,7 @@ class SocketCenter {
     }
     
     async connect(url: string) {
-        await ceo.socketMgr.asyncConnect({
+        await fw.socketMgr.asyncConnect({
             url: url,
             parseNetData: (data: any) => {
                 return {
@@ -41,15 +41,15 @@ class SocketCenter {
     }
 
     clear() {
-        ceo.socketMgr.close(true);
+        fw.socketMgr.close(true);
     }
 
     on(cmd: number, callback: Function, target: any) {
-        ceo.socketMgr.on(cmd, callback, target);
+        fw.socketMgr.on(cmd, callback, target);
     }
 
     off(cmd: number, callback: Function, target: any) {
-        ceo.socketMgr.off(cmd, callback, target);
+        fw.socketMgr.off(cmd, callback, target);
     }
 
     async req(cmd: number, args?: any) {
@@ -61,7 +61,7 @@ class SocketCenter {
                 break;
         }
         cc.log("-----------> send ", content);
-        return await ceo.socketMgr.asyncReq(cmd, JSON.stringify({
+        return await fw.socketMgr.asyncReq(cmd, JSON.stringify({
             cmd: cmd,
             data: content
         }));

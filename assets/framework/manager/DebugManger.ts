@@ -4,14 +4,14 @@
  * @created 2022年9月30日
  */
 
-import ceo from "../ceo";
+import fw from "../fw";
 import CocosHelper from "../tools/CocosHelper";
 
 
 export default class DebugManger {
 
     switchDebugLogBtn() {
-        let logBtn = ceo.godNode.getChildByName("logBtn");
+        let logBtn = fw.godNode.getChildByName("logBtn");
         if (logBtn) {
             logBtn.active = !logBtn.active;
         } else {
@@ -21,7 +21,7 @@ export default class DebugManger {
 
     private initLogPanel() {
         let logPanel = new cc.Node();
-        ceo.godNode.addChild(logPanel, 9998);
+        fw.godNode.addChild(logPanel, 9998);
     
         CocosHelper.addSprite(logPanel, {
             spriteFrame: CocosHelper.genPureColorSpriteFrame()
@@ -87,7 +87,7 @@ export default class DebugManger {
             enableBold: true
         });
         
-        ceo.godNode.addChild(logBtn, 9999);
+        fw.godNode.addChild(logBtn, 9999);
         logBtn.addComponent(cc.Button);
         logBtn.on("click", () => {
             logPanel.active = !logPanel.active;

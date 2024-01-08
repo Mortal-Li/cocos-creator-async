@@ -4,7 +4,7 @@
  * @created 2021年9月2日
  */
 
-import ceo from "../ceo";
+import fw from "../fw";
 
 export default class SoundManager {
 
@@ -29,7 +29,7 @@ export default class SoundManager {
         bundle.load(T._path + musicName, (err, audio: cc.AudioClip) => {
             if (err) {
                 cc.log(err);
-                if (bundleName != ceo.uiMgr.getCurLayerConf().bundle) T.playMusic(musicName, ceo.uiMgr.getCurLayerConf().bundle, loop, endCall);
+                if (bundleName != fw.uiMgr.getCurLayerConf().bundle) T.playMusic(musicName, fw.uiMgr.getCurLayerConf().bundle, loop, endCall);
                 return;
             }
 
@@ -77,7 +77,7 @@ export default class SoundManager {
             bundle.load(this._path + effectName, (err, audio: cc.AudioClip) => {
                 if (err) {
                     cc.log(err);
-                    if (bundleName != ceo.uiMgr.getCurLayerConf().bundle) this.playEffect(effectName, ceo.uiMgr.getCurLayerConf().bundle, loop).then(resolve).catch(reject);
+                    if (bundleName != fw.uiMgr.getCurLayerConf().bundle) this.playEffect(effectName, fw.uiMgr.getCurLayerConf().bundle, loop).then(resolve).catch(reject);
                     else reject();
                     return;
                 }

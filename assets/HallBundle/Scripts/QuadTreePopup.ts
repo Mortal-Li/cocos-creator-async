@@ -5,7 +5,7 @@
  */
 
 
-import ceo from "../../framework/ceo";
+import fw from "../../framework/fw";
 import PopupBase from "../../framework/ui/PopupBase";
 
 const {ccclass, property} = cc._decorator;
@@ -66,7 +66,7 @@ export default class QuadTreePopup extends PopupBase {
     }
 
     reset() {
-        ceo.qCollisionMgr.enabled = false;
+        fw.qCollisionMgr.enabled = false;
         cc.director.getCollisionManager().enabled = false;
         this.getObj("bg").removeAllChildren();
     }
@@ -75,8 +75,8 @@ export default class QuadTreePopup extends PopupBase {
         let T = this;
 
         let bg = T.getObj("bg");
-        ceo.qCollisionMgr.resetQt(bg.getBoundingBoxToWorld());
-        ceo.qCollisionMgr.enabled = true;
+        fw.qCollisionMgr.resetQt(bg.getBoundingBoxToWorld());
+        fw.qCollisionMgr.enabled = true;
 
         for (let i = 0; i < 1500; ++i) {
             let ball = cc.instantiate(T.ballNd2);

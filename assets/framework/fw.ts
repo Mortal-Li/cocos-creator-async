@@ -15,7 +15,7 @@ import SoundManager from "./manager/SoundManager";
 import UIManager from "./manager/UIManager";
 
 
-const ceo = {
+const fw = {
     uiMgr: new UIManager(),
     eventMgr: new EventManager(),
     localMgr: new LocalManager(),
@@ -39,7 +39,7 @@ const ceo = {
         socket?: boolean,
 
     } = {})=>{
-        ceo.godNode = cc.find("Canvas");
+        fw.godNode = cc.find("Canvas");
 
         const defaultSwitchs = {
             qt: false,
@@ -52,11 +52,11 @@ const ceo = {
         }
 
         if (switchs.qt) {
-            ceo.qCollisionMgr = new QCollisionManager();
+            fw.qCollisionMgr = new QCollisionManager();
         }
 
         if (switchs.socket) {
-            ceo.socketMgr = new SocketManager();
+            fw.socketMgr = new SocketManager();
         }
     },
 
@@ -78,4 +78,4 @@ function getHMSM() {
     return d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds();
 }
 
-export default ceo;
+export default fw;

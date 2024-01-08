@@ -74,7 +74,7 @@ assets
     ├───tools --------------------> 一些工具类，如通用加密、装饰器等
     ├───ui -----------------------> 主要是对4种UI界面类型的封装
     ├───widget -------------------> 一些通用控件或组件，如TableView、适配组件等
-    └───ceo.ts -------------------> 控制UI树根节点，管理所有manager
+    └───fw.ts -------------------> 控制UI树根节点，管理所有manager
 ```
 #### 3、UI创建示范
 ```typescript
@@ -117,9 +117,9 @@ interface IUIConfig {
 // 异步方法，跳转到指定的Layer;
 // 第一个参数类型是IUIConfig，下面一样；
 // 第二个参数表示传入这个Layer的任意类型数据，可选；传入的数据会被脚本自动保存。
-ceo.uiMgr.goLayerAsync(LayerConf.Hall, data);
+fw.uiMgr.goLayerAsync(LayerConf.Hall, data);
 // 异步方法，重置刷新当前Layer，data为传入的数据，可选。
-ceo.uiMgr.resetCurLayerAsync(data)
+fw.uiMgr.resetCurLayerAsync(data)
 
 // ---------------- Popup类型 ----------------
 // const PopupConf = {
@@ -131,9 +131,9 @@ ceo.uiMgr.resetCurLayerAsync(data)
 
 // 异步方法，显示指定的弹窗；
 // 第一个参数类型是IUIConfig；第二个是要传入的数据，可选
-ceo.uiMgr.showPopupAsync(PopupConf.Settings);
+fw.uiMgr.showPopupAsync(PopupConf.Settings);
 // 弹窗关闭后，会返回用户在弹窗脚本中设置的任意类型数据。
-let ret = await ceo.uiMgr.showPopupAsync(PopupConf.Settings, data);
+let ret = await fw.uiMgr.showPopupAsync(PopupConf.Settings, data);
 
 // ---------------- Panel、Widget类型 ----------------
 // const PanelConf = {
@@ -152,24 +152,24 @@ let ret = await ceo.uiMgr.showPopupAsync(PopupConf.Settings, data);
 // }
 
 // 都是异步方法，跟前面不同的是，这两种类型创建后，需要自行设置父节点才会显示。
-ceo.uiMgr.createPanelAsync(PanelConf.Game);
-ceo.uiMgr.createWidgetAsync(WidgetConf.Toast);
+fw.uiMgr.createPanelAsync(PanelConf.Game);
+fw.uiMgr.createWidgetAsync(WidgetConf.Toast);
 
 ```
 #### 4、网络模块使用示范
 http和websocket都使用async/await、Promise进行封装，既支持异步也支持同步。
 ```typescript
 // http
-let ret = await ceo.httpMgr.request(...);
-ceo.httpMgr.request(...).then(...).catch(...);
+let ret = await fw.httpMgr.request(...);
+fw.httpMgr.request(...).then(...).catch(...);
 
 // websocket
-await ceo.socketMgr.asyncConnect(...)
-let ret = await ceo.socketMgr.asyncReq(...);
-ceo.socketMgr.asyncConnect(...).then(...).catch(...);
+await fw.socketMgr.asyncConnect(...)
+let ret = await fw.socketMgr.asyncReq(...);
+fw.socketMgr.asyncConnect(...).then(...).catch(...);
 
-ceo.socketMgr.on(cmd, callback, target);
-ceo.socketMgr.off(cmd, callback, target);
+fw.socketMgr.on(cmd, callback, target);
+fw.socketMgr.off(cmd, callback, target);
 
 ```
 详细使用以及其他使用示例请运行demo工程查看。  

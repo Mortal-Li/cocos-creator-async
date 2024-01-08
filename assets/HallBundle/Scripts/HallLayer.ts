@@ -7,7 +7,7 @@
 import { PanelConf } from "../../Boot/Scripts/AssetConfig";
 import GameData from "../../MainBundle/Scripts/common/GameData";
 import { GameCustomEvent } from "../../MainBundle/Scripts/common/MainConst";
-import ceo from "../../framework/ceo";
+import fw from "../../framework/fw";
 import { doOnceFirst } from "../../framework/tools/Decorators";
 import LayerBase from "../../framework/ui/LayerBase";
 
@@ -17,7 +17,7 @@ const {ccclass, property} = cc._decorator;
 export default class HallLayer extends LayerBase {
 
     onLoad () {
-        ceo.eventMgr.on(GameCustomEvent.Update_GEM, this.updateGems, this);
+        fw.eventMgr.on(GameCustomEvent.Update_GEM, this.updateGems, this);
     }
 
     start () {
@@ -52,7 +52,7 @@ export default class HallLayer extends LayerBase {
         let panel = T.getObj("panel");
         panel.destroyAllChildren();
 
-        let pnl = await ceo.uiMgr.createPanelAsync(isTest ? PanelConf.Test : PanelConf.Game);
+        let pnl = await fw.uiMgr.createPanelAsync(isTest ? PanelConf.Test : PanelConf.Game);
         pnl.parent = panel;
     }
 

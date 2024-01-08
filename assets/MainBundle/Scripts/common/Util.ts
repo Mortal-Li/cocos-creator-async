@@ -5,7 +5,7 @@
  */
 
 import { PopupConf, WidgetConf } from "../../../Boot/Scripts/AssetConfig";
-import ceo from "../../../framework/ceo";
+import fw from "../../../framework/fw";
 import Toast from "../Toast";
 
 
@@ -13,10 +13,10 @@ import Toast from "../Toast";
 export default class Util {
     
     static async showToast(str: string) {
-        let tst = await ceo.uiMgr.createWidgetAsync(WidgetConf.Toast);
+        let tst = await fw.uiMgr.createWidgetAsync(WidgetConf.Toast);
         let scrpt = tst.getComponent(Toast);
         scrpt.msg = str;
-        ceo.godNode.addChild(tst);
+        fw.godNode.addChild(tst);
     }
 
     static async showCommonPopup(options: {
@@ -50,7 +50,7 @@ export default class Util {
         height?: number;
         }) {
 
-        return await ceo.uiMgr.showPopupAsync(PopupConf.Common, options);
+        return await fw.uiMgr.showPopupAsync(PopupConf.Common, options);
     }
 
 }

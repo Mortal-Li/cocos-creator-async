@@ -4,7 +4,7 @@
  * @created 2022年4月1日
  */
 
-import ceo from "../../ceo";
+import fw from "../../fw";
 import { QTBounds, QTObject, Quadtree } from "../../tools/Quadtree";
 
 const {ccclass, property, menu} = cc._decorator;
@@ -19,11 +19,11 @@ export default class QCircleCollider extends cc.CircleCollider implements QTObje
     qts: Quadtree[] = [];
 
     onEnable() {
-        ceo.qCollisionMgr.addCollider(this);
+        fw.qCollisionMgr.addCollider(this);
     }
 
     onDisable() {
-        ceo.qCollisionMgr.removeCollider(this);
+        fw.qCollisionMgr.removeCollider(this);
     }
     
 }
