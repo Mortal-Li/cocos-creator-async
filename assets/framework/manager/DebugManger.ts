@@ -1,31 +1,47 @@
 /**
- * 调试日志开关管理，当不方便查看log时，可以启动此开关，比如已发布的线上游戏
+ * 调试日志管理
  * @author Mortal-Li
  * @created 2022年9月30日
  */
 
 import fw from "../fw";
 import CocosHelper from "../tools/CocosHelper";
+import TimeHelper from "../tools/TimeHelper";
 
 
 export default class DebugManger {
 
-    switchDebugLogBtn() {
-        let logBtn = fw.godNode.getChildByName("logBtn");
-        if (logBtn) {
-            logBtn.active = !logBtn.active;
-        } else {
-            this.initLogPanel();
-        }
+    init() {
+        let oldLog = cc.log;
+        cc.log = (msg: string | any, ...subst) => {
+            oldLog(`[${TimeHelper.getCurDetailTime()}]`, msg, ...subst);
+        };
+
+        let oldErr = cc.error;
+        cc.error = (msg: string | any, ...subst) => {
+            oldErr(`[${TimeHelper.getCurDetailTime()}]`, msg, ...subst);
+        };
+
+        let oldWarn = cc.warn;
+        cc.warn = (msg: string | any, ...subst) => {
+            oldWarn(`[${TimeHelper.getCurDetailTime()}]`, msg, ...subst);
+        };
     }
 
-    private initLogPanel() {
+    /**
+     * 当不方便查看log时，可以启动此开关，比如已发布的线上游戏
+     */
+    switchDebugLogBtn() {
+        let logBtn = fw.godNode.getChildByName("logBtn");
+        if (logBtn) logBtn.active = !logBtn.active;
+        else this._initLogPanel();
+    }
+
+    private _initLogPanel() {
         let logPanel = new cc.Node();
         fw.godNode.addChild(logPanel, 9998);
     
-        CocosHelper.addSprite(logPanel, {
-            spriteFrame: CocosHelper.genPureColorSpriteFrame()
-        });
+        CocosHelper.addSprite(logPanel, { spriteFrame: CocosHelper.genPureColorSpriteFrame() });
         logPanel.setContentSize(cc.winSize);
         logPanel.opacity = 180;
     
@@ -42,15 +58,12 @@ export default class DebugManger {
         scv.brake = 0.75;
         scv.content = content;
         
-        const addLbl = (msg: string, clrIdx?: number) => {
+        const addLblNode = (msg: string, clr?: cc.Color) => {
             let nd = new cc.Node();
-            if (clrIdx) {
-                if (clrIdx == 1) nd.color = cc.Color.RED;
-                else nd.color = cc.Color.ORANGE;
-            }
             CocosHelper.addLabel(nd, {
                 string: msg,
                 fontSize: 24,
+                color: clr,
                 overflow: cc.Label.Overflow.RESIZE_HEIGHT
             });
             nd.width = cc.winSize.width - 20;
@@ -60,19 +73,19 @@ export default class DebugManger {
         let oldLog = cc.log;
         cc.log = (msg: string | any, ...subst) => {
             oldLog(msg, ...subst);
-            addLbl(JSON.stringify(msg) + '\n' + JSON.stringify(subst));
+            addLblNode(JSON.stringify(msg) + '\n' + JSON.stringify(subst));
         }
     
         let oldErr = cc.error;
         cc.error = (msg: string | any, ...subst) => {
             oldErr(msg, ...subst);
-            addLbl(JSON.stringify(msg) + '\n' + JSON.stringify(subst), 1);
+            addLblNode(JSON.stringify(msg) + '\n' + JSON.stringify(subst), cc.Color.RED);
         }
     
         let oldWarn = cc.warn;
         cc.warn = (msg: string | any, ...subst) => {
             oldWarn(msg, ...subst);
-            addLbl(JSON.stringify(msg) + '\n' + JSON.stringify(subst), 2);
+            addLblNode(JSON.stringify(msg) + '\n' + JSON.stringify(subst), cc.Color.ORANGE);
         }
     
         logPanel.active = false;

@@ -22,4 +22,4 @@ export default class Stage extends cc.Component {
 
 }
 
-fw.log("Welcome~ https://github.com/Mortal-Li/cocos-creator-async");
+cc.log("Welcome~ https://github.com/Mortal-Li/cocos-creator-async");

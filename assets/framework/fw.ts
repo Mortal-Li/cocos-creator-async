@@ -58,24 +58,9 @@ const fw = {
         if (switchs.socket) {
             fw.socketMgr = new SocketManager();
         }
-    },
 
-    log: function(msg: string | any, ...subst) {
-        cc.log(`[${getHMSM()}]`, msg, ...subst);
-    },
-
-    warn: function(msg: string | any, ...subst) {
-        cc.warn(`[${getHMSM()}]`, msg, ...subst);
-    },
-
-    error: function(msg: string | any, ...subst) {
-        cc.error(`[${getHMSM()}]`, msg, ...subst);
-    },
-}
-
-function getHMSM() {
-    let d = new Date();
-    return d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds();
+        fw.debugMgr.init();
+    }
 }
 
 export default fw;

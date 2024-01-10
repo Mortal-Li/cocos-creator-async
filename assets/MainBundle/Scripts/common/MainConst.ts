@@ -35,7 +35,7 @@ export const SoundID = {
 export const TxtConst = {
     Sure: "Sure",
     AddGems: "Add 10 Gems.",
-    Hello: "Hello! I'am Sparrow~",
+    Hello: "Hello! I'am CC-Async~",
 
     NetTipTitle: "Whoops!",
     NetTipMsg: "Network Connection Error!Do you want to try again?",

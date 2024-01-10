@@ -7,7 +7,7 @@
 
 </center>
 
-Cocos-Creator-Async是一个基于Cocos-creator的轻量级代码开发框架，它主要有以下特征：
+Cocos-Creator-Async是一个基于Cocos-creator的轻量级的、异步的游戏开发框架，它主要有以下特征：
 - 单场景 + 多层级
 - 使用引擎的Bundle思想来管理游戏代码和资源
 - 提供常用的功能模块和通用的解决方案（不需要的功能模块可自行删除）
