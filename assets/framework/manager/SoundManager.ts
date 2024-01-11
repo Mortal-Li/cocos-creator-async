@@ -12,10 +12,9 @@ export default class SoundManager {
     /**
      * 指定声音资源默认路径和所属bundle
      */
-    prepare(bundleStr: string, pathStr: string) {
-        let T = this;
-        T._bundle = bundleStr;
-        T._path = pathStr;
+    init(bundleStr: string, pathStr: string) {
+        this._bundle = bundleStr;
+        this._path = pathStr;
     }
     
     /**

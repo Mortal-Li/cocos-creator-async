@@ -20,7 +20,7 @@ export default class LoadLayer extends LayerBase {
     pb: cc.ProgressBar = null;
 
     onLoad () {
-        fw.soundMgr.prepare(SoundID.Bundle, SoundID.Path);
+        fw.soundMgr.init(SoundID.Bundle, SoundID.Path);
         const musicState = fw.localMgr.getItemWithDefault(LocalKey.Switch_Music, true);
         const effectState = fw.localMgr.getItemWithDefault(LocalKey.Switch_Effect, true);
         fw.soundMgr.setMusicMute(!musicState);
