@@ -4,93 +4,123 @@
  * @created 2021年9月2日
  */
 
-import fw from "../fw";
-
 export default class SoundManager {
 
     private _bundle: string = "";
     private _path: string = "";
 
-    private _curBgMusicName: string;
-
-    // 指定默认路径和所属bundle
+    /**
+     * 指定声音资源默认路径和所属bundle
+     */
     prepare(bundleStr: string, pathStr: string) {
         let T = this;
         T._bundle = bundleStr;
         T._path = pathStr;
     }
     
-    playMusic(musicName: string, bundleName?: string, loop: boolean = true, endCall: Function = null) {
-        let T = this;
-
-        let bundle = cc.assetManager.getBundle(bundleName ? bundleName : T._bundle);
-        if (!bundle) return;
-
-        bundle.load(T._path + musicName, (err, audio: cc.AudioClip) => {
-            if (err) {
-                cc.log(err);
-                if (bundleName != fw.uiMgr.getCurLayerConf().bundle) T.playMusic(musicName, fw.uiMgr.getCurLayerConf().bundle, loop, endCall);
+    /**
+     * 播放音乐
+     * @param musicName 音乐名字
+     * @param bundleName 资源所属bundle，可选
+     * @param loop 是否循环，默认true
+     * @returns 异步返回audioID
+     */
+    playMusicAsync(musicName: string, bundleName?: string, loop: boolean = true) {
+        return new Promise<number>((resolve, reject) => {
+            let bundle = cc.assetManager.getBundle(bundleName ? bundleName : this._bundle);
+            if (!bundle) {
+                cc.warn("Bundle not found!");
+                reject();
                 return;
             }
 
-            T.stopMusic();
-            let id = cc.audioEngine.playMusic(audio, loop);
-            if (id != null && id != undefined) {
-                T._curBgMusicName = musicName;
-                if (endCall) {
-                    cc.audioEngine.setFinishCallback(id, endCall);
+            bundle.load(this._path + musicName, (err, audio: cc.AudioClip) => {
+                if (err) {
+                    cc.warn(err);
+                    reject();
+                    return;
                 }
-            }
+
+                this.stopMusic();
+                let audioID = cc.audioEngine.playMusic(audio, loop);
+                resolve(audioID);
+            });
+        });
+    }
+
+    /**
+     * 播放音乐直到播完
+     * @param musicName 音乐名字
+     * @param bundleName 资源所属bundle，可选
+     */
+    playMusicUntilFinishAsync(musicName: string, bundleName?: string) {
+        return new Promise<void>((resolve, reject) => {
+            this.playMusicAsync(musicName, bundleName, false).then((audioID: number) => {
+                cc.audioEngine.setFinishCallback(audioID, resolve);
+            }).catch(reject);
         });
     }
 
     stopMusic() {
-        let T = this;
-        if (T._curBgMusicName) {
-            cc.audioEngine.stopMusic();
-            T._curBgMusicName = null;
-        }
+        cc.audioEngine.stopMusic();
     }
 
     pauseMusic() {
-        let T = this;
-        if (T._curBgMusicName) {
-            cc.audioEngine.pauseMusic();
-        }
+        cc.audioEngine.pauseMusic();
     }
 
     resumeMusic() {
-        let T = this;
-        if (T._curBgMusicName) {
-            cc.audioEngine.resumeMusic();
-        }
+        cc.audioEngine.resumeMusic();
     }
 
-    playEffect(effectName: string, bundleName?: string, loop: boolean = false) {
+    isMusicPlaying() {
+        return cc.audioEngine.isMusicPlaying();
+    }
+
+    /**
+     * 播放音效
+     * @param effectName 音效名字
+     * @param bundleName 资源所属bundle，可选
+     * @param loop 是否循环，默认false
+     * @returns 异步返回audioID
+     */
+    playEffectAsync(effectName: string, bundleName?: string, loop: boolean = false) {
         return new Promise<number>((resolve, reject) => {
             let bundle = cc.assetManager.getBundle(bundleName ? bundleName : this._bundle);
             if (!bundle) {
+                cc.warn("Bundle not found!");
                 reject();
                 return;
             }
 
             bundle.load(this._path + effectName, (err, audio: cc.AudioClip) => {
                 if (err) {
-                    cc.log(err);
-                    if (bundleName != fw.uiMgr.getCurLayerConf().bundle) this.playEffect(effectName, fw.uiMgr.getCurLayerConf().bundle, loop).then(resolve).catch(reject);
-                    else reject();
+                    cc.warn(err);
+                    reject();
                     return;
                 }
 
-                let id = cc.audioEngine.playEffect(audio, loop);
-                resolve(id);
+                let audioID = cc.audioEngine.playEffect(audio, loop);
+                resolve(audioID);
             });
         });
-        
     }
 
-    stopEffect(id: number) {
-        cc.audioEngine.stopEffect(id);
+    /**
+     * 播放音效直到播完
+     * @param effectName 音效名字
+     * @param bundleName 资源所属bundle，可选
+     */
+    playEffectUntilFinishAsync(effectName: string, bundleName?: string) {
+        return new Promise<void>((resolve, reject) => {
+            this.playEffectAsync(effectName, bundleName, false).then((audioID: number) => {
+                cc.audioEngine.setFinishCallback(audioID, resolve);
+            }).catch(reject);
+        });
+    }
+
+    stopEffect(audioID: number) {
+        cc.audioEngine.stopEffect(audioID);
     }
 
     stopAllEffects() {
@@ -99,7 +129,14 @@ export default class SoundManager {
 
     stopAll() {
         cc.audioEngine.stopAll();
-        this._curBgMusicName = null;
+    }
+
+    pauseEffect(audioID: number) {
+        cc.audioEngine.pauseEffect(audioID);
+    }
+
+    resumeEffect(audioID: number) {
+        cc.audioEngine.resumeEffect(audioID);
     }
 
     setMusicVolume(v: number) {
@@ -109,4 +146,28 @@ export default class SoundManager {
     setEffectsVolume(v: number) {
         cc.audioEngine.setEffectsVolume(v);
     }
+
+    /**
+     * 设置是否静音，true为静音
+     * @param isMute 
+     */
+    setMute(isMute: boolean) {
+        cc.audioEngine.setMusicVolume(isMute ? 0 : 1);
+        cc.audioEngine.setEffectsVolume(isMute ? 0 : 1);
+    }
+
+    /**
+     * 是否静音背景音乐
+     */
+    setMusicMute(isMute: boolean) {
+        cc.audioEngine.setMusicVolume(isMute ? 0 : 1);
+    }
+
+    /**
+     * 是否静音音效
+     */
+    setEffectMute(isMute: boolean) {
+        cc.audioEngine.setEffectsVolume(isMute ? 0 : 1);
+    }
+    
 }

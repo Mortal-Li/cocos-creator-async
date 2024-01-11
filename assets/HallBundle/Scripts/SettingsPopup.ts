@@ -47,16 +47,13 @@ export default class SettingsPopup extends PopupBase {
         }
     }
 
-
     onToggle(toggle: cc.Toggle, name: string) {
-        let v = toggle.isChecked ? 1 : 0;
         if (name == "music") {
-            fw.soundMgr.setMusicVolume(v);
+            fw.soundMgr.setMusicMute(!toggle.isChecked);
             GameData.music_switch = toggle.isChecked;
         } else {
-            fw.soundMgr.setEffectsVolume(v);
+            fw.soundMgr.setEffectMute(!toggle.isChecked);
             GameData.effect_switch = toggle.isChecked;
         }
-        
     }
 }

@@ -23,8 +23,8 @@ export default class LoadLayer extends LayerBase {
         fw.soundMgr.prepare(SoundID.Bundle, SoundID.Path);
         const musicState = fw.localMgr.getItemWithDefault(LocalKey.Switch_Music, true);
         const effectState = fw.localMgr.getItemWithDefault(LocalKey.Switch_Effect, true);
-        fw.soundMgr.setMusicVolume(musicState ? 1 : 0);
-        fw.soundMgr.setEffectsVolume(effectState ? 1 : 0);
+        fw.soundMgr.setMusicMute(!musicState);
+        fw.soundMgr.setEffectMute(!effectState);
         GameData.music_switch = musicState;
         GameData.effect_switch = effectState;
     }
