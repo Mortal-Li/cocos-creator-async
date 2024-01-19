@@ -1,5 +1,5 @@
 /**
- * 对HttpManager进行项目相关的封装
+ * 对HttpManager进行项目相关的封装 DEMO
  * @author Mortal-Li
  * @created 2021年9月22日
  */
@@ -62,7 +62,7 @@ class HttpHelper {
 
     private _req(url: string, data: any, option: ReqOptionInterface) {
         return new Promise<any>((resolve, reject) => {
-            fw.httpMgr.request(url, data, {
+            fw.httpMgr.reqAsync(url, data, {
                 show: ()=>{
                     if (option.needLoading) Loading.show();
                 },

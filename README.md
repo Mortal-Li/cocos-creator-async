@@ -160,8 +160,8 @@ fw.uiMgr.createWidgetAsync(WidgetConf.Toast);
 http和websocket都使用async/await、Promise进行封装，既支持异步也支持同步。
 ```typescript
 // http
-let ret = await fw.httpMgr.request(...);
-fw.httpMgr.request(...).then(...).catch(...);
+let ret = await fw.httpMgr.reqAsync(...);
+fw.httpMgr.reqAsync(...).then(...).catch(...);
 
 // websocket
 await fw.socketMgr.asyncConnect(...)

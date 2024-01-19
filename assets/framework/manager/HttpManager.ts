@@ -17,6 +17,10 @@ interface HttpOptionInterface {
      */
     responseType?: 'json' | 'text' | 'arraybuffer' | 'blob' | 'document';
     /**
+     * setRequestHeader中Content-Type的值， 默认 application/x-www-form-urlencoded
+     */
+    contentType?: string;
+    /**
      * 显示loading函数
      */
      show?: Function;
@@ -28,7 +32,7 @@ interface HttpOptionInterface {
 
 export default class HttpManager {
 
-    request(url: string, data: {} = null, option: HttpOptionInterface = {}) {
+    reqAsync(url: string, data: any = null, option: HttpOptionInterface = {}) {
         if (option.show) option.show();
         
         return new Promise<any>((resolve, reject) => {
@@ -36,6 +40,7 @@ export default class HttpManager {
                 url : url,
                 timeout: option.timeout || 8000,
                 responseType: option.responseType || 'json',
+                contentType: option.contentType || 'application/x-www-form-urlencoded',
                 method: data ? 'POST' : 'GET',
                 data: data,
                 success: (recv) => {
@@ -44,7 +49,7 @@ export default class HttpManager {
                     resolve(recv);
                 },
                 error: (err) => {
-                    cc.error(err);
+                    cc.error({url, data, err});
                     if (option.hide) option.hide();
                     reject(err);
                 }
@@ -61,7 +66,7 @@ export default class HttpManager {
                 if (xhr.status === 200) {
                     params.success(xhr.response);
                 } else {
-                    params.error('Please Check Network!', xhr.status);
+                    params.error('Please Check Network! ' + xhr.status);
                 }
             }
         }
@@ -72,22 +77,29 @@ export default class HttpManager {
             params.error('Network Abort');
         };
         xhr.onerror = () => {
-            params.error('Network Error', params.url);
+            params.error('Network Error');
         };
         xhr.open(params.method, params.url, true);
 
         if (params.method === 'POST') {
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Content-Type', params.contentType);
         }
 
+        let sendData = null;
         if (params.data) {
-            let formData = [];
-            for (let key in params.data) {
-                formData.push(''.concat(key, '=', params.data[key]));
+            if (params.contentType == 'application/x-www-form-urlencoded') {
+                let formData = [];
+                for (let key in params.data) {
+                    formData.push(''.concat(key, '=', params.data[key]));
+                }
+                sendData = formData.join('&');
+            } else if (params.contentType == 'application/json') {
+                sendData = JSON.stringify(params.data);
+            } else {
+                sendData = params.data;
             }
-            params.data = formData.join('&');
         }
 
-        xhr.send(params.data);
+        xhr.send(sendData);
     }
 }
