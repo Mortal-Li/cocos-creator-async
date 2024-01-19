@@ -53,17 +53,7 @@ export default class QuadTreePopup extends PopupBase {
 
         cc.director.getCollisionManager().enabled = true;
 
-        let bg = T.getObj("bg");
-        for (let i = 0; i < 1500; ++i) {
-            let ball = cc.instantiate(T.ballNd);
-            ball.parent = bg;
-            
-            let startPos = MathHelper.randomV2(bg.width, bg.height);
-            let endPos = MathHelper.randomV2(bg.width, bg.height);
-
-            ball.setPosition(startPos);
-            cc.tween(ball).to(6, { x: endPos.x, y: endPos.y }).to(6, { x: startPos.x, y: startPos.y }).union().repeatForever().start();
-        }
+        T.initBalls(T.ballNd);
     }
 
     reset() {
@@ -74,13 +64,19 @@ export default class QuadTreePopup extends PopupBase {
 
     showQuad() {
         let T = this;
-
-        let bg = T.getObj("bg");
-        fw.qCollisionMgr.resetQt(bg.getBoundingBoxToWorld());
+        
+        fw.qCollisionMgr.resetQt(T.getObj("bg").getBoundingBoxToWorld());
         fw.qCollisionMgr.enabled = true;
 
+        T.initBalls(T.ballNd2);
+    }
+
+    initBalls(target: cc.Node) {
+        let T = this;
+
+        let bg = T.getObj("bg");
         for (let i = 0; i < 1500; ++i) {
-            let ball = cc.instantiate(T.ballNd2);
+            let ball = cc.instantiate(target);
             ball.parent = bg;
             
             let startPos = MathHelper.randomV2(bg.width, bg.height);
