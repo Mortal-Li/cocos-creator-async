@@ -6,6 +6,7 @@
 
 
 import fw from "../../framework/fw";
+import MathHelper from "../../framework/tools/MathHelper";
 import PopupBase from "../../framework/ui/PopupBase";
 
 const {ccclass, property} = cc._decorator;
@@ -57,8 +58,8 @@ export default class QuadTreePopup extends PopupBase {
             let ball = cc.instantiate(T.ballNd);
             ball.parent = bg;
             
-            let startPos = cc.v2(bg.width * (Math.random() - 0.5), bg.height * (Math.random() - 0.5));
-            let endPos = cc.v2(bg.width * (Math.random() - 0.5), bg.height * (Math.random() - 0.5));
+            let startPos = MathHelper.randomV2(bg.width, bg.height);
+            let endPos = MathHelper.randomV2(bg.width, bg.height);
 
             ball.setPosition(startPos);
             cc.tween(ball).to(6, { x: endPos.x, y: endPos.y }).to(6, { x: startPos.x, y: startPos.y }).union().repeatForever().start();
@@ -82,8 +83,8 @@ export default class QuadTreePopup extends PopupBase {
             let ball = cc.instantiate(T.ballNd2);
             ball.parent = bg;
             
-            let startPos = cc.v2(bg.width * (Math.random() - 0.5), bg.height * (Math.random() - 0.5));
-            let endPos = cc.v2(bg.width * (Math.random() - 0.5), bg.height * (Math.random() - 0.5));
+            let startPos = MathHelper.randomV2(bg.width, bg.height);
+            let endPos = MathHelper.randomV2(bg.width, bg.height);
 
             ball.setPosition(startPos);
             cc.tween(ball).to(6, { x: endPos.x, y: endPos.y }).to(6, { x: startPos.x, y: startPos.y }).union().repeatForever().start();
