@@ -1,5 +1,5 @@
 /**
- * 
+ * 对SocketManager进行项目相关的封装 DEMO
  * @author Mortal-Li
  * @created 2022年5月7日
  */
@@ -14,22 +14,26 @@ class SocketCenter {
 
     private tips = {
         showConnecting: (isShow: boolean) => {
-            if (isShow) cc.log("net is connecting!");
+            
         },
         showReconnecting: (isShow: boolean) => {
-            if (isShow) cc.log("net is reconnecing!");
+            
         },
         showRequesting: (isShow: boolean) => {
-            if (isShow) cc.log("send request...");
+            
         },
         manualReconnect: () => {
-            cc.log("need reconnect manually!");
+            
         }
     }
     
     async connect(url: string) {
-        await fw.socketMgr.asyncConnect({
+        await fw.socketMgr.connectAsync({
             url: url,
+            getHeartbeat: () => {
+                cc.log(">>> heartbeat")
+                return "";
+            },
             parseNetData: (data: any) => {
                 return {
                     cmd: CMDID.CMD_HELLO,
@@ -44,11 +48,11 @@ class SocketCenter {
         fw.socketMgr.close(true);
     }
 
-    on(cmd: number, callback: Function, target: any) {
+    on(cmd: number, callback: (data: any) => void, target: any) {
         fw.socketMgr.on(cmd, callback, target);
     }
 
-    off(cmd: number, callback: Function, target: any) {
+    off(cmd: number, callback: (data: any) => void, target: any) {
         fw.socketMgr.off(cmd, callback, target);
     }
 
@@ -60,8 +64,8 @@ class SocketCenter {
                 content = "Hello~" + args;
                 break;
         }
-        cc.log("-----------> send ", content);
-        return await fw.socketMgr.asyncReq(cmd, JSON.stringify({
+        cc.log("---> send ", content);
+        return await fw.socketMgr.reqAsync(cmd, JSON.stringify({
             cmd: cmd,
             data: content
         }));

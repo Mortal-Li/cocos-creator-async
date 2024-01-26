@@ -1,5 +1,5 @@
 /**
- * 
+ * Socket异步封装
  * @author Mortal-Li
  * @created 2022年5月7日
  */
@@ -15,12 +15,23 @@ interface INetworkTips {
     manualReconnect?: () => void;
 }
 
+/**
+ * 响应回调
+ */
+type RespCallback = (data: any) => void;
+
+/**
+ * 服务器推送响应对象
+ */
 interface S2CCallbackObj {
     target: any;
-    callback: Function;
+    callback: RespCallback;
 }
 
-export type ReqCallback = (data?: any) => void;
+export const SocketErrCode = {
+    NoThisSocket: 100,
+    SendFailure: 101,
+};
 
 /**
  * socket通信相关配置
@@ -57,7 +68,7 @@ export interface IConnectOptions {
     autoReconnect?: number;
 
     /**
-     * 等待多长时间进行下一次重连，默认10s
+     * 等待多长时间进行下一次重连，默认6s
      */
     reconnectTime?: number;
 
@@ -67,7 +78,7 @@ export interface IConnectOptions {
     heartTime?: number;
 
     /**
-     * 心跳超时计数，默认3次；超过这个数则断开连接，收到任意消息会重置为0
+     * 心跳超时计数，默认3次；超过这个数则进行重连，收到任意消息会重置为0
      */
     heartOutCount?: number;
 
@@ -81,12 +92,12 @@ export interface IConnectOptions {
      * 默认cmd为0，content返回原数据
      */
     parseNetData?: (data: any) => {
-        cmd: number;
+        cmd: number | string;
         content: any;
     };
 
     /**
-     * 网络提示相关回调接口，默认为空对象
+     * 网络提示及相关回调接口，默认为空对象
      */
     tips?: INetworkTips;
 }
@@ -95,45 +106,44 @@ export class BaseSocket {
 
     private _ws: WebSocket = null;
     private _connectOptions: IConnectOptions = null;
-    private _inPromise: boolean = true;
     private _heartTimer: any = null;
     private _curHeartOutCnt: number = 0;
     private _curAutoReconnect: number = 0;
     private _reconnectTimer: any = 0;
 
-    private _req2respCallbacks: { [cmd: number]: ReqCallback[] } = {};
-    private _server2ClientListeners: { [cmd: number]: S2CCallbackObj[] } = {};
+    private _req2respCallbacks: { [cmd: number | string]: RespCallback[] } = {};
+    private _server2ClientListeners: { [cmd: number | string]: S2CCallbackObj[] } = {};
 
     private _connectedCB: Function = null;
 
-    asyncConnect(options: IConnectOptions, connectedCB?: Function) {
+    connectAsync(options: IConnectOptions, connectedCB?: Function) {
         if (this._connectOptions == null) {
             this._connectOptions = {
                 url: options.url ? options.url : `${(options.protocol ? options.protocol : "ws")}://${options.ip}:${options.port}`,
                 ca: options.ca,
                 binaryType: options.binaryType ? options.binaryType : "arraybuffer",
                 autoReconnect: options.autoReconnect ? options.autoReconnect : 0,
-                reconnectTime: options.reconnectTime ? options.reconnectTime : 10,
+                reconnectTime: options.reconnectTime ? options.reconnectTime : 6,
                 heartTime: options.heartTime ? options.heartTime : 3,
                 heartOutCount: options.heartOutCount ? options.heartOutCount : 3,
                 getHeartbeat: options.getHeartbeat ? options.getHeartbeat : () => "",
                 parseNetData: options.parseNetData ? options.parseNetData : (data: any) => { return { cmd: 0, content: data } },
                 tips: options.tips ? options.tips : {}
             };
+            this._connectedCB = connectedCB ? connectedCB : ()=>{};
         }
 
-        this._connectedCB = connectedCB ? connectedCB : ()=>{};
-        this._inPromise = true;
+        let inPromise = true;
 
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             if (this._ws) {
                 if (this._ws.readyState === WebSocket.CONNECTING) {
                     cc.log("ws connecting, wait for a moment...");
-                    resolve(null);
+                    resolve();
                     return ;
                 } else if (this._ws.readyState === WebSocket.OPEN) {
                     cc.log("ws has connected!");
-                    resolve(null);
+                    resolve();
                     return ;
                 }
             }
@@ -150,9 +160,9 @@ export class BaseSocket {
             this._ws.binaryType = this._connectOptions.binaryType;
             
             this._ws.onopen = (ev) => {
-                this._inPromise = false;
+                inPromise = false;
                 this._connectOptions.tips?.showConnecting(false);
-                resolve(null);
+                resolve();
 
                 this._connectedCB();
                 this._onOpen(ev);
@@ -163,8 +173,8 @@ export class BaseSocket {
             };
 
             this._ws.onerror = (ev) => {
-                if (this._inPromise) {
-                    this._inPromise = false;
+                if (inPromise) {
+                    inPromise = false;
                     this._connectOptions.tips?.showConnecting(false);
                     reject(ev);
                 }
@@ -173,8 +183,8 @@ export class BaseSocket {
             };
 
             this._ws.onclose = (ev) => {
-                if (this._inPromise) {
-                    this._inPromise = false;
+                if (inPromise) {
+                    inPromise = false;
                     this._connectOptions.tips?.showConnecting(false);
                     reject(ev);
                 }
@@ -183,6 +193,78 @@ export class BaseSocket {
             };
 
         });
+    }
+
+    reqAsync(cmd: number | string, data: any, showWaiting: boolean = false) {
+        if (showWaiting) this._connectOptions.tips?.showRequesting(true);
+        
+        return new Promise<any>((resolve, reject) => {
+            if (!this._send(data)) {
+                if (showWaiting) this._connectOptions.tips?.showRequesting(false);
+                reject(SocketErrCode.SendFailure);
+                return ;
+            }
+
+            if (!this._req2respCallbacks[cmd]) {
+                this._req2respCallbacks[cmd] = [];
+            }
+            
+            this._req2respCallbacks[cmd].push((d: any) => {
+                if (showWaiting) this._connectOptions.tips?.showRequesting(false);
+                resolve(d);
+            });
+        });
+    }
+
+    close(isClean: boolean = false) {
+        this._stopHeartTimer();
+        this._stopReconnectTimer();
+
+        if (this._ws) {
+            if (this._ws.readyState == WebSocket.CONNECTING || this._ws.readyState == WebSocket.CLOSING) {
+                this._connectOptions.tips?.showConnecting(false);
+            }
+
+            this._clearReqList();
+            if (isClean) this._server2ClientListeners = {};
+
+            this._ws.onopen = (ev) => {};
+            this._ws.onmessage = (ev) => {};
+            this._ws.onerror = (ev) => {};
+            this._ws.onclose = (ev) => {};
+            
+            if (this._ws.readyState != WebSocket.CLOSED) this._ws.close();
+            cc.log("ws closed manually");
+        }
+    }
+
+    on(cmd: number | string, callback: RespCallback, target: any) {
+        if (!this._server2ClientListeners[cmd]) {
+            this._server2ClientListeners[cmd] = [];
+        }
+
+        let idx = this._server2ClientListeners[cmd].findIndex((obj) => {
+            return obj.target === target && obj.callback === callback;
+        });
+
+        if (idx === -1) {
+            this._server2ClientListeners[cmd].push({
+                target: target,
+                callback: callback
+            });
+        }
+    }
+
+    off(cmd: number | string, callback: RespCallback, target: any) {
+        let s2cCallbacks = this._server2ClientListeners[cmd];
+        if (s2cCallbacks) {
+            let idx = s2cCallbacks.findIndex((obj) => {
+                return obj.target === target && obj.callback === callback;
+            });
+            if (idx !== -1) {
+                s2cCallbacks.splice(idx, 1);
+            }
+        }
     }
 
     private _onOpen(ev) {
@@ -211,28 +293,7 @@ export class BaseSocket {
         this._doReconnect();
     }
 
-    asyncReq(cmd: number, data: any, showWaiting: boolean) {
-        if (showWaiting) this._connectOptions.tips?.showRequesting(true);
-        
-        return new Promise<any>((resolve, reject) => {
-            if (!this.send(data)) {
-                if (showWaiting) this._connectOptions.tips?.showRequesting(false);
-                reject();
-                return ;
-            }
-
-            if (!this._req2respCallbacks[cmd]) {
-                this._req2respCallbacks[cmd] = [];
-            }
-
-            this._req2respCallbacks[cmd].push((d?: any) => {
-                if (showWaiting) this._connectOptions.tips?.showRequesting(false);
-                resolve(d);
-            });
-        });
-    }
-
-    send(data: any) {
+    private _send(data: any) {
         if (this._ws && this._ws.readyState === WebSocket.OPEN) {
             this._ws.send(data);
             return true;
@@ -250,52 +311,24 @@ export class BaseSocket {
         this._req2respCallbacks = {};
     }
 
-    /**
-     * 主动断开
-     */
-    close(isClean: boolean = false) {
-        this._stopHeartTimer();
-        this._stopReconnectTimer();
-
-        if (this._ws && this._ws.readyState != WebSocket.CLOSED) {
-            
-            if (this._ws.readyState == WebSocket.CONNECTING || this._ws.readyState == WebSocket.CLOSING) {
-                this._connectOptions.tips?.showConnecting(false);
-            }
-
-            this._clearReqList();
-            if (isClean) this._server2ClientListeners = {};
-
-            this._ws.onopen = (ev) => {};
-            this._ws.onmessage = (ev) => {};
-            this._ws.onerror = (ev) => {};
-            this._ws.onclose = (ev) => {};
-            
-            this._ws.close();
-            cc.log("ws closed manually");
-        }
-    }
-
     private _onRecv(data: any) {
         let ret = this._connectOptions.parseNetData(data);
         
         if (ret === null || ret === undefined) {
-            cc.error("ParseNetData Error!", data);
+            cc.error("ParseNetData Error! ", data);
             return;
         }
 
-        if (ret.cmd >= 0) {
-            let reqCallbacks = this._req2respCallbacks[ret.cmd];
-            if (reqCallbacks && reqCallbacks.length > 0) {
-                let cb = reqCallbacks.shift();
-                cb(ret.content);
-            }
+        let reqCallbacks = this._req2respCallbacks[ret.cmd];
+        if (reqCallbacks && reqCallbacks.length > 0) {
+            let cb = reqCallbacks.shift();
+            cb(ret.content);
+        }
 
-            let s2cCallbacks = this._server2ClientListeners[ret.cmd];
-            if (s2cCallbacks) {
-                for (const obj of s2cCallbacks) {
-                    obj.callback.call(obj.target, ret.content);
-                }
+        let s2cCallbacks = this._server2ClientListeners[ret.cmd];
+        if (s2cCallbacks) {
+            for (const obj of s2cCallbacks) {
+                obj.callback.call(obj.target, ret.content);
             }
         }
 
@@ -307,42 +340,12 @@ export class BaseSocket {
             this._connectOptions.tips?.manualReconnect();
         } else {
             if (limitReconnect > 0) ++this._curAutoReconnect;
-            cc.log("net is reconnecing!");
+            cc.log("net is reconnecting!");
             this._connectOptions.tips?.showReconnecting(true);
             this._reconnectTimer = setTimeout(() => {
                 this._connectOptions.tips?.showReconnecting(false);
-                this.asyncConnect(this._connectOptions, this._connectedCB);
+                this.connectAsync(this._connectOptions, this._connectedCB);
             }, this._connectOptions.reconnectTime * 1000);
-        }
-    }
-
-    on(cmd: number, callback: Function, target: any) {
-        if (!this._server2ClientListeners[cmd]) {
-            this._server2ClientListeners[cmd] = [];
-        }
-
-        let idx = this._server2ClientListeners[cmd].findIndex((obj) => {
-            return obj.target === target && obj.callback === callback;
-        });
-
-        if (idx === -1) {
-            this._server2ClientListeners[cmd].push({
-                target: target,
-                callback: callback
-            });
-        }
-
-    }
-
-    off(cmd: number, callback: Function, target: any) {
-        let s2cCallbacks = this._server2ClientListeners[cmd];
-        if (s2cCallbacks) {
-            let idx = s2cCallbacks.findIndex((obj) => {
-                return obj.target === target && obj.callback === callback;
-            });
-            if (idx !== -1) {
-                s2cCallbacks.splice(idx, 1);
-            }
         }
     }
 
@@ -359,7 +362,7 @@ export class BaseSocket {
                 return;
             }
             
-            this.send(this._connectOptions.getHeartbeat());
+            this._send(this._connectOptions.getHeartbeat());
         }, this._connectOptions.heartTime * 1000);
     }
 

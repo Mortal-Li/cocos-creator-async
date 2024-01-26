@@ -164,9 +164,9 @@ let ret = await fw.httpMgr.reqAsync(...);
 fw.httpMgr.reqAsync(...).then(...).catch(...);
 
 // websocket
-await fw.socketMgr.asyncConnect(...)
-let ret = await fw.socketMgr.asyncReq(...);
-fw.socketMgr.asyncConnect(...).then(...).catch(...);
+await fw.socketMgr.connectAsync(...)
+let ret = await fw.socketMgr.reqAsync(...);
+fw.socketMgr.connectAsync(...).then(...).catch(...);
 
 fw.socketMgr.on(cmd, callback, target);
 fw.socketMgr.off(cmd, callback, target);
