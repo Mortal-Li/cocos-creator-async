@@ -12,7 +12,6 @@ interface INetworkTips {
     showConnecting?: (isShow: boolean) => void;
     showReconnecting?: (isShow: boolean) => void;
     showRequesting?: (isShow: boolean) => void;
-    manualReconnect?: () => void;
 }
 
 /**
@@ -100,6 +99,11 @@ export interface IConnectOptions {
      * 网络提示及相关回调接口，默认为空对象
      */
     tips?: INetworkTips;
+
+    /**
+     * 手动重连回调，默认为一个警告日志函数，提示此函数用户未定义
+     */
+    manualReconnect?: () => void;
 }
 
 export class BaseSocket {
@@ -128,7 +132,8 @@ export class BaseSocket {
                 heartOutCount: options.heartOutCount ? options.heartOutCount : 3,
                 getHeartbeat: options.getHeartbeat ? options.getHeartbeat : () => "",
                 parseNetData: options.parseNetData ? options.parseNetData : (data: any) => { return { cmd: 0, content: data } },
-                tips: options.tips ? options.tips : {}
+                tips: options.tips ? options.tips : {},
+                manualReconnect: options.manualReconnect ? options.manualReconnect : () => cc.warn("manualReconnect undefined")
             };
             this._connectedCB = connectedCB ? connectedCB : ()=>{};
         }
@@ -314,7 +319,7 @@ export class BaseSocket {
     private _onRecv(data: any) {
         let ret = this._connectOptions.parseNetData(data);
         
-        if (ret === null || ret === undefined) {
+        if (!ret) {
             cc.error("ParseNetData Error! ", data);
             return;
         }
@@ -337,7 +342,7 @@ export class BaseSocket {
     private _doReconnect() {
         let limitReconnect = this._connectOptions.autoReconnect;
         if (limitReconnect == 0 || (limitReconnect > 0 && this._curAutoReconnect >= limitReconnect)) {
-            this._connectOptions.tips?.manualReconnect();
+            this._connectOptions?.manualReconnect();
         } else {
             if (limitReconnect > 0) ++this._curAutoReconnect;
             cc.log("net is reconnecting!");

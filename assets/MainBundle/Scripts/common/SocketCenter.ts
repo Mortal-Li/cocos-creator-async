@@ -21,9 +21,6 @@ class SocketCenter {
         },
         showRequesting: (isShow: boolean) => {
             
-        },
-        manualReconnect: () => {
-            
         }
     }
     
@@ -40,7 +37,10 @@ class SocketCenter {
                     content: data
                 }
             },
-            tips: this.tips
+            tips: this.tips,
+            manualReconnect: () => {
+            
+            }
         });
     }
 
