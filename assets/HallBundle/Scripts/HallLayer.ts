@@ -10,6 +10,7 @@ import { GameCustomEvent } from "../../MainBundle/Scripts/common/MainConst";
 import fw from "../../framework/fw";
 import { doOnceFirst } from "../../framework/tools/Decorators";
 import LayerBase from "../../framework/ui/LayerBase";
+import SpriteNumber from "../../framework/widget/SpriteNumber";
 
 const {ccclass, property} = cc._decorator;
 
@@ -17,6 +18,7 @@ const {ccclass, property} = cc._decorator;
 export default class HallLayer extends LayerBase {
 
     onLoad () {
+        this.getObj("bar.lo.sprNum", SpriteNumber).value = GameData.gems;
         fw.eventMgr.on(GameCustomEvent.Update_GEM, this.updateGems, this);
     }
 
@@ -56,7 +58,9 @@ export default class HallLayer extends LayerBase {
         pnl.parent = panel;
     }
 
-    updateGems() {
-        this.getObj("bar.lo.num", cc.Label).string = String(GameData.gems);
+    updateGems(numVar: number, doAnim: boolean = false) {
+        if (doAnim) this.getObj("bar.lo.sprNum", SpriteNumber).numVarTween(GameData.gems, GameData.gems + numVar, Math.floor);
+        else this.getObj("bar.lo.sprNum", SpriteNumber).value = GameData.gems + numVar;
+        GameData.gems += numVar;
     }
 }

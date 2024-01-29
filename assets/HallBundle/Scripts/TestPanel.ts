@@ -5,7 +5,6 @@
  */
 
 import { PopupConf } from "../../Boot/Scripts/AssetConfig";
-import GameData from "../../MainBundle/Scripts/common/GameData";
 import { GameCustomEvent, TxtConst } from "../../MainBundle/Scripts/common/MainConst";
 import Util from "../../MainBundle/Scripts/common/Util";
 import fw from "../../framework/fw";
@@ -39,8 +38,7 @@ export default class TestPanel extends UIBase {
                     msg: TxtConst.AddGems,
                     btnTxtOK: TxtConst.Sure,
                     btnCallOK: () => {
-                        GameData.gems += 10;
-                        fw.eventMgr.emit(GameCustomEvent.Update_GEM);
+                        fw.eventMgr.emit(GameCustomEvent.Update_GEM, 10, true);
                     }
                 });
                 break;
