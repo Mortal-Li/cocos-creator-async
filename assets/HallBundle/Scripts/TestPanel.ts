@@ -62,6 +62,10 @@ export default class TestPanel extends UIBase {
             case "debug":
                 fw.debugMgr.switchDebugLogBtn();
                 break;
+
+            case "frame":
+                fw.uiMgr.showPopupAsync(PopupConf.Framing);
+                break;
         }
     }
 }

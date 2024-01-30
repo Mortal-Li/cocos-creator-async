@@ -65,6 +65,11 @@ export const PopupConf = {
         name: "SocketPopup",
     },
 
+    Framing: <IUIConfig> {
+        bundle: BundleConf.Hall,
+        name: "FramingPopup",
+    },
+
     //********** GameA **********/
     GameAHelperPopup: <IUIConfig> {
         bundle: BundleConf.GameA,
