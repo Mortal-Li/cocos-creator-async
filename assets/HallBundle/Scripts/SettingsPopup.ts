@@ -6,7 +6,7 @@
 
 import GameData from "../../MainBundle/Scripts/common/GameData";
 import { LocalKey } from "../../MainBundle/Scripts/common/MainConst";
-import fw from "../../framework/fw";
+import kk from "../../framework/kk";
 import PopupBase from "../../framework/ui/PopupBase";
 
 const {ccclass, property} = cc._decorator;
@@ -34,8 +34,8 @@ export default class SettingsPopup extends PopupBase {
     }
 
     onDestroy() {
-        fw.localMgr.setItem(LocalKey.Switch_Music, GameData.music_switch);
-        fw.localMgr.setItem(LocalKey.Switch_Effect, GameData.effect_switch);
+        kk.localMgr.setItem(LocalKey.Switch_Music, GameData.music_switch);
+        kk.localMgr.setItem(LocalKey.Switch_Effect, GameData.effect_switch);
         super.onDestroy();
     }
 
@@ -49,10 +49,10 @@ export default class SettingsPopup extends PopupBase {
 
     onToggle(toggle: cc.Toggle, name: string) {
         if (name == "music") {
-            fw.soundMgr.setMusicMute(!toggle.isChecked);
+            kk.soundMgr.setMusicMute(!toggle.isChecked);
             GameData.music_switch = toggle.isChecked;
         } else {
-            fw.soundMgr.setEffectMute(!toggle.isChecked);
+            kk.soundMgr.setEffectMute(!toggle.isChecked);
             GameData.effect_switch = toggle.isChecked;
         }
     }

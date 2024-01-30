@@ -15,7 +15,7 @@ import SoundManager from "./manager/SoundManager";
 import UIManager from "./manager/UIManager";
 
 
-const fw = {
+const kk = {
     uiMgr: new UIManager(),
     eventMgr: new EventManager(),
     localMgr: new LocalManager(),
@@ -39,7 +39,7 @@ const fw = {
         socket?: boolean,
 
     } = {})=>{
-        fw.godNode = cc.find("Canvas");
+        kk.godNode = cc.find("Canvas");
 
         const defaultSwitchs = {
             qt: false,
@@ -52,15 +52,15 @@ const fw = {
         }
 
         if (switchs.qt) {
-            fw.qCollisionMgr = new QCollisionManager();
+            kk.qCollisionMgr = new QCollisionManager();
         }
 
         if (switchs.socket) {
-            fw.socketMgr = new SocketManager();
+            kk.socketMgr = new SocketManager();
         }
 
-        fw.debugMgr.init();
+        kk.debugMgr.init();
     }
 }
 
-export default fw;
+export default kk;

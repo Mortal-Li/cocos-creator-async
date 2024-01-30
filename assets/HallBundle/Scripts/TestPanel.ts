@@ -7,7 +7,7 @@
 import { PopupConf } from "../../Boot/Scripts/AssetConfig";
 import { GameCustomEvent, TxtConst } from "../../MainBundle/Scripts/common/MainConst";
 import Util from "../../MainBundle/Scripts/common/Util";
-import fw from "../../framework/fw";
+import kk from "../../framework/kk";
 import UIBase from "../../framework/ui/UIBase";
 
 const {ccclass, property} = cc._decorator;
@@ -26,7 +26,7 @@ export default class TestPanel extends UIBase {
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         switch (name) {
             case "set":
-                fw.uiMgr.showPopupAsync(PopupConf.Settings);
+                kk.uiMgr.showPopupAsync(PopupConf.Settings);
                 break;
         
             case "toast":
@@ -38,33 +38,33 @@ export default class TestPanel extends UIBase {
                     msg: TxtConst.AddGems,
                     btnTxtOK: TxtConst.Sure,
                     btnCallOK: () => {
-                        fw.eventMgr.emit(GameCustomEvent.Update_GEM, 10, true);
+                        kk.eventMgr.emit(GameCustomEvent.Update_GEM, 10, true);
                     }
                 });
                 break;
 
             case "table":
-                fw.uiMgr.showPopupAsync(PopupConf.TableView);
+                kk.uiMgr.showPopupAsync(PopupConf.TableView);
                 break;
 
             case "adapter":
-                fw.uiMgr.showPopupAsync(PopupConf.SafeAdapter);
+                kk.uiMgr.showPopupAsync(PopupConf.SafeAdapter);
                 break;
 
             case "quad":
-                fw.uiMgr.showPopupAsync(PopupConf.QuadTree);
+                kk.uiMgr.showPopupAsync(PopupConf.QuadTree);
                 break;
 
             case "socket":
-                fw.uiMgr.showPopupAsync(PopupConf.Socket);
+                kk.uiMgr.showPopupAsync(PopupConf.Socket);
                 break;
 
             case "debug":
-                fw.debugMgr.switchDebugLogBtn();
+                kk.debugMgr.switchDebugLogBtn();
                 break;
 
             case "frame":
-                fw.uiMgr.showPopupAsync(PopupConf.Framing);
+                kk.uiMgr.showPopupAsync(PopupConf.Framing);
                 break;
         }
     }

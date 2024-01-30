@@ -4,7 +4,7 @@
  * @created 2022年9月30日
  */
 
-import fw from "../fw";
+import kk from "../kk";
 import CocosHelper from "../tools/CocosHelper";
 import TimeHelper from "../tools/TimeHelper";
 
@@ -32,14 +32,14 @@ export default class DebugManger {
      * 当不方便查看log时，可以启动此开关，比如已发布的线上游戏
      */
     switchDebugLogBtn() {
-        let logBtn = fw.godNode.getChildByName("logBtn");
+        let logBtn = kk.godNode.getChildByName("logBtn");
         if (logBtn) logBtn.active = !logBtn.active;
         else this._initLogPanel();
     }
 
     private _initLogPanel() {
         let logPanel = new cc.Node();
-        fw.godNode.addChild(logPanel, 9998);
+        kk.godNode.addChild(logPanel, 9998);
     
         CocosHelper.addSprite(logPanel, { spriteFrame: CocosHelper.genPureColorSpriteFrame() });
         logPanel.setContentSize(cc.winSize);
@@ -100,7 +100,7 @@ export default class DebugManger {
             enableBold: true
         });
         
-        fw.godNode.addChild(logBtn, 9999);
+        kk.godNode.addChild(logBtn, 9999);
         logBtn.addComponent(cc.Button);
         logBtn.on("click", () => {
             logPanel.active = !logPanel.active;

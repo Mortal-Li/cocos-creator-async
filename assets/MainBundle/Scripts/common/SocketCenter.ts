@@ -4,7 +4,7 @@
  * @created 2022年5月7日
  */
 
-import fw from "../../../framework/fw";
+import kk from "../../../framework/kk";
 
 export const CMDID = {
      CMD_HELLO: 1000,
@@ -25,7 +25,7 @@ class SocketCenter {
     }
     
     async connect(url: string) {
-        await fw.socketMgr.connectAsync({
+        await kk.socketMgr.connectAsync({
             url: url,
             getHeartbeat: () => {
                 cc.log(">>> heartbeat")
@@ -45,15 +45,15 @@ class SocketCenter {
     }
 
     clear() {
-        fw.socketMgr.close(true);
+        kk.socketMgr.close(true);
     }
 
     on(cmd: number, callback: (data: any) => void, target: any) {
-        fw.socketMgr.on(cmd, callback, target);
+        kk.socketMgr.on(cmd, callback, target);
     }
 
     off(cmd: number, callback: (data: any) => void, target: any) {
-        fw.socketMgr.off(cmd, callback, target);
+        kk.socketMgr.off(cmd, callback, target);
     }
 
     async req(cmd: number, args?: any) {
@@ -65,7 +65,7 @@ class SocketCenter {
                 break;
         }
         cc.log("---> send ", content);
-        return await fw.socketMgr.reqAsync(cmd, JSON.stringify({
+        return await kk.socketMgr.reqAsync(cmd, JSON.stringify({
             cmd: cmd,
             data: content
         }));

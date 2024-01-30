@@ -5,7 +5,7 @@
  */
 
 import { LayerConf } from "../../Boot/Scripts/AssetConfig";
-import fw from "../../framework/fw";
+import kk from "../../framework/kk";
 import AsyncHelper from "../../framework/tools/AsyncHelper";
 import LayerBase from "../../framework/ui/LayerBase";
 import GameData from "./common/GameData";
@@ -20,11 +20,11 @@ export default class LoadLayer extends LayerBase {
     pb: cc.ProgressBar = null;
 
     onLoad () {
-        fw.soundMgr.init(SoundID.Bundle, SoundID.Path);
-        const musicState = fw.localMgr.getItemWithDefault(LocalKey.Switch_Music, true);
-        const effectState = fw.localMgr.getItemWithDefault(LocalKey.Switch_Effect, true);
-        fw.soundMgr.setMusicMute(!musicState);
-        fw.soundMgr.setEffectMute(!effectState);
+        kk.soundMgr.init(SoundID.Bundle, SoundID.Path);
+        const musicState = kk.localMgr.getItemWithDefault(LocalKey.Switch_Music, true);
+        const effectState = kk.localMgr.getItemWithDefault(LocalKey.Switch_Effect, true);
+        kk.soundMgr.setMusicMute(!musicState);
+        kk.soundMgr.setEffectMute(!effectState);
         GameData.music_switch = musicState;
         GameData.effect_switch = effectState;
     }
@@ -38,11 +38,11 @@ export default class LoadLayer extends LayerBase {
         // ...
         // ...
 
-        await fw.uiMgr.preLoadLayerAsync(LayerConf.Hall, (cur, total) => {
+        await kk.uiMgr.preLoadLayerAsync(LayerConf.Hall, (cur, total) => {
             this.pb.progress = 0.5 + cur / total * 0.5;
         });
 
-        fw.uiMgr.goLayerAsync(LayerConf.Hall);
+        kk.uiMgr.goLayerAsync(LayerConf.Hall);
     }
 
 }

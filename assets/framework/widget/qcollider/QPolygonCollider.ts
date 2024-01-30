@@ -4,7 +4,7 @@
  * @created 2022年4月1日
  */
 
-import fw from "../../fw";
+import kk from "../../kk";
 import { QTBounds, QTObject, Quadtree } from "../../tools/Quadtree";
 
 const {ccclass, property, menu} = cc._decorator;
@@ -19,11 +19,11 @@ export default class QPolygonCollider extends cc.PolygonCollider implements QTOb
     qts: Quadtree[] = [];
 
     onEnable() {
-        fw.qCollisionMgr.addCollider(this);
+        kk.qCollisionMgr.addCollider(this);
     }
 
     onDisable() {
-        fw.qCollisionMgr.removeCollider(this);
+        kk.qCollisionMgr.removeCollider(this);
     }
 
 }

@@ -6,7 +6,7 @@
  */
 
 import { LayerConf } from "../../Boot/Scripts/AssetConfig";
-import fw from "../../framework/fw";
+import kk from "../../framework/kk";
 import UIBase from "../../framework/ui/UIBase";
 
 const {ccclass, property} = cc._decorator;
@@ -25,7 +25,7 @@ export default class GamePanel extends UIBase {
     onBtnClick(evt: cc.Event.EventTouch, name: string) {
         switch (name) {
             case "gameA":
-                fw.uiMgr.goLayerAsync(LayerConf.GameA);
+                kk.uiMgr.goLayerAsync(LayerConf.GameA);
                 break;
                 
         }

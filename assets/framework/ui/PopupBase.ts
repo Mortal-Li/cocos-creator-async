@@ -4,7 +4,7 @@
  * @created 2021年9月2日
  */
 
-import fw from "../fw";
+import kk from "../kk";
 import UIBase from "./UIBase";
 
 const {ccclass, property} = cc._decorator;
@@ -20,7 +20,7 @@ export default class PopupBase extends UIBase {
     onDestroyCall: (value?: any) => void = () => {};
 
     onDestroy() {
-        fw.uiMgr._autoRemovePopup(this.node.parent);
+        kk.uiMgr._autoRemovePopup(this.node.parent);
         this.onDestroyCall(this.ret);
         super.onDestroy();
     }
@@ -38,7 +38,7 @@ export default class PopupBase extends UIBase {
     showAnim() {
         this.node.scale = 0;
         cc.tween(this.node)
-            .set({ width: fw.godNode.width, height: fw.godNode.height })    // bug fix, scale may cause cc.Widget wrong
+            .set({ width: kk.godNode.width, height: kk.godNode.height })    // bug fix, scale may cause cc.Widget wrong
             .to(0.2, { scale: 1 }, cc.easeBackOut())
             .start();
     }

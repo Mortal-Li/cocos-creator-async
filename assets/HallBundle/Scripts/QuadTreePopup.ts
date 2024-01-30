@@ -5,7 +5,7 @@
  */
 
 
-import fw from "../../framework/fw";
+import kk from "../../framework/kk";
 import MathHelper from "../../framework/tools/MathHelper";
 import PopupBase from "../../framework/ui/PopupBase";
 
@@ -57,7 +57,7 @@ export default class QuadTreePopup extends PopupBase {
     }
 
     reset() {
-        fw.qCollisionMgr.enabled = false;
+        kk.qCollisionMgr.enabled = false;
         cc.director.getCollisionManager().enabled = false;
         this.getObj("bg").removeAllChildren();
     }
@@ -65,8 +65,8 @@ export default class QuadTreePopup extends PopupBase {
     showQuad() {
         let T = this;
         
-        fw.qCollisionMgr.resetQt(T.getObj("bg").getBoundingBoxToWorld());
-        fw.qCollisionMgr.enabled = true;
+        kk.qCollisionMgr.resetQt(T.getObj("bg").getBoundingBoxToWorld());
+        kk.qCollisionMgr.enabled = true;
 
         T.initBalls(T.ballNd2);
     }

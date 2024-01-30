@@ -4,7 +4,7 @@
  * @created 2021年9月22日
  */
 
-import fw from "../../../framework/fw";
+import kk from "../../../framework/kk";
 import Loading from "../Loading";
 import GameData from "./GameData";
 import { TxtConst } from "./MainConst";
@@ -62,7 +62,7 @@ class HttpHelper {
 
     private _req(url: string, data: any, option: ReqOptionInterface) {
         return new Promise<any>((resolve, reject) => {
-            fw.httpMgr.reqAsync(url, data, {
+            kk.httpMgr.reqAsync(url, data, {
                 show: ()=>{
                     if (option.needLoading) Loading.show();
                 },

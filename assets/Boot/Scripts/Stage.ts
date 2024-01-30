@@ -4,7 +4,7 @@
  * @created 2021年9月2日
  */
 
-import fw from "../../framework/fw";
+import kk from "../../framework/kk";
 import { LayerConf } from "./AssetConfig";
 
 const {ccclass, property} = cc._decorator;
@@ -13,11 +13,11 @@ const {ccclass, property} = cc._decorator;
 export default class Stage extends cc.Component {
 
     start () {
-        fw.init({
+        kk.init({
             qt: true,
             socket: true,
         });
-        fw.uiMgr.goLayerAsync(LayerConf.Load);
+        kk.uiMgr.goLayerAsync(LayerConf.Load);
     }
 
 }

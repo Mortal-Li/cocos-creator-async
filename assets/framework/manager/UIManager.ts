@@ -5,7 +5,7 @@
  * @created 2021年9月18日
  */
 
-import fw from "../fw";
+import kk from "../kk";
 import AsyncHelper from "../tools/AsyncHelper";
 import CocosHelper from "../tools/CocosHelper";
 import LayerBase from "../ui/LayerBase";
@@ -25,7 +25,7 @@ export default class UIManager {
     }
 
     getCurLayer() {
-        return fw.godNode.getChildByName(this._curLayerConf.name);
+        return kk.godNode.getChildByName(this._curLayerConf.name);
     }
     
     /**
@@ -45,7 +45,7 @@ export default class UIManager {
         T._curLayerConf = newConf;
 
         if (newConf.cacheMode == UICacheMode.Stay) {
-            let layer = fw.godNode.getChildByName(newConf.name);
+            let layer = kk.godNode.getChildByName(newConf.name);
             if (layer) {
                 layer.active = true;
                 let scptName = newConf.script ? newConf.script : newConf.name;
@@ -59,7 +59,7 @@ export default class UIManager {
         }
 
         let layer = await T._genUIBaseAsync(newConf, LAYER_PATH, data);
-        layer.parent = fw.godNode;
+        layer.parent = kk.godNode;
         cc.log("create Layer", newConf.name);
 
         T._clearLayer(preConf);
@@ -75,18 +75,18 @@ export default class UIManager {
         let conf = T._curLayerConf;
         if (conf) {
             if (conf.cacheMode == UICacheMode.Stay) {
-                let layer = fw.godNode.getChildByName(conf.name);
+                let layer = kk.godNode.getChildByName(conf.name);
                 let scptName = conf.script ? conf.script : conf.name;
                 let scpt: LayerBase = layer.getComponent(scptName);
                 scpt.recvData = data;
                 scpt.refresh();
                 cc.log("refresh Layer", conf.name);
             } else {
-                let delLayer = fw.godNode.getChildByName(conf.name);
+                let delLayer = kk.godNode.getChildByName(conf.name);
                 delLayer.name = "removed";
 
                 let layer = await T._genUIBaseAsync(conf, LAYER_PATH, data);
-                layer.parent = fw.godNode;
+                layer.parent = kk.godNode;
                 delLayer.destroy();
                 
                 cc.log("reset Layer", conf.name);
@@ -107,7 +107,7 @@ export default class UIManager {
 
     private _clearLayer(preConf: IUIConfig) {
         if (preConf) {
-            let layer = fw.godNode.getChildByName(preConf.name);
+            let layer = kk.godNode.getChildByName(preConf.name);
             if (preConf.cacheMode == UICacheMode.Stay) {
                 layer.active = false;
                 cc.log("hide Layer", preConf.name);
@@ -158,7 +158,7 @@ export default class UIManager {
     getPopup(popupConf: IUIConfig, layerConf: IUIConfig = null) {
         if (!layerConf) layerConf = this._curLayerConf;
         
-        let layer = fw.godNode.getChildByName(layerConf.name);
+        let layer = kk.godNode.getChildByName(layerConf.name);
         if (layer) {
             return layer.getChildByName(popupConf.name);
         }
@@ -170,7 +170,7 @@ export default class UIManager {
      * 关闭所有已展示的弹窗
      */
     closeAllPopup() {
-        let layer = fw.godNode.getChildByName(this._curLayerConf.name);
+        let layer = kk.godNode.getChildByName(this._curLayerConf.name);
         if (layer) {
             layer.children.forEach((nd, i) => {
                 if (nd.name.endsWith("Popup")) {
@@ -222,11 +222,11 @@ export default class UIManager {
      * 屏蔽UI触摸
      */
     banTouch() {
-        let ban = fw.godNode.getChildByName("_ban");
+        let ban = kk.godNode.getChildByName("_ban");
         if (!ban) {
             let node = new cc.Node("_ban");
-            node.setContentSize(fw.godNode.getContentSize());
-            fw.godNode.addChild(node, 9);
+            node.setContentSize(kk.godNode.getContentSize());
+            kk.godNode.addChild(node, 9);
             node.addComponent(cc.BlockInputEvents);
         }
     }
@@ -235,7 +235,7 @@ export default class UIManager {
      * 恢复UI触摸
      */
     unbanTouch() {
-        let ban = fw.godNode.getChildByName("_ban");
+        let ban = kk.godNode.getChildByName("_ban");
         if (ban) ban.destroy();
     }
 }

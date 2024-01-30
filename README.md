@@ -7,13 +7,14 @@
 
 </center>
 
-Cocos-Creator-Async是一个基于Cocos-creator的轻量级的、异步的游戏开发框架，它主要有以下特征：
-- 单场景 + 多层级
+Cocos-Creator-Async是一个基于Cocos-creator的轻量级的、异步的、高效的游戏开发框架，它主要有以下特征：
+- 单场景、多Layer的UI结构，自动内存管理；
+- 大部分API都是异步的，代码更直观高效；
 - 使用引擎的Bundle思想来管理游戏代码和资源
 - 提供常用的功能模块和通用的解决方案（不需要的功能模块可自行删除）
 - 配合插件 **sparrow-helper** 使用，效率更高
 
-希望能用更简洁的代码提供更效率的开发体验。
+希望能用更简洁的代码提供更效率的开发体验，故起别名kk，寓意“快快”。
 
 **简要声明**：
 - 本项目基于 Cocos Creator 2.4.x。
@@ -22,7 +23,7 @@ Cocos-Creator-Async是一个基于Cocos-creator的轻量级的、异步的游戏
 ### 基本使用指南
 #### 1、UI结构说明
 
-本框架基于单场景，在单场景下，有4种类型的UI界面容器：
+本框架UI基于单场景，在单场景下，有4种类型的UI界面容器：
 - Layer：层，用于从一个界面切换到另一个界面，界面元素的主要载体；
 - Popup：弹窗，在当前界面弹出一个界面展示窗体；
 - Panel：面板，即可用于Layer也可用于Popup，相当于嵌入其中的子视图；
@@ -74,12 +75,11 @@ assets
     ├───tools --------------------> 一些工具类，如通用加密、装饰器等
     ├───ui -----------------------> 主要是对4种UI界面类型的封装
     ├───widget -------------------> 一些通用控件或组件，如TableView、适配组件等
-    └───fw.ts -------------------> 控制UI树根节点，管理所有manager
+    └───kk.ts --------------------> 控制UI树根节点，管理所有manager
 ```
 #### 3、UI创建示范
 ```typescript
-// 创建四种类型的界面：先在编辑器创建对应的预制体，挂载对应的脚本，该脚本继承对应的基类；
-// 推荐使用 sparrow-helper 插件来创建，快捷键CTRL+F12；
+// 使用 sparrow-helper 插件来一键创建，快捷键CTRL+F12；
 // 然后在AssetConfig里面配置对应的信息，再调用对应的API函数即可。
 
 // UI的配置格式如下，定义在UIConfig.ts中
@@ -97,10 +97,7 @@ interface IUIConfig {
      */
     script?: string;
     /**
-     * 所加载资源的缓存模式，默认为 UICacheMode.NoCache，不缓存；
-     * 设置为UICacheMode.Cache，表示缓存加载的资源；
-     * 设置为UICacheMode.Stay，用于Layer类型，表示Layer常在，只不过跳转到其他Layer时，
-     * 会把当前Layer的active设置为false，再跳回来时设置为true
+     * 所加载资源的缓存模式，默认为 UICacheMode.NoCache，不缓存
      */
     cacheMode?: number;
 }
@@ -117,9 +114,9 @@ interface IUIConfig {
 // 异步方法，跳转到指定的Layer;
 // 第一个参数类型是IUIConfig，下面一样；
 // 第二个参数表示传入这个Layer的任意类型数据，可选；传入的数据会被脚本自动保存。
-fw.uiMgr.goLayerAsync(LayerConf.Hall, data);
+kk.uiMgr.goLayerAsync(LayerConf.Hall, data);
 // 异步方法，重置刷新当前Layer，data为传入的数据，可选。
-fw.uiMgr.resetCurLayerAsync(data)
+kk.uiMgr.resetCurLayerAsync(data)
 
 // ---------------- Popup类型 ----------------
 // const PopupConf = {
@@ -131,9 +128,9 @@ fw.uiMgr.resetCurLayerAsync(data)
 
 // 异步方法，显示指定的弹窗；
 // 第一个参数类型是IUIConfig；第二个是要传入的数据，可选
-fw.uiMgr.showPopupAsync(PopupConf.Settings);
+kk.uiMgr.showPopupAsync(PopupConf.Settings);
 // 弹窗关闭后，会返回用户在弹窗脚本中设置的任意类型数据。
-let ret = await fw.uiMgr.showPopupAsync(PopupConf.Settings, data);
+let ret = await kk.uiMgr.showPopupAsync(PopupConf.Settings, data);
 
 // ---------------- Panel、Widget类型 ----------------
 // const PanelConf = {
@@ -152,24 +149,24 @@ let ret = await fw.uiMgr.showPopupAsync(PopupConf.Settings, data);
 // }
 
 // 都是异步方法，跟前面不同的是，这两种类型创建后，需要自行设置父节点才会显示。
-fw.uiMgr.createPanelAsync(PanelConf.Game);
-fw.uiMgr.createWidgetAsync(WidgetConf.Toast);
+kk.uiMgr.createPanelAsync(PanelConf.Game);
+kk.uiMgr.createWidgetAsync(WidgetConf.Toast);
 
 ```
 #### 4、网络模块使用示范
 http和websocket都使用async/await、Promise进行封装，既支持异步也支持同步。
 ```typescript
 // http
-let ret = await fw.httpMgr.reqAsync(...);
-fw.httpMgr.reqAsync(...).then(...).catch(...);
+let ret = await kk.httpMgr.reqAsync(...);
+kk.httpMgr.reqAsync(...).then(...).catch(...);
 
 // websocket
-await fw.socketMgr.connectAsync(...)
-let ret = await fw.socketMgr.reqAsync(...);
-fw.socketMgr.connectAsync(...).then(...).catch(...);
+await kk.socketMgr.connectAsync(...)
+let ret = await kk.socketMgr.reqAsync(...);
+kk.socketMgr.connectAsync(...).then(...).catch(...);
 
-fw.socketMgr.on(cmd, callback, target);
-fw.socketMgr.off(cmd, callback, target);
+kk.socketMgr.on(cmd, callback, target);
+kk.socketMgr.off(cmd, callback, target);
 
 ```
 详细使用以及其他使用示例请运行demo工程查看。  
