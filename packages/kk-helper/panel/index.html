@@ -64,3 +64,17 @@
         <ui-button class="green" @click="createPanel()">Create Panel</ui-button>
     </div>
 </ui-box-container>
+<ui-box-container>
+    <h3>新建Widget</h3>
+    <div class="layout horizontal center">
+        <span>Widget名:&nbsp;</span>
+        <ui-input placeholder="Widget Name" v-value="widgetName"></ui-input>
+        <span>属于:&nbsp;</span>
+        <ui-select v-value="bundleChoice4">
+            <template v-for="item in bundles">
+                <option>{{item}}</option>
+            </template>
+        </ui-select>
+        <ui-button class="green" @click="createWidget()">Create Widget</ui-button>
+    </div>
+</ui-box-container>

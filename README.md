@@ -12,7 +12,7 @@ Cocos-Creator-Async是一个基于Cocos-creator的轻量级的、异步的、高
 - 大部分API都是异步的，代码更直观高效；
 - 使用引擎的Bundle思想来管理游戏代码和资源
 - 提供常用的功能模块和通用的解决方案（不需要的功能模块可自行删除）
-- 配合插件 **sparrow-helper** 使用，效率更高
+- 配合插件 **kk-helper** 使用，效率更高
 
 希望能用更简洁的代码提供更效率的开发体验，故起别名kk，寓意“快快”。
 
@@ -79,7 +79,7 @@ assets
 ```
 #### 3、UI创建示范
 ```typescript
-// 使用 sparrow-helper 插件来一键创建，快捷键CTRL+F12；
+// 使用 kk-helper 插件来一键创建，快捷键CTRL+F12；
 // 然后在AssetConfig里面配置对应的信息，再调用对应的API函数即可。
 
 // UI的配置格式如下，定义在UIConfig.ts中

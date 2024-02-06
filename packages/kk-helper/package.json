@@ -1,0 +1,22 @@
+{
+  "name": "kk-helper",
+  "version": "1.0.0",
+  "description": "Help you develop quickly with kk-Frame",
+  "author": "Mortal-Li",
+  "main": "main.js",
+  "main-menu": {
+    "i18n:MAIN_MENU.package.title/kk-helper": {
+      "message": "kk-helper:open",
+      "accelerator": "Control+F12"
+    }
+  },
+  "panel": {
+    "main": "panel/index.js",
+    "type": "float",
+    "title": "kk-helper",
+    "width": 580,
+    "min-width": 580,
+    "height": 480,
+    "min-height": 480
+  }
+}

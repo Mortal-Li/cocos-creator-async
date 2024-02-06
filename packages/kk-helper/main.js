@@ -14,7 +14,7 @@ module.exports = {
   // register your ipc messages here
   messages: {
     'open' () {
-      Editor.Panel.open('sparrow-helper');
+      Editor.Panel.open('kk-helper');
     },
     
     'create-bundle' (event, bundleName, priority) {
@@ -35,7 +35,11 @@ module.exports = {
 
     'create-panel' (event, panelName, bundleName) {
       Utils.genUIUnit("Panel", panelName, bundleName);
-    }
+    },
+
+    'create-widget' (event, widgetName, bundleName) {
+      Utils.genUIUnit("Widget", widgetName, bundleName);
+    },
 
   },
 };
