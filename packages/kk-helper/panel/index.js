@@ -32,6 +32,7 @@ Editor.Panel.extend({
 
       methods: {
         createBundle() {
+          this.bundleName = this.bundleName.trim();
           if (this.bundleName.length == 0) {
             Editor.warn("Bundle name is empty!");
           } else {
@@ -43,6 +44,7 @@ Editor.Panel.extend({
         },
 
         createLayer() {
+          this.layerName = this.layerName.trim();
           if (this.layerName.length == 0) {
             Editor.warn("Layer name is empty!");
           } else {
@@ -52,6 +54,7 @@ Editor.Panel.extend({
         },
 
         createPopup() {
+          this.popupName = this.popupName.trim();
           if (this.popupName.length == 0) {
             Editor.warn("Popup name is empty!");
           } else {
@@ -61,6 +64,7 @@ Editor.Panel.extend({
         },
 
         createPanel() {
+          this.panelName = this.panelName.trim();
           if (this.panelName.length == 0) {
             Editor.warn("Panel name is empty!");
           } else {
@@ -70,6 +74,7 @@ Editor.Panel.extend({
         },
 
         createWidget() {
+          this.widgetName = this.widgetName.trim();
           if (this.widgetName.length == 0) {
             Editor.warn("Widget name is empty!");
           } else {
