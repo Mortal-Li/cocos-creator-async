@@ -19,6 +19,7 @@ Cocos-Creator-Async是一个基于Cocos-creator的轻量级的、异步的、高
 **简要声明**：
 - 本项目基于 Cocos Creator 2.4.x。
 - 本项目使用 *MIT License* 开源协议，主要供读者学习参考。
+- `后期将主要修改优化Cocos Creator 3.x版本，2.x官方支持越来越少，所以本仓库也将维护越来越少`
 
 ### 基本使用指南
 #### 1、UI结构说明
@@ -78,10 +79,8 @@ assets
     └───kk.ts --------------------> 控制UI树根节点，管理所有manager
 ```
 #### 3、UI创建示范
+使用 kk-helper 插件来一键创建UI，快捷键CTRL+F12；然后在AssetConfig里面配置对应的信息，再调用对应的API函数即可。
 ```typescript
-// 使用 kk-helper 插件来一键创建，快捷键CTRL+F12；
-// 然后在AssetConfig里面配置对应的信息，再调用对应的API函数即可。
-
 // UI的配置格式如下，定义在UIConfig.ts中
 interface IUIConfig {
     /**
@@ -107,7 +106,7 @@ interface IUIConfig {
 //     Hall: <IUIConfig> {
 //         bundle: BundleConf.Hall,
 //         name: "HallLayer",
-//         cacheMode: UICacheMode.Stay,
+//         cacheMode: UICacheMode.Cache,
 //     }
 // };
 
